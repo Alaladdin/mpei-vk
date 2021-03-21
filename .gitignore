@@ -1,0 +1,5 @@
+.idea
+.ignore
+.env
+node_modules
+pnpm-lock.yaml

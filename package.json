@@ -1,0 +1,40 @@
+{
+  "name": "mpei-vk",
+  "private": true,
+  "version": "0.0.1",
+  "description": "mpei vk bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "dev": "nodemon ./index.js"
+  },
+  "keywords": [
+    "mpei",
+    "vk",
+    "bot",
+    "nodejs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alaladdin/mpei-vk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Alaladdin/mpei-vk.git/issues"
+  },
+  "author": "Alaladdin",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1",
+    "node-vk-bot-api": "^3.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.7"
+  },
+  "engines": {
+    "node": "15.x"
+  }
+}
