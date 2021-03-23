@@ -5,3 +5,4 @@
 ### Added
 
 - Keyboard hide command (/hide)
+- Help command (/h)

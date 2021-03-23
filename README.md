@@ -1,6 +1,6 @@
 # MPEI-vk bot
 
-Commands
+### Commands
 
 `/s` - show keyboard
 
