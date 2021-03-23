@@ -7,7 +7,7 @@ module.exports = {
   description: 'Инициализация',
 
   execute(bot, ctx) {
-    ctx.reply('started', null,
+    ctx.reply('Клавиатура включена', null,
       Markup.keyboard(keyboard, { columns: 2 }));
   },
 };
