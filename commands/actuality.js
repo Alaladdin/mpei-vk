@@ -1,36 +1,38 @@
 const fetch = require('node-fetch');
 const { serverAddress } = require('../config');
+const pdate = require('../utility/pdate');
 
 module.exports = {
-  name: 'a',
+  name: 'actuality',
   description: 'Получает "актуалочку"',
-  aliases: ['actuality', 'act', 'news', 'акт'],
-  async execute(bot, ctx) {
-    const { actuality } = await this.get(ctx) || {};
+  aliases: ['a', 'act', 'news', 'акт'],
+  async execute(ctx) {
+    ctx.send('Получаю данные с сервера');
 
-    // if actuality data exists
+    const { actuality } = await this.get() || {};
+    const msg = [];
+
+    // check, exists actuality data or not
     if (actuality && 'content' in actuality) {
-      ctx.reply(actuality.content);
+      msg.push(`Актуалочка. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
+      msg.push(`${actuality.content}`);
     } else {
-      ctx.reply('Непредвиденская ошибка. Кто-то украл данные из БД');
+      msg.push('Непредвиденская ошибка. Кто-то украл данные из БД');
     }
+
+    ctx.send(msg.join('\n'));
   },
-  async get(ctx) {
+  async get() {
     // get actuality data
     return fetch(`${serverAddress}/api/getActuality`)
       .then(async (res) => {
         const json = await res.json();
 
         // if request error
-        if (!res.ok) {
-          if (res.status === 404) return ctx.reply(json.error);
-          throw new Error(json.error);
-        }
+        if (!res.ok) throw new Error(json.error);
+
         return json;
       })
-      .catch(async (err) => {
-        console.error(err);
-        await ctx.reply('Ошибка при попытке получить актуалочку');
-      });
+      .catch(console.error);
   },
 };

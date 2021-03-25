@@ -2,10 +2,12 @@
 
 ### Commands
 
-`/s` - show keyboard
+`/actuality` - get actuality
 
-`/a` - get actuality
+`/schedule ` - get schedule
 
-`/h` - get help
+`/start` - show keyboard
+
+`/help` - get help
 
 `/hide` - hide keyboard

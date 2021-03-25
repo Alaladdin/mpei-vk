@@ -1,10 +1,12 @@
-const Markup = require('node-vk-bot-api/lib/markup');
+const { Keyboard } = require('vk-io');
 
 module.exports = {
   name: 'hide',
   description: 'Скрывает клавиатуру',
-  execute(bot, ctx) {
-    ctx.reply('Клавиатура скрыта', null,
-      Markup.keyboard([]));
+  async execute(ctx) {
+    await ctx.send({
+      message: 'Клавиатура выключена',
+      keyboard: Keyboard.builder(),
+    });
   },
 };

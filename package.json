@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
-    "node-vk-bot-api": "^3.4.0"
+    "vk-io": "^4.1.4"
   },
   "devDependencies": {
     "eslint": "^7.22.0",

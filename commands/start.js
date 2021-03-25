@@ -1,13 +1,35 @@
-const Markup = require('node-vk-bot-api/lib/markup');
-const keyboard = require('../data/keyboard');
+const { Keyboard } = require('vk-io');
 
 module.exports = {
-  name: 's',
-  aliases: ['start'],
-  description: 'Инициализация',
-
-  execute(bot, ctx) {
-    ctx.reply('Клавиатура включена', null,
-      Markup.keyboard(keyboard, { columns: 2 }));
+  name: 'start',
+  description: 'Включает клавиатуру',
+  aliases: ['начать'],
+  async execute(ctx) {
+    await ctx.send({
+      message: 'Клавиатура включена',
+      keyboard: Keyboard
+        .builder()
+        .urlButton({
+          label: 'Открыть сайт',
+          url: 'https://mpei.space',
+        })
+        .urlButton({
+          label: 'Скачать win-клиент',
+          url: 'https://mpei.space/win',
+        })
+        .row()
+        .textButton({
+          label: 'Актуалочка',
+          payload: {
+            command: '/actuality',
+          },
+        })
+        .textButton({
+          label: 'Расписание',
+          payload: {
+            command: '/schedule',
+          },
+        }),
+    });
   },
 };
