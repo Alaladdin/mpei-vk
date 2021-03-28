@@ -18,38 +18,43 @@ module.exports = {
     },
   ],
   async execute(ctx, args) {
-    const today = new Date();
-    const todayFormatted = pdate.format(today.toString());
-    const tomorrow = pdate.format(new Date().setDate(today.getDate() + 1));
-
+    const today = pdate.format(new Date().toString());
+    const tomorrow = pdate.format(new Date().setDate(new Date().getDate() + 1));
     const [command] = args;
-    let [start, finish] = ['', ''];
 
-    if (!args.length) {
-      // check today's schedule
-      [start, finish] = [todayFormatted, todayFormatted];
-    } else if (['week', 'tw'].includes(command)) {
-      // check tomorrow's schedule
-      if (command === 'tw') [start, finish] = [tomorrow, tomorrow];
-    } else {
-      ctx.reply(`Не знаю, что за аргумент такой "${command}"`);
+    const argsInstructions = {
+      week: {
+        name: 'неделю',
+      },
+      tw: {
+        name: 'завтра',
+        start: tomorrow,
+        finish: tomorrow,
+      },
+      empty: {
+        name: 'сегодня',
+        start: today,
+        finish: today,
+      },
+    };
+
+    if (command && (command === 'empty' || !argsInstructions[command])) {
+      ctx.reply(`не знаю, что за аргумент такой "${command}"`);
       return;
     }
 
     ctx
       .send('Получаю данные с сервера')
       .then(async () => {
-        const { schedule } = await this.get(start, finish) || {};
+        const selectedDate = argsInstructions[!args.length ? 'empty' : command];
+        const { schedule } = await this.get(selectedDate) || {};
 
         if (typeof schedule !== 'object' && !Array.isArray(schedule)) {
-          await ctx.send('Ошибка при попытке получить расписание');
+          await ctx.send('Ошибка при попытке получить расписание 😢');
           return;
         }
-        const scheduleDate = start === todayFormatted
-          ? 'сегодня' : start === tomorrow
-            ? 'завтра' : 'неделю';
 
-        await ctx.send(`Расписание на ${scheduleDate}`);
+        await ctx.send(`Расписание на ${selectedDate.name}`);
 
         // if schedule data exists
         if (Array.isArray(schedule) && schedule.length <= 0) {
@@ -64,16 +69,13 @@ module.exports = {
             discipline,
             dayOfWeekString,
             kindOfWork,
-            building,
             beginLesson,
             endLesson,
             lecturer,
           } = item;
 
-          // itemData.push(`Группа: ${item.stream.replace(',', ', ')}`);
           itemData.push(`[${dayOfWeekString}] ${discipline} - ${pdate.format(date, 'ru-RU')}`);
           itemData.push(kindOfWork);
-          if (building && building !== '-') itemData.push(`Здание: ${building}`);
           itemData.push(`${beginLesson} - ${endLesson}`);
           itemData.push(lecturer);
 
@@ -81,12 +83,11 @@ module.exports = {
         });
       });
   },
-  async get(start, finish) {
+  async get({ start, finish }) {
     const url = new URL(`${serverAddress}/api/getSchedule/`);
 
     if (start) url.searchParams.append('start', start);
     if (finish) url.searchParams.append('finish', finish);
-
     return fetch(url.href)
       .then(async (res) => {
         const json = await res.json();
