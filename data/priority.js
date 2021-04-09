@@ -9,4 +9,7 @@ module.exports = {
       userId: 457248723,
     },
   ],
+  blackList: [
+    53265470,
+  ],
 };

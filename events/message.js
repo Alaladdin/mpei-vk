@@ -1,10 +1,14 @@
 const { prefix } = require('../config');
+const priority = require('../data/priority');
 
 module.exports = {
   name: 'message',
   async execute(ctx, next, vk) {
     const { messagePayload, text } = ctx;
-    if ((!messagePayload && (!text || !text.startsWith(prefix))) || ctx.senderType !== 'user') return;
+    if ((!messagePayload && (!text || !text.startsWith(prefix))) || !ctx.isUser) return;
+
+    // check for user id in black list
+    if (priority.blackList.includes(ctx.senderId)) return;
 
     const commandBody = (messagePayload && messagePayload.command)
       ? messagePayload.command.slice(prefix.length)

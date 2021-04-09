@@ -1,6 +1,5 @@
-const fetch = require('node-fetch');
 const pdate = require('../utility/pdate');
-const { serverAddress } = require('../config');
+const pschedule = require('../functions/schedule');
 
 module.exports = {
   name: 'schedule',
@@ -44,10 +43,10 @@ module.exports = {
     }
 
     ctx
-      .send('Получаю данные с сервера')
+      .send('Получаю данные с сервера...')
       .then(async () => {
         const selectedDate = argsInstructions[!args.length ? 'empty' : command];
-        const { schedule } = await this.get(selectedDate) || {};
+        const { schedule } = await pschedule.get(selectedDate) || {};
 
         if (typeof schedule !== 'object' && !Array.isArray(schedule)) {
           await ctx.send('Ошибка при попытке получить расписание 😢');
@@ -82,21 +81,5 @@ module.exports = {
           return ctx.send(itemData.join('\n'));
         });
       });
-  },
-  async get({ start, finish }) {
-    const url = new URL(`${serverAddress}/api/getSchedule/`);
-
-    if (start) url.searchParams.append('start', start);
-    if (finish) url.searchParams.append('finish', finish);
-    return fetch(url.href)
-      .then(async (res) => {
-        const json = await res.json();
-
-        // if request error
-        if (!res.ok) throw new Error(json.error);
-
-        return json;
-      })
-      .catch(console.error);
   },
 };
