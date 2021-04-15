@@ -11,3 +11,5 @@
 `/help` - get help
 
 `/hide` - hide keyboard
+
+`/troll` - get trolling message

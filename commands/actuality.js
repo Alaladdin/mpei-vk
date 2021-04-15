@@ -12,7 +12,7 @@ module.exports = {
 
     // check, exists actuality data or not
     if (actuality && 'content' in actuality) {
-      msg.push(`Актуалочка. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
+      msg.push(`Актуалити. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
       msg.push(`${actuality.content}`);
     } else {
       msg.push('Непредвиденская ошибка. Кто-то украл данные из БД');

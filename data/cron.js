@@ -3,7 +3,6 @@ const pdate = require('../utility/pdate');
 const pactuality = require('../functions/actuality');
 const pschedule = require('../functions/schedule');
 const rand = require('../utility/random');
-const { trolleos } = require('./trolleos');
 const { chatIds } = require('../config');
 
 module.exports = {
@@ -16,11 +15,10 @@ module.exports = {
 
       if (actuality && 'content' in actuality) {
         const msg = [];
-        msg.push(`Актуалочка. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
+        msg.push(`Актуалити. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
         msg.push(`${actuality.content}`);
 
         chatIds.forEach((chat) => {
-          console.log(1);
           vk.api.messages.send({
             peer_id: chat.peerId,
             random_id: rand.int(999),
@@ -64,19 +62,6 @@ module.exports = {
             random_id: rand.int(999),
             message: itemData.join('\n'),
           });
-        });
-      });
-    });
-
-    // voronin trolleo every day at 9:10:00
-    schedule.scheduleJob('0 10 9 * * *', () => {
-      const randIndex = (arr) => rand.int(arr.length);
-
-      chatIds.forEach(async (chat) => {
-        await vk.api.messages.send({
-          peer_id: chat.peerId,
-          random_id: rand.int(999),
-          message: trolleos[randIndex(trolleos)],
         });
       });
     });
