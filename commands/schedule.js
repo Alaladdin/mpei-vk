@@ -42,44 +42,40 @@ module.exports = {
       return;
     }
 
-    ctx
-      .send('Получаю данные с сервера...')
-      .then(async () => {
-        const selectedDate = argsInstructions[!args.length ? 'empty' : command];
-        const { schedule } = await pschedule.get(selectedDate) || {};
+    const selectedDate = argsInstructions[!args.length ? 'empty' : command];
+    const { schedule } = await pschedule.get(selectedDate) || {};
 
-        if (typeof schedule !== 'object' && !Array.isArray(schedule)) {
-          await ctx.send('Ошибка при попытке получить расписание 😢');
-          return;
-        }
+    if (typeof schedule !== 'object' && !Array.isArray(schedule)) {
+      await ctx.send('Ошибка при попытке получить расписание 😢');
+      return;
+    }
 
-        await ctx.send(`Расписание на ${selectedDate.name}`);
+    await ctx.send(`Расписание на ${selectedDate.name}`);
 
-        // if schedule data exists
-        if (Array.isArray(schedule) && schedule.length <= 0) {
-          ctx.send('Занятий нет 😎');
-          return;
-        }
+    // if schedule data exists
+    if (Array.isArray(schedule) && schedule.length <= 0) {
+      ctx.send('Занятий нет 😎');
+      return;
+    }
 
-        schedule.forEach((item) => {
-          const itemData = [];
-          const {
-            date,
-            discipline,
-            dayOfWeekString,
-            kindOfWork,
-            beginLesson,
-            endLesson,
-            lecturer,
-          } = item;
+    schedule.forEach((item) => {
+      const itemData = [];
+      const {
+        date,
+        discipline,
+        dayOfWeekString,
+        kindOfWork,
+        beginLesson,
+        endLesson,
+        lecturer,
+      } = item;
 
-          itemData.push(`[${dayOfWeekString}] ${discipline} - ${pdate.format(date, 'ru-RU')}`);
-          itemData.push(kindOfWork);
-          itemData.push(`${beginLesson} - ${endLesson}`);
-          itemData.push(lecturer);
+      itemData.push(`[${dayOfWeekString}] ${discipline} - ${pdate.format(date, 'ru-RU')}`);
+      itemData.push(kindOfWork);
+      itemData.push(`${beginLesson} - ${endLesson}`);
+      itemData.push(lecturer);
 
-          return ctx.send(itemData.join('\n'));
-        });
-      });
+      return ctx.send(itemData.join('\n'));
+    });
   },
 };

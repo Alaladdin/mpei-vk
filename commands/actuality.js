@@ -5,8 +5,7 @@ module.exports = {
   name: 'actuality',
   description: 'Получает "актуалочку"',
   aliases: ['a', 'act', 'news', 'акт'],
-  async execute(ctx, args, vk) {
-    const { id } = await ctx.send('Получаю данные с сервера...');
+  async execute(ctx) {
     const { actuality } = await pactuality.get() || {};
     const msg = [];
 
@@ -16,14 +15,6 @@ module.exports = {
       msg.push(`${actuality.content}`);
     } else {
       msg.push('Непредвиденская ошибка. Кто-то украл данные из БД');
-    }
-
-    // deletes message "getting actuality", but only in chat with user
-    if (ctx.isFromUser) {
-      await vk.api.messages.delete({
-        message_ids: id,
-        delete_for_all: true,
-      });
     }
 
     ctx.send(msg.join('\n'));

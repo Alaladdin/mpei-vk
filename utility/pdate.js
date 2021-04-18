@@ -3,7 +3,7 @@ module.exports = {
     const options = {
       day: 'numeric',
       month: 'numeric',
-      year: 'numeric',
+      // year: 'numeric',
     };
 
     return new Date(dateString).toLocaleString(locale, options);
