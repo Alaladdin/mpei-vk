@@ -10,6 +10,11 @@ module.exports = {
     const randomTrolling = () => s[rand.int(s.length)];
 
     if (!args || !args.length) {
+      ctx.reply('Необходимо указать имя в качестве аргумента');
+      return;
+    }
+
+    if (args && args[0] === '_') {
       ctx.send(randomTrolling());
       return;
     }
