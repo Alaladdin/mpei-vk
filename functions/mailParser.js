@@ -57,7 +57,7 @@ module.exports.mailParser = async (vk) => {
     await page.goto('https://legacy.mpei.ru/owa/');
 
     if (!await page.url().match(/https:\/\/legacy.mpei.ru\/owa\//)) {
-      await sendMessageToAdmins('Кажется, не удалось залогиниться');
+      await sendMessageToAdmins(['Кажется, не удалось залогиниться', `Страница: ${await page.url()}`].join('\n'));
       await browser.close();
     }
 
