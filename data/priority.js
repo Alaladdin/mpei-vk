@@ -1,5 +1,7 @@
+const { isProd } = require('../config');
+
 module.exports = {
-  admin: [
+  admin: isProd ? [
     {
       name: 'AL',
       userId: 161372337,
@@ -7,6 +9,11 @@ module.exports = {
     {
       name: 'Omar',
       userId: 457248723,
+    },
+  ] : [
+    {
+      name: 'AL',
+      userId: 161372337,
     },
   ],
   blackList: [

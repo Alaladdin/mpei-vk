@@ -9,16 +9,16 @@ module.exports = {
   serverAddress: isProd ? process.env.prodServerAddress : process.env.devServerAddress,
   mpeiLogin: process.env.MPEI_LOGIN,
   mpeiPass: process.env.MPEI_PASS,
-  waitUnread: parseInt(ms(process.env.WAIT_UNREAD || '10s'), 10),
+  waitUnread: parseInt(ms(process.env.WAIT_UNREAD || '1h'), 10),
   chatIds: isProd ? [
     {
       name: 'main',
       peerId: 2000000005,
     },
-    // {
-    //   name: 'spam',
-    //   peerId: 2000000004,
-    // },
+    {
+      name: 'spam',
+      peerId: 2000000004,
+    },
   ] : [
     {
       name: 'trash',
