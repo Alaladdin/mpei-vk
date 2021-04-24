@@ -2,4 +2,6 @@
 .ignore
 .env
 node_modules
+files
+cookies.json
 pnpm-lock.yaml
