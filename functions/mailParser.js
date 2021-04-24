@@ -15,6 +15,7 @@ module.exports.mailParser = async (vk) => {
   const filesPath = path.join(__dirname, '../files');
   const browser = await puppeteer.launch({
     product: 'chrome',
+    args: ['--no-sandbox'],
     defaultViewport: {
       width: 1080,
       height: 720,
