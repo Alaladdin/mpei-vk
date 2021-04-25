@@ -11,6 +11,7 @@ const {
 } = require('../config');
 
 module.exports.mailParser = async (vk) => {
+  console.info({ waitUnread });
   const { upload } = vk;
   const filesPath = path.join(__dirname, '../files');
   const browser = await puppeteer.launch({
@@ -56,10 +57,10 @@ module.exports.mailParser = async (vk) => {
     const unreadSelector = '.cntnt .bld';
     await page.goto('https://legacy.mpei.ru/owa/');
 
-    // if (!await page.url().match(/https:\/\/legacy.mpei.ru\/owa\//)) {
-    //   await sendMessageToAdmins(['Кажется, не удалось залогиниться', `Страница: ${await page.url()}`].join('\n'));
-    //   await browser.close();
-    // }
+    if (!await page.url().match(/https:\/\/legacy.mpei.ru\/owa\//)) {
+      await sendMessageToAdmins(['Кажется, не удалось залогиниться', `Страница: ${await page.url()}`].join('\n'));
+      await browser.close();
+    }
 
     return page.waitForSelector(unreadSelector, { timeout: waitUnread })
       .then(async (element) => {
