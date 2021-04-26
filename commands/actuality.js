@@ -5,17 +5,23 @@ module.exports = {
   name: 'actuality',
   description: 'Получает "актуалочку"',
   aliases: ['a', 'act', 'news', 'акт'],
-  async execute(ctx) {
-    const { actuality } = await pactuality.get() || {};
+  async execute(ctx, args) {
+    const { actuality } = await pactuality.get().catch(() => ctx.send('Непредвиденская ошибка. Кто-то украл данные из БД'));
+    const [command] = args;
     const msg = [];
 
-    // check, exists actuality data or not
-    if (actuality && 'content' in actuality) {
-      msg.push(`Актуалити. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
-      msg.push(`${actuality.content}`);
-    } else {
-      msg.push('Непредвиденская ошибка. Кто-то украл данные из БД');
+    if (!actuality) return;
+
+    if (command && command.toLowerCase() === 'lazy') {
+      msg.push('Несрочное актуалити\n');
+      msg.push(actuality.lazyContent);
+
+      ctx.send(msg.join('\n'));
+      return;
     }
+
+    msg.push(`Актуалити. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
+    msg.push(`${actuality.content}`);
 
     ctx.send(msg.join('\n'));
   },

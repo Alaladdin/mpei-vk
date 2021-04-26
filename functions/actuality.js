@@ -13,7 +13,6 @@ module.exports = {
         if (!res.ok) throw new Error(json.error);
 
         return json;
-      })
-      .catch(console.error);
+      });
   },
 };
