@@ -7,11 +7,9 @@ const {
   mpeiLogin,
   mpeiPass,
   chatIds,
-  waitUnread,
 } = require('../config');
 
 module.exports.mailParser = async (vk) => {
-  console.info({ waitUnread });
   const { upload } = vk;
   const filesPath = path.join(__dirname, '../files');
   const browser = await puppeteer.launch({
@@ -62,7 +60,7 @@ module.exports.mailParser = async (vk) => {
       await browser.close();
     }
 
-    return page.waitForSelector(unreadSelector, { timeout: waitUnread })
+    return page.waitForSelector(unreadSelector, { timeout: 50000 })
       .then(async (element) => {
         const unreadTitle = await page.$eval(unreadSelector, (titleEl) => titleEl.textContent.trim());
         // open letter
@@ -71,10 +69,6 @@ module.exports.mailParser = async (vk) => {
           await sendMessageToAdmins(['Пропущено сообщение', `Заголовок: ${unreadTitle}`].join('\n'));
           throw new Error('not allowed letter');
         }
-      })
-      .catch(async () => {
-        await page.reload();
-        await openUnread();
       });
   };
 
@@ -97,7 +91,7 @@ module.exports.mailParser = async (vk) => {
           await vk.api.messages.send({
             peer_id: chat.peerId,
             random_id: rand.int(999),
-            message: [...mailLinks, ...filteredPageText].join('\n') || '',
+            message: [...filteredPageText, ...mailLinks].join('\n') || '',
             attachment: `photo${a.ownerId}_${a.id}`,
           });
         });
@@ -111,25 +105,23 @@ module.exports.mailParser = async (vk) => {
     await page.click('.signinTxt');
   };
 
-  // listen for unread messages
-  const listenUnread = async () => {
-    await openUnread()
-      .then(async () => {
-        const mailEl = '.cntnttp table';
-        await page.waitForSelector(mailEl, { timeout: 0 });
-        const mailBody = await page.$(mailEl).then((body) => body.boundingBox());
+  const listenUnread = async () => openUnread()
+    .then(async () => {
+      const mailEl = '.cntnttp table';
+      await page.waitForSelector(mailEl, { timeout: 0 });
+      const mailBody = await page.$(mailEl).then((body) => body.boundingBox());
 
-        await screenShot('letter.jpg', {
-          clip: {
-            ...mailBody,
-            y: mailBody.y + 30,
-            height: mailBody.height - 10,
-          },
-        });
-        await sendMailContent();
-        await listenUnread();
+      await screenShot('letter.jpg', {
+        clip: {
+          ...mailBody,
+          y: mailBody.y + 30,
+          height: mailBody.height - 10,
+        },
       });
-  };
+      await sendMailContent();
+      await listenUnread();
+    })
+    .catch(() => browser.close());
 
   // run
   const run = async () => {
@@ -141,7 +133,9 @@ module.exports.mailParser = async (vk) => {
   // call run and catch errors
   run()
     .catch((err) => {
+      console.info('[MAIL PARSER] error');
       console.error(err);
       sendMessageToAdmins('Вообще непонятная ошибка возникла с почтой. Все ебнулось, бро');
-    });
+    })
+    .then(() => browser.close());
 };

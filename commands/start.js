@@ -3,7 +3,6 @@ const { Keyboard } = require('vk-io');
 module.exports = {
   name: 'start',
   description: 'Включает клавиатуру',
-  aliases: ['начать'],
   async execute(ctx) {
     await ctx.send({
       message: 'Клавиатура включена',

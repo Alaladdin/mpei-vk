@@ -1,9 +1,9 @@
 const schedule = require('node-schedule');
-const pdate = require('../utility/pdate');
+const { format } = require('../utility/pdate');
 const pactuality = require('../functions/actuality');
 const pschedule = require('../functions/schedule');
 const rand = require('../utility/random');
-const { chatIds } = require('../config');
+const { chatIds, serverDateFormat } = require('../config');
 
 module.exports = {
   name: 'crons',
@@ -15,7 +15,7 @@ module.exports = {
 
       if (actuality && 'content' in actuality) {
         const msg = [];
-        msg.push(`Актуалити. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
+        msg.push(`Актуалити. Обновлено: ${format(actuality.date)}\n`);
         msg.push(`${actuality.content}`);
 
         chatIds.forEach((chat) => {
@@ -30,13 +30,11 @@ module.exports = {
 
     // schedule every day at 9:05:00
     schedule.scheduleJob('0 5 9 * * *', async () => {
-      const today = pdate.format(new Date().toString());
+      const today = format(new Date(), serverDateFormat);
       const s = await pschedule.get({ start: today, finish: today });
       const scheduleToday = s.schedule || null;
 
-      if (typeof scheduleToday !== 'object' && !Array.isArray(scheduleToday)) {
-        return;
-      }
+      if (typeof scheduleToday !== 'object' && !Array.isArray(scheduleToday)) return;
 
       scheduleToday.forEach((item) => {
         const itemData = [];
@@ -51,7 +49,7 @@ module.exports = {
           lecturer,
         } = item;
 
-        itemData.push(`[${dayOfWeekString}] ${discipline} - ${pdate.format(date, 'ru-RU')}`);
+        itemData.push(`[${dayOfWeekString}] ${discipline} - ${format(date)}`);
         itemData.push(kindOfWork);
         itemData.push(`${beginLesson} - ${endLesson}`);
         itemData.push(lecturer);

@@ -1,4 +1,4 @@
-const pdate = require('../utility/pdate');
+const { format } = require('../utility/pdate');
 const pactuality = require('../functions/actuality');
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
       return;
     }
 
-    msg.push(`Актуалити. Обновлено: ${pdate.format(actuality.date, 'ru-RU')}\n`);
+    msg.push(`Актуалити. Обновлено: ${format(actuality.date)}\n`);
     msg.push(`${actuality.content}`);
 
     ctx.send(msg.join('\n'));

@@ -1,4 +1,5 @@
-const pdate = require('../utility/pdate');
+const { format, add } = require('../utility/pdate');
+const { serverDateFormat } = require('../config');
 const pschedule = require('../functions/schedule');
 
 module.exports = {
@@ -17,8 +18,9 @@ module.exports = {
     },
   ],
   async execute(ctx, args) {
-    const today = pdate.format(new Date().toString());
-    const tomorrow = pdate.format(new Date().setDate(new Date().getDate() + 1));
+    const today = format(new Date(), serverDateFormat);
+    const tomorrow = format(add(new Date()), serverDateFormat);
+
     const [command] = args;
 
     const argsInstructions = {
@@ -70,7 +72,7 @@ module.exports = {
         lecturer,
       } = item;
 
-      itemData.push(`[${dayOfWeekString}] ${discipline} - ${pdate.format(date, 'ru-RU')}`);
+      itemData.push(`[${dayOfWeekString}] ${discipline} - ${format(date)}`);
       itemData.push(kindOfWork);
       itemData.push(`${beginLesson} - ${endLesson}`);
       itemData.push(lecturer);

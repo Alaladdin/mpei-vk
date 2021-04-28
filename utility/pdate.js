@@ -1,11 +1,6 @@
-module.exports = {
-  format(dateString, locale = 'lt-LT') {
-    const options = {
-      day: 'numeric',
-      month: 'numeric',
-      // year: 'numeric',
-    };
+const { format, add } = require('date-fns');
 
-    return new Date(dateString).toLocaleString(locale, options);
-  },
-};
+// HH:mm:ss dd.MM.yyyy
+
+module.exports.format = (dateString, dateFormat = 'dd.MM') => format(new Date(dateString), dateFormat);
+module.exports.add = (dateString, days = 1) => add(new Date(dateString), { days });

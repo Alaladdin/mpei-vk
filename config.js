@@ -1,5 +1,4 @@
 require('dotenv').config();
-const ms = require('ms');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -9,7 +8,8 @@ module.exports = {
   serverAddress: isProd ? process.env.prodServerAddress : process.env.devServerAddress,
   mpeiLogin: process.env.MPEI_LOGIN,
   mpeiPass: process.env.MPEI_PASS,
-  waitUnread: parseInt(ms(process.env.WAIT_UNREAD || '1h'), 10),
+  mailSchedule: isProd ? (process.env.MAIL_SHEDULE || '0 0 * * * *') : '0 * * * * *',
+  serverDateFormat: 'yyyy.MM.dd',
   chatIds: isProd ? [
     {
       name: 'main',

@@ -10,7 +10,7 @@ module.exports = {
     const randomTrolling = () => s[rand.int(s.length)];
 
     if (!args || !args.length) {
-      ctx.reply('Необходимо указать имя в качестве аргумента');
+      ctx.reply('Кого троллить то?');
       return;
     }
 
