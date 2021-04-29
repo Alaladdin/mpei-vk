@@ -5,7 +5,7 @@ module.exports = {
   name: 'actuality',
   async get() {
     // get actuality data
-    return fetch(`${serverAddress}/api/getActuality`)
+    return fetch(`${serverAddress}/getActuality`)
       .then(async (res) => {
         const json = await res.json();
 

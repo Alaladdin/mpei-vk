@@ -4,7 +4,7 @@ const { serverAddress } = require('../config');
 module.exports = {
   name: 'actuality',
   async get({ start, finish } = {}) {
-    const url = new URL(`${serverAddress}/api/getSchedule/`);
+    const url = new URL(`${serverAddress}/getSchedule/`);
 
     if (start) url.searchParams.append('start', start);
     if (finish) url.searchParams.append('finish', finish);
