@@ -1,12 +1,14 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.2",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "dev": "nodemon ./index.js"
+    "dev": "nodemon ./index.js",
+    "deploy:setup": "pm2 deploy production setup",
+    "deploy:prod": "pm2 deploy ecosystem.config.js production --force"
   },
   "keywords": [
     "mpei",

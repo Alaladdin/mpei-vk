@@ -18,11 +18,18 @@ module.exports = {
         })
         .row()
         .textButton({
+          label: 'Ленивая актуалочка',
+          payload: {
+            command: '/actuality lazy',
+          },
+        })
+        .textButton({
           label: 'Актуалочка',
           payload: {
             command: '/actuality',
           },
         })
+        .row()
         .textButton({
           label: 'Расписание',
           payload: {
