@@ -13,7 +13,6 @@ module.exports.mailParser = async (vk) => {
   const { upload } = vk;
   const filesPath = path.join(__dirname, '../files');
   const browser = await puppeteer.launch({
-    product: 'chrome',
     args: ['--no-sandbox'],
     defaultViewport: {
       width: 1080,
@@ -56,7 +55,7 @@ module.exports.mailParser = async (vk) => {
     await page.goto('https://legacy.mpei.ru/owa/');
 
     if (!await page.url().match(/https:\/\/legacy.mpei.ru\/owa\//)) {
-      await sendMessageToAdmins(['Кажется, не удалось залогиниться', `Страница: ${await page.url()}`].join('\n'));
+      await sendMessageToAdmins(`Кажется, не удалось залогиниться\nСтраница: ${await page.url()}`);
       await browser.close();
     }
 
