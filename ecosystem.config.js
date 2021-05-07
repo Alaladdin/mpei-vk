@@ -6,7 +6,7 @@ module.exports = {
       name: 'mvk',
       script: 'index.js',
       watch: true,
-      ignore_watch: ['.git', 'node_modules', 'files'],
+      ignore_watch: ['node_modules', 'files'],
       env: {
         NODE_ENV: 'development',
       },
