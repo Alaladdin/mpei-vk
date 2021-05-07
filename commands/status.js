@@ -27,8 +27,8 @@ module.exports = {
     // bot info
     msg.push('- Bot info');
     msg.push(`· version: ${version}`);
-    msg.push(`· prefix: "${prefix}"`);
-    msg.push(`· mailSchedule: "${mailSchedule}"`);
+    msg.push(`· prefix: '${prefix}'`);
+    msg.push(`· mailSchedule: ${mailSchedule}`);
 
     // server info
     msg.push('\n- Server info');
