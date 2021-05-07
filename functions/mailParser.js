@@ -31,6 +31,7 @@ module.exports.mailParser = async (vk) => {
         peer_id: user.userId,
         random_id: rand.int(999),
         message: message.toString(),
+        dont_parse_links: true,
       });
     });
   };
@@ -92,6 +93,7 @@ module.exports.mailParser = async (vk) => {
             random_id: rand.int(999),
             message: [...filteredPageText, ...mailLinks].join('\n') || '',
             attachment: `photo${a.ownerId}_${a.id}`,
+            dont_parse_links: true,
           });
         });
     });
