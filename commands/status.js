@@ -28,12 +28,12 @@ module.exports = {
     msg.push('- Bot info');
     msg.push(`· version: ${version}`);
     msg.push(`· prefix: "${prefix}"`);
+    msg.push(`· isProduction: ${isProd}`);
     msg.push(`· mailSchedule: "${mailSchedule}"`);
 
     // server info
     msg.push('\n- Server info');
     msg.push(`· address: ${serverAddress}`);
-    msg.push(`· isProduction: ${isProd}`);
     msg.push(`· version: ${await serverData('version')}`);
     msg.push(`· health: ${await serverData('health')}`);
     msg.push(`· ping: ${await serverData('ping')}`);
