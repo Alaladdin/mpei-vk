@@ -24,7 +24,6 @@ module.exports = {
         host: process.env.DEPLOY_HOST,
         port: process.env.DEPLOY_PORT,
       }],
-      // ssh_options: 'StrictHostKeyChecking=no',
       ref: 'origin/main',
       repo: 'https://github.com/Alaladdin/mpei-vk',
       path: '$HOME/dev/mpei-vk',
