@@ -7,6 +7,7 @@ module.exports = {
   prefix: process.env.PREFIX,
   token: process.env.TOKEN,
   serverAddress: isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
+  mpeiParserEnable: process.env.MPEI_ENABLE === 'true',
   mpeiLogin: process.env.MPEI_LOGIN,
   mpeiPass: process.env.MPEI_PASS,
   mailSchedule: isProd ? (process.env.MAIL_SHEDULE || '0 0 * * * *') : '0 * * * * *',
