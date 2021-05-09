@@ -4,6 +4,7 @@ const {
   serverAddress,
   prefix,
   mailSchedule,
+  mailParserEnabled,
   isProd,
 } = require('../config');
 
@@ -29,7 +30,8 @@ module.exports = {
     msg.push(`· version: ${version}`);
     msg.push(`· prefix: "${prefix}"`);
     msg.push(`· isProduction: ${isProd}`);
-    msg.push(`· mailSchedule: "${mailSchedule}"`);
+    msg.push(`· mailListen: ${mailParserEnabled}`);
+    msg.push(`· mailListen time: "${mailSchedule}"`);
 
     // server info
     msg.push('\n- Server info');
