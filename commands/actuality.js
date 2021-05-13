@@ -1,4 +1,4 @@
-const { format } = require('../utility/pdate');
+const { format } = require('../util/pdate');
 const pactuality = require('../functions/actuality');
 
 module.exports = {

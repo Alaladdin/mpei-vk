@@ -1,8 +1,8 @@
 const schedule = require('node-schedule');
-const { format } = require('../utility/pdate');
+const { format } = require('../util/pdate');
 const pactuality = require('../functions/actuality');
 const pschedule = require('../functions/schedule');
-const rand = require('../utility/random');
+const rand = require('../util/random');
 const { chatIds, serverDateFormat } = require('../config');
 
 module.exports = {

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
-const rand = require('../utility/random');
+const rand = require('../util/random');
 const { admin } = require('../data/priority');
 const {
   mpeiLogin,

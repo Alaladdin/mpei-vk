@@ -1,4 +1,4 @@
-const { format, add } = require('../utility/pdate');
+const { format, add } = require('../util/pdate');
 const { serverDateFormat } = require('../config');
 const pschedule = require('../functions/schedule');
 

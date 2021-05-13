@@ -15,7 +15,7 @@ const vk = new VK({ token });
 
 vk.updates.start()
   .then(() => {
-    console.log('Bot has been started');
+    console.info('Bot has been started');
     setTimeout(() => parser.init(vk), 2000);
   })
   .catch(console.error);

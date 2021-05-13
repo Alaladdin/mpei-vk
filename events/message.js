@@ -14,7 +14,9 @@ module.exports = {
       ? messagePayload.command.slice(prefix.length)
       : text.slice(prefix.length);
 
-    const args = commandBody.split(' ');
+    const args = commandBody.split(' ')
+      .filter((arg) => arg)
+      .map((arg) => arg.toLowerCase());
     const commandName = args.shift().toLowerCase();
 
     const findCommand = (commandsList, lookingCommand) => {
