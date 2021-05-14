@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.5.7",
+  "version": "1.5.8",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
@@ -45,6 +45,6 @@
     "typescript": "^4.2.4"
   },
   "engines": {
-    "node": "15.x"
+    "node": "^15.x"
   }
 }

@@ -5,6 +5,12 @@ module.exports = {
   name: 'actuality',
   description: 'Получает "актуалочку"',
   aliases: ['a', 'act', 'news', 'акт'],
+  arguments: [
+    {
+      name: 'lazy',
+      description: 'несрочная актуалочка',
+    },
+  ],
   async execute(ctx, args) {
     const { actuality } = await pactuality.get().catch(() => ctx.send('Непредвиденская ошибка. Кто-то украл данные из БД'));
     const [command] = args;
