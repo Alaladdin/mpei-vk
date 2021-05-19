@@ -5,7 +5,7 @@ const isProd = process.env.NODE_ENV === 'production';
 module.exports = {
   isProd,
   prefix: process.env.PREFIX,
-  token: process.env.TOKEN,
+  token: isProd ? process.env.TOKEN : process.env.TOKEN_DEV,
   serverAddress: isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
   mailParserEnabled: process.env.MAIL_ENABLE === 'true',
   mpeiLogin: process.env.MPEI_LOGIN,

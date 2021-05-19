@@ -25,6 +25,8 @@ module.exports = {
         return 'error';
       });
 
+    const serverHealth = await serverData('health');
+
     // bot info
     msg.push('- Bot info');
     msg.push(`· version: ${version}`);
@@ -37,7 +39,7 @@ module.exports = {
     msg.push('\n- Server info');
     msg.push(`· address: ${serverAddress}`);
     msg.push(`· version: ${await serverData('version')}`);
-    msg.push(`· health: ${await serverData('health')}`);
+    msg.push(`· health: ${serverHealth !== 'error' ? '💖' : serverHealth}`);
     msg.push(`· ping: ${await serverData('ping')}`);
 
     ctx.send(msg.join('\n'), {
