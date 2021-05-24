@@ -27,7 +27,7 @@
   "license": "ISC",
   "dependencies": {
     "date-fns": "^2.21.3",
-    "dotenv": "^9.0.2",
+    "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
     "puppeteer": "^9.1.1",
