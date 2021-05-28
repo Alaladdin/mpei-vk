@@ -14,9 +14,7 @@ module.exports = {
       ? messagePayload.command.slice(prefix.length)
       : text.slice(prefix.length);
 
-    const args = commandBody.split(' ')
-      .filter((arg) => arg)
-      .map((arg) => arg.toLowerCase());
+    let args = commandBody.split(' ').filter((arg) => arg);
     const commandName = args.shift().toLowerCase();
 
     const findCommand = (commandsList, lookingCommand) => {
@@ -30,6 +28,8 @@ module.exports = {
 
     // get command by name or alias
     const command = vk.commands.get(commandName) || findCommand(vk.commands, commandName);
+
+    if (command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
 
     // call command
     if (command) command.execute(ctx, args, vk);

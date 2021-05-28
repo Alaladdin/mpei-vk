@@ -5,6 +5,7 @@ module.exports = {
   name: 'troll',
   description: 'Троллит, притом жейско. Используйте с осторожностью, вы запросто можете ранить чьи-то чувства',
   aliases: ['t'],
+  lowercaseArguments: false,
   async execute(ctx, args) {
     let s = trollings.default; // selected trolligns array
     const randomTrolling = () => s[rand.int(s.length)];
