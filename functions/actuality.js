@@ -9,7 +9,6 @@ module.exports = {
       .then(async (res) => {
         const json = await res.json();
 
-        // if request error
         if (!res.ok) throw new Error(json.error);
 
         return json;

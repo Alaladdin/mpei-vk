@@ -48,7 +48,7 @@ module.exports = {
     const { schedule } = await pschedule.get(selectedDate) || {};
 
     if (typeof schedule !== 'object' && !Array.isArray(schedule)) {
-      await ctx.send('Ошибка при попытке получить расписание 😢');
+      await ctx.send('Ебаные сервера МЭИ снова не отвечают');
       return;
     }
 

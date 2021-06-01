@@ -65,7 +65,7 @@ module.exports.mailParser = async (vk) => {
         const unreadTitle = await page.$eval(unreadSelector, (titleEl) => titleEl.textContent.trim());
         // open letter
         await element.click();
-        if (unreadTitle.match(/(github|disarmed|spam|ticket)/gi)) {
+        if (unreadTitle.match(/(github|disarmed|spam|ticket|Изменение статуса отчёта)/gi)) {
           await sendMessageToAdmins(['Пропущено сообщение', `Заголовок: ${unreadTitle}`].join('\n'));
           throw new Error('not allowed letter');
         }
@@ -136,7 +136,7 @@ module.exports.mailParser = async (vk) => {
     .catch((err) => {
       console.info('[MAIL PARSER] error');
       console.error(err);
-      sendMessageToAdmins('Вообще непонятная ошибка возникла с почтой. Все ебнулось, бро');
+      sendMessageToAdmins('[MAIL PARSER] Тотальный краш');
     })
     .then(() => browser.close());
 };

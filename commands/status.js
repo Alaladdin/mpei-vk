@@ -17,7 +17,9 @@ module.exports = {
     const serverData = (query) => fetch(`${serverAddress}/${query}`)
       .then(async (res) => {
         const json = await res.json();
+
         if (!res.ok) throw new Error(res.statusText);
+
         return Object.values(json)[0];
       })
       .catch((err) => {
