@@ -30,7 +30,7 @@
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
-    "puppeteer": "^9.1.1",
+    "puppeteer": "^10.0.0",
     "vk-io": "^4.3.0"
   },
   "devDependencies": {
