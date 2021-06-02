@@ -32,7 +32,7 @@ module.exports = {
     // bot info
     msg.push('- Bot info');
     msg.push(`· version: ${version}`);
-    msg.push(`· prefix: "${prefix}"`);
+    msg.push(`· prefix: "${!Array.isArray(prefix) ? prefix : prefix.join(', ')}"`);
     msg.push(`· isProduction: ${isProd}`);
     msg.push(`· mailListen: ${mailParserEnabled}`);
     msg.push(`· mailListen time: "${mailSchedule}"`);
