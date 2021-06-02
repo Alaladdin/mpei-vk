@@ -3,11 +3,14 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const rand = require('../util/random');
 const { admin } = require('../data/priority');
+const { texts } = require('../data/messages');
 const {
   mpeiLogin,
   mpeiPass,
   chatIds,
 } = require('../config');
+
+const { status: statusTexts } = texts;
 
 module.exports.mailParser = async (vk) => {
   const { upload } = vk;
@@ -56,7 +59,7 @@ module.exports.mailParser = async (vk) => {
     await page.goto('https://legacy.mpei.ru/owa/');
 
     if (!await page.url().match(/https:\/\/legacy.mpei.ru\/owa\//)) {
-      await sendMessageToAdmins(`Кажется, не удалось залогиниться\nСтраница: ${await page.url()}`);
+      await sendMessageToAdmins(`${statusTexts.loginError}\nСтраница: ${await page.url()}`);
       await browser.close();
     }
 
@@ -136,7 +139,7 @@ module.exports.mailParser = async (vk) => {
     .catch((err) => {
       console.info('[MAIL PARSER] error');
       console.error(err);
-      sendMessageToAdmins('[MAIL PARSER] Тотальный краш');
+      sendMessageToAdmins(`[MAIL PARSER] ${statusTexts.crashError}`);
     })
     .then(() => browser.close());
 };

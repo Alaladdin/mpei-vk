@@ -1,4 +1,7 @@
 const findCommand = require('../util/findCommand');
+const { texts } = require('../data/messages');
+
+const { commands: commandsTexts } = texts;
 
 module.exports = {
   name: 'help',
@@ -9,7 +12,7 @@ module.exports = {
     const data = [];
 
     if (!args.length) {
-      data.push('Список моих командуcов:\n');
+      data.push(`${commandsTexts.commandsList}:\n`);
       commands.forEach((c) => data.push(`/${c.name} - ${c.description}`));
       return ctx.send(data.join('\n'));
     }
@@ -17,7 +20,7 @@ module.exports = {
     const requestedCommand = args[0];
     const command = findCommand(requestedCommand, commands);
 
-    if (!command) return ctx.send('Я не нашел эту команду в своем крутейшем списке');
+    if (!command) return ctx.send(commandsTexts.unknownCommand);
 
     data.push(`Name: ${command.name}`);
     if (command.description) data.push(`Description: ${command.description}`);

@@ -4,13 +4,14 @@ const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   isProd,
-  prefix: process.env.PREFIX,
+  prefix: ['/', '!', '@'] || process.env.PREFIX,
   token: isProd ? process.env.TOKEN : process.env.TOKEN_DEV,
   serverAddress: isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
   mailParserEnabled: process.env.MAIL_ENABLE === 'true',
   mpeiLogin: process.env.MPEI_LOGIN,
   mpeiPass: process.env.MPEI_PASS,
   mailSchedule: isProd ? (process.env.MAIL_SHEDULE || '0 0 * * * *') : '0 * * * * *',
+  hateOnQuestions: true,
   serverDateFormat: 'yyyy.MM.dd',
   chatIds: isProd ? [
     {

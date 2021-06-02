@@ -1,5 +1,11 @@
 const { format } = require('../util/pdate');
 const pactuality = require('../functions/actuality');
+const { texts } = require('../data/messages');
+
+const {
+  actuality: actualityTexts,
+  status: statusTexts,
+} = texts;
 
 module.exports = {
   name: 'actuality',
@@ -8,11 +14,11 @@ module.exports = {
   arguments: [
     {
       name: 'lazy',
-      description: 'несрочная актуалочка',
+      description: actualityTexts.arguments.lazy,
     },
   ],
   async execute(ctx, args) {
-    const { actuality } = await pactuality.get().catch(() => ctx.send('Непредвиденская ошибка. Кто-то украл данные из БД'));
+    const { actuality } = await pactuality.get().catch(() => ctx.send(statusTexts.databaseError));
     const [command] = args;
     const msg = [];
 

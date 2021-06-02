@@ -1,20 +1,27 @@
 const { format, add } = require('../util/pdate');
 const { serverDateFormat } = require('../config');
 const pschedule = require('../functions/schedule');
+const { texts } = require('../data/messages');
+
+const {
+  status: statusTexts,
+  schedule: scheduleTexts,
+  commands: commandsTexts,
+} = texts;
 
 module.exports = {
   name: 'schedule',
-  description: 'Расписание на сегодняшний день',
+  description: scheduleTexts.arguments.tomorrowFull,
   aliases: ['s', 'расписание', 'р'],
   usage: '',
   arguments: [
     {
       name: 'tw',
-      description: 'расписание на завтра',
+      description: scheduleTexts.arguments.tomorrowFull.toLowerCase(),
     },
     {
       name: 'week',
-      description: 'расписание на неделю',
+      description: scheduleTexts.arguments.weekFull.toLowerCase(),
     },
   ],
   async execute(ctx, args) {
@@ -25,22 +32,22 @@ module.exports = {
 
     const argsInstructions = {
       week: {
-        name: 'неделю',
+        name: scheduleTexts.arguments.week,
       },
       tw: {
-        name: 'завтра',
+        name: scheduleTexts.arguments.tomorrow,
         start: tomorrow,
         finish: tomorrow,
       },
       empty: {
-        name: 'сегодня',
+        name: scheduleTexts.arguments.today,
         start: today,
         finish: today,
       },
     };
 
     if (command && (command === 'empty' || !argsInstructions[command])) {
-      ctx.reply(`не знаю, что за аргумент такой "${command}"`);
+      ctx.reply(`${commandsTexts.unknownArgument} "${command}"`);
       return;
     }
 
@@ -48,15 +55,15 @@ module.exports = {
     const { schedule } = await pschedule.get(selectedDate) || {};
 
     if (typeof schedule !== 'object' && !Array.isArray(schedule)) {
-      await ctx.send('Ебаные сервера МЭИ снова не отвечают');
+      await ctx.send(statusTexts.mpeiServerError);
       return;
     }
 
-    await ctx.send(`Расписание на ${selectedDate.name}`);
+    await ctx.send(`${scheduleTexts.scheduleFor} ${selectedDate.name}`);
 
     // if schedule data exists
     if (Array.isArray(schedule) && schedule.length <= 0) {
-      ctx.send('Занятий нет 😎');
+      ctx.send(scheduleTexts.noClasses);
       return;
     }
 
