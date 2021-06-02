@@ -9,7 +9,7 @@ const { image: imageTexts } = texts;
 module.exports = {
   name: 'image',
   aliases: ['p', 'photo'],
-  description: 'Включает клавиатуру',
+  description: 'Создает картинку с заданным текстом',
   lowercaseArguments: false,
   async execute(ctx, args, vk) {
     const { upload } = vk;
