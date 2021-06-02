@@ -6,11 +6,13 @@ module.exports = {
   name: 'message',
   async execute(ctx, next, vk) {
     const { messagePayload, text } = ctx;
-    const messagePrefix = prefix.includes(text[0]) && text[0];
 
+    if ((!messagePayload && !text) || !ctx.isUser) return;
+
+    const messagePrefix = text && prefix.includes(text[0]) && text[0];
     await notAllowedMessages(ctx, text);
 
-    if ((!messagePayload && (!text || !messagePrefix)) || !ctx.isUser) return;
+    if (!messagePrefix) return;
 
     // check for user id in black list
     if (priority.blackList.includes(ctx.senderId)) return;
