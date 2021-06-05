@@ -42,7 +42,11 @@ module.exports = {
 
     // call command
     if (command) {
-      await commandsStatsSetters.incrementCommandStats(command.name);
+      const isAdminMess = priority.admin.map((user) => user.userId).includes(ctx.peerId);
+
+      // update command stats
+      if (!isAdminMess) await commandsStatsSetters.incrementCommandStats(command.name);
+
       command.execute(ctx, args, vk);
     }
   },

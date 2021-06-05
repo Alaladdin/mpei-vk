@@ -16,6 +16,11 @@ module.exports = {
       return;
     }
 
+    if (!args.length && stats && Object.keys(stats).length === 0) {
+      ctx.reply(statsTexts.status.noStats);
+      return;
+    }
+
     if (args.length) {
       ctx.send(`command stats\n\nname: ${args[0]}\ncalls: ${stats}`);
       return;
