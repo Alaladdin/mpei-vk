@@ -1,4 +1,5 @@
 const { prefix } = require('../config');
+const { commandsStatsSetters } = require('../data/commandsStats');
 const { execute: notAllowedMessages } = require('../functions/notAllowedMessages');
 const priority = require('../data/priority');
 
@@ -10,6 +11,7 @@ module.exports = {
     if ((!messagePayload && !text) || !ctx.isUser) return;
 
     const messagePrefix = text && prefix.includes(text[0]) && text[0];
+
     await notAllowedMessages(ctx, text);
 
     if (!messagePrefix) return;
@@ -26,7 +28,7 @@ module.exports = {
 
     const findCommand = (commandsList, lookingCommand) => {
       const newMap = new Map([...commandsList]
-        .filter(([k, v]) => v.aliases && v.aliases.includes(lookingCommand)));
+        .filter(([, v]) => v.aliases && v.aliases.includes(lookingCommand)));
 
       const arr = Array.from(newMap);
 
@@ -39,6 +41,9 @@ module.exports = {
     if (command && command.lowercaseArguments && command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
 
     // call command
-    if (command) command.execute(ctx, args, vk);
+    if (command) {
+      await commandsStatsSetters.incrementCommandStats(command.name);
+      command.execute(ctx, args, vk);
+    }
   },
 };

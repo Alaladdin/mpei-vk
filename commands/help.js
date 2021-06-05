@@ -14,6 +14,7 @@ module.exports = {
     if (!args.length) {
       data.push(`${commandsTexts.commandsList}:\n`);
       commands.forEach((c) => data.push(`/${c.name} - ${c.description}`));
+
       return ctx.send(data.join('\n'));
     }
 
@@ -27,12 +28,17 @@ module.exports = {
     if (command.aliases) data.push(`Aliases: ${command.aliases.join(', ')}`);
 
     if (command.arguments) {
-      const commandArgs = [];
-      Object.values(command.arguments).forEach((c) => {
-        commandArgs.push(`${c.name} - ${c.description}`);
-      });
+      if (typeof command.arguments[0] === 'string') {
+        data.push(`Arguments: \n${command.arguments.join(', ')}`);
+      } else {
+        const commandArgs = [];
 
-      data.push(`Arguments: \n${commandArgs.join('\n')}`);
+        command.arguments.forEach((c) => {
+          commandArgs.push(`${c.name} - ${c.description}`);
+        });
+
+        data.push(`Arguments: \n${commandArgs.join('\n')}`);
+      }
     }
 
     return ctx.send(data.join('\n'));

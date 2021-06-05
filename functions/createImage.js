@@ -1,44 +1,75 @@
 const fs = require('fs');
 const path = require('path');
-const { createCanvas } = require('canvas');
+const { createCanvas, loadImage } = require('canvas');
 
 module.exports = {
   name: 'createImage',
   async execute(
     {
-      width = 1000,
-      height = 1000,
       text = 'Гера воняет',
-      fontSize = 128,
+      width = '1000',
+      height = '1000',
+      image = null,
+
+      // theming
       theme = 'dark',
+      fontSize = '128',
+      fontFamily = null,
+      textColor = null,
+      bgColor = null,
+      textAlign = 'center',
+      textPosX = null,
+      textPosY = null,
     },
   ) {
-    const canvas = createCanvas(width, height);
-    const filesPath = path.join(__dirname, '../files');
+    const imgWidth = image ? image.width : parseInt(width, 10);
+    const imgHeight = image ? image.height : parseInt(height, 10);
+    const canvas = createCanvas(imgWidth, imgHeight);
     const ctx = canvas.getContext('2d');
+    const createImageFile = () => {
+      const filesPath = path.join(__dirname, '../files');
+      const buffer = canvas.toBuffer('image/png');
+
+      fs.writeFileSync(path.resolve(filesPath, 'userCreated.png'), buffer);
+    };
     const themes = {
       light: {
-        fontFamily: 'Calibri',
-        textColor: '#fff',
-        bgColor: '#222222',
+        textColor: '121212',
+        bgColor: 'f2f2f2',
       },
       dark: {
-        fontFamily: 'Calibri',
-        textColor: '#121212',
-        bgColor: '#f2f2f2',
+        textColor: 'f2f2f2',
+        bgColor: '121212',
       },
     };
     const selectedTheme = themes[Object.keys(themes).find((key) => key === theme) || 'dark'];
+    const config = {
+      textColor: textColor || selectedTheme.textColor,
+      bgColor: bgColor || selectedTheme.bgColor,
+      fontFamily: fontFamily || 'Calibri',
+      fontSize: parseInt(fontSize, 10),
+      textAlign,
+      textPosition: {
+        x: parseInt(textPosX, 10) || (imgWidth / 2),
+        y: parseInt(textPosY, 10) || (imgHeight / 2) + (parseInt(fontSize, 10) / 4),
+      },
+    };
 
-    ctx.fillStyle = selectedTheme.textColor;
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = selectedTheme.bgColor;
-    ctx.font = `${fontSize}px ${selectedTheme.fontFamily}`;
-    ctx.textAlign = 'center';
+    ctx.fillStyle = `#${config.bgColor}`;
+    ctx.fillRect(0, 0, imgWidth, imgHeight);
+    ctx.fillStyle = `#${config.textColor}`;
+    ctx.font = `${config.fontSize}px ${config.fontFamily}`;
+    ctx.textAlign = textAlign;
+    ctx.fillText(text, config.textPosition.x, config.textPosition.y);
 
-    ctx.fillText(text, width / 2, height / 2);
+    if (!image) return createImageFile();
 
-    const buffer = canvas.toBuffer('image/png');
-    fs.writeFileSync(path.resolve(filesPath, 'userCreated.jpg'), buffer);
+    return loadImage(image.url)
+      .then((img) => {
+        ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
+        ctx.fillText(text, config.textPosition.x, config.textPosition.y);
+
+        createImageFile();
+      });
   },
 };
