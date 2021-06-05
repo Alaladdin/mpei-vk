@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
-const rand = require('../util/random');
-const { admin } = require('../data/priority');
+const sendMessage = require('./sendMessage');
+const sendMessageToAdmins = require('./sendMessageToAdmins');
 const { texts } = require('../data/messages');
 const {
   mpeiLogin,
@@ -27,18 +27,6 @@ module.exports.mailParser = async (vk) => {
   // create files folder, if not exists
   if (!fs.existsSync(filesPath)) fs.mkdirSync(filesPath);
 
-  // sendMessageToAdmins
-  const sendMessageToAdmins = async (message) => {
-    admin.forEach((user) => {
-      vk.api.messages.send({
-        peer_id: user.userId,
-        random_id: rand.int(999),
-        message: message.toString(),
-        dont_parse_links: true,
-      });
-    });
-  };
-
   // takes page screen shot
   const screenShot = async (fileName, options = {}) => {
     const defaults = {
@@ -59,7 +47,7 @@ module.exports.mailParser = async (vk) => {
     await page.goto('https://legacy.mpei.ru/owa/');
 
     if (!await page.url().match(/https:\/\/legacy.mpei.ru\/owa\//)) {
-      await sendMessageToAdmins(`${statusTexts.loginError}\nСтраница: ${await page.url()}`);
+      await sendMessageToAdmins(vk, `${statusTexts.loginError}\nСтраница: ${await page.url()}`);
       await browser.close();
     }
 
@@ -69,7 +57,7 @@ module.exports.mailParser = async (vk) => {
         // open letter
         await element.click();
         if (unreadTitle.match(/(github|disarmed|spam|ticket|Изменение статуса отчёта)/gi)) {
-          await sendMessageToAdmins(['Пропущено сообщение', `Заголовок: ${unreadTitle}`].join('\n'));
+          await sendMessageToAdmins(vk, ['Пропущено сообщение', `Заголовок: ${unreadTitle}`].join('\n'));
           throw new Error('not allowed letter');
         }
       });
@@ -91,12 +79,10 @@ module.exports.mailParser = async (vk) => {
         },
       })
         .then(async (a) => {
-          await vk.api.messages.send({
-            peer_id: chat.peerId,
-            random_id: rand.int(999),
-            message: [...filteredPageText, ...mailLinks].join('\n') || '',
+          await sendMessage(vk, {
+            peerId: chat.peerId,
             attachment: `photo${a.ownerId}_${a.id}`,
-            dont_parse_links: true,
+            message: [...filteredPageText, ...mailLinks].join('\n') || '',
           });
         });
     });
@@ -139,7 +125,7 @@ module.exports.mailParser = async (vk) => {
     .catch((err) => {
       console.info('[MAIL PARSER] error');
       console.error(err);
-      sendMessageToAdmins(`[MAIL PARSER] ${statusTexts.crashError}`);
+      sendMessageToAdmins(vk, `[MAIL PARSER] ${statusTexts.crashError}`);
     })
     .then(() => browser.close());
 };

@@ -1,8 +1,9 @@
 const schedule = require('node-schedule');
 const { format } = require('../util/pdate');
+const getChatMembers = require('../functions/getChatMembers');
+const sendMessage = require('../functions/sendMessage');
 const pactuality = require('../functions/actuality');
 const pschedule = require('../functions/schedule');
-const rand = require('../util/random');
 const { chatIds, serverDateFormat } = require('../config');
 
 module.exports = {
@@ -19,9 +20,8 @@ module.exports = {
         msg.push(`${actuality.content}`);
 
         chatIds.forEach((chat) => {
-          vk.api.messages.send({
-            peer_id: chat.peerId,
-            random_id: rand.int(999),
+          sendMessage(vk, {
+            peerId: chat.peerId,
             message: msg.join('\n'),
           });
         });
@@ -55,11 +55,41 @@ module.exports = {
         itemData.push(lecturer);
 
         chatIds.forEach((chat) => {
-          vk.api.messages.send({
-            peer_id: chat.peerId,
-            random_id: rand.int(999),
+          sendMessage(vk, {
+            peerId: chat.peerId,
             message: itemData.join('\n'),
           });
+        });
+      });
+    });
+
+    // birth days check
+    schedule.scheduleJob('0 0 12 * * *', async () => {
+      const mainChat = chatIds.find((chat) => chat.name === 'main');
+      const res = await getChatMembers(vk, {
+        peerId: mainChat && mainChat.peerId,
+        fields: ['bdate'],
+      })
+        .catch(() => false);
+
+      if (!res) return;
+
+      const today = format(Date.now());
+      const todayBirthUsers = res.profiles.filter((profile) => {
+        if (!profile.bdate) return false;
+
+        const userBirthArr = profile.bdate.split('.');
+        const userBirth = `${userBirthArr[0]}.${userBirthArr[1]}`;
+        return userBirth === today;
+      });
+
+      todayBirthUsers.forEach((user) => {
+        const userFullName = `${user.first_name} ${user.last_name}`;
+
+        sendMessage(vk, {
+          peerId: mainChat.peerId,
+          message: `У @id${user.id} (${userFullName}) сегодня день рождения`,
+          dontParseLinks: false,
         });
       });
     });

@@ -13,7 +13,6 @@ module.exports = {
   name: 'schedule',
   description: scheduleTexts.arguments.tomorrowFull,
   aliases: ['s', 'расписание', 'р'],
-  usage: '',
   arguments: [
     {
       name: 'tw',

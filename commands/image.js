@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { texts } = require('../data/messages');
-const { execute: createImage } = require('../functions/createImage');
-const rand = require('../util/random');
+const sendMessage = require('../functions/sendMessage');
+const createImage = require('../functions/createImage');
 
 const { image: imageTexts } = texts;
 
@@ -56,7 +56,7 @@ module.exports = {
   async execute(ctx, args, vk) {
     const { upload } = vk;
     const { peerId, attachments } = ctx;
-    const configBlackListOptions = ['image'];
+    const configBlackListOptions = ['text', 'image'];
     let filteredArgs = args;
     const getAttachImage = () => {
       const { sizes } = attachments[0];
@@ -104,11 +104,9 @@ module.exports = {
       },
     });
 
-    await vk.api.messages.send({
-      peer_id: peerId,
-      random_id: rand.int(999),
+    await sendMessage(vk, {
+      peerId,
       attachment: `photo${uploadedImage.ownerId}_${uploadedImage.id}`,
-      dont_parse_links: true,
     });
   },
 };

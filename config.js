@@ -24,6 +24,10 @@ module.exports = {
     },
   ] : [
     {
+      name: 'main',
+      peerId: 2000000003,
+    },
+    {
       name: 'trash',
       peerId: 2000000003,
     },
