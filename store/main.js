@@ -1,5 +1,5 @@
 const events = require('events');
-const { getStore, setStore } = require('../functions/storeConfigMethods');
+const { getStore, setStore } = require('../functions/storeMethods');
 
 events.captureRejections = true;
 
