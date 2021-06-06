@@ -2,7 +2,7 @@ const rand = require('../util/random');
 
 module.exports = async (vk, {
   peerId = null,
-  message = null,
+  message = '',
   attachment = null,
   dontParseLinks = true,
 }) => {
