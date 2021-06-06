@@ -7,6 +7,7 @@ module.exports = {
   prefix: ['/', '!', '@'] || process.env.PREFIX,
   token: isProd ? process.env.TOKEN : process.env.TOKEN_DEV,
   serverAddress: isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
+  authToken: process.env.AUTH_TOKEN,
   mailParserEnabled: process.env.MAIL_ENABLE === 'true',
   mpeiLogin: process.env.MPEI_LOGIN,
   mpeiPass: process.env.MPEI_PASS,

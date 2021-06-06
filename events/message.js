@@ -1,5 +1,5 @@
 const { prefix } = require('../config');
-const { commandsStatsSetters } = require('../data/commandsStats');
+const { getters: storeGetters, setters: storeSetters } = require('../store');
 const { execute: notAllowedMessages } = require('../functions/notAllowedMessages');
 const priority = require('../data/priority');
 
@@ -8,7 +8,10 @@ module.exports = {
   async execute(ctx, next, vk) {
     const { messagePayload, text } = ctx;
 
-    if ((!messagePayload && !text) || !ctx.isUser) return;
+    const isAdminMess = priority.admin.map((user) => user.userId).includes(ctx.peerId);
+    const isBotActive = storeGetters.getBotStatus();
+
+    if ((!isBotActive && !isAdminMess) || (!messagePayload && !text) || !ctx.isUser) return;
 
     const messagePrefix = text && prefix.includes(text[0]) && text[0];
 
@@ -33,19 +36,21 @@ module.exports = {
       const arr = Array.from(newMap);
 
       if (arr.length) return arr[0][1];
+
+      return null;
     };
 
     // get command by name or alias
     const command = vk.commands.get(commandName) || findCommand(vk.commands, commandName);
 
-    if (command && command.lowercaseArguments && command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
+    if (command && command.lowercaseArguments && command.lowercaseArguments !== false) {
+      args = args.map((arg) => arg.toLowerCase());
+    }
 
     // call command
     if (command) {
-      const isAdminMess = priority.admin.map((user) => user.userId).includes(ctx.peerId);
-
       // update command stats
-      if (!isAdminMess) await commandsStatsSetters.incrementCommandStats(command.name);
+      if (!isAdminMess) await storeSetters.incrementCommandStats(command.name);
 
       command.execute(ctx, args, vk);
     }

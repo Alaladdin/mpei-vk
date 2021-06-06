@@ -1,4 +1,4 @@
-const { commandsStatsGetters } = require('../data/commandsStats');
+const { getters: storeGetters } = require('../store');
 const { texts } = require('../data/messages');
 
 const { stats: statsTexts } = texts;
@@ -9,7 +9,7 @@ module.exports = {
   description: statsTexts.description,
   async execute(ctx, args) {
     const msg = [`${statsTexts.description}\n`];
-    const stats = await commandsStatsGetters.getCommandStats(args.length && args[0]);
+    const stats = await storeGetters.getCommandStats(args.length && args[0]);
 
     if (args.length && !Number.isInteger(stats)) {
       ctx.reply(statsTexts.status.noCommandStats);

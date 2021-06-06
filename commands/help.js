@@ -1,5 +1,6 @@
 const findCommand = require('../util/findCommand');
 const { texts } = require('../data/messages');
+const priority = require('../data/priority');
 
 const { commands: commandsTexts } = texts;
 
@@ -7,21 +8,30 @@ module.exports = {
   name: 'help',
   description: 'Получает информацию по командам',
   aliases: ['h', 'commands'],
+  arguments: [
+    {
+      name: 'all',
+      description: 'выводит полный список команд',
+    },
+  ],
   async execute(ctx, args, vk) {
     const { commands } = vk;
     const data = [];
-
-    if (!args.length) {
+    const isAdminRequest = priority.admin.map((a) => a.userId).includes(ctx.peerId);
+    const showAllCommandsForce = isAdminRequest && args[0] === 'all';
+    if (!args.length || args[0] === 'all') {
       data.push(`${commandsTexts.commandsList}:\n`);
-      commands.forEach((c) => data.push(`/${c.name} - ${c.description}`));
 
+      commands.forEach((c) => (showAllCommandsForce || !c.hidden) && data.push(`/${c.name} - ${c.description}`));
       return ctx.send(data.join('\n'));
     }
 
     const requestedCommand = args[0];
     const command = findCommand(requestedCommand, commands);
 
-    if (!command) return ctx.send(commandsTexts.unknownCommand);
+    if (!command || (command.hidden && !isAdminRequest)) {
+      return ctx.send(commandsTexts.unknownCommand);
+    }
 
     data.push(`Name: ${command.name}`);
     if (command.description) data.push(`Description: ${command.description}`);
