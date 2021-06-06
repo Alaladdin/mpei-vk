@@ -1,10 +1,10 @@
 const fetch = require('node-fetch');
-const { serverAddress } = require('../config');
+const { getScheduleUrl } = require('../data/requests');
 
 module.exports = {
   name: 'actuality',
   async get({ start, finish } = {}) {
-    const url = new URL(`${serverAddress}/getSchedule/`);
+    const url = new URL(getScheduleUrl);
 
     if (start) url.searchParams.append('start', start);
     if (finish) url.searchParams.append('finish', finish);

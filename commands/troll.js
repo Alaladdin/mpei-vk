@@ -8,7 +8,7 @@ module.exports = {
   lowercaseArguments: false,
   async execute(ctx, args) {
     let s = trollings.default; // selected trolligns array
-    const randomTrolling = () => s[rand.int(s.length)];
+    const randomTrolling = () => s[rand.int({ max: s.length - 1 })];
 
     if (!args || !args.length) {
       ctx.reply('Кого троллить то?');

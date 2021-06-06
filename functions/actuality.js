@@ -1,11 +1,11 @@
 const fetch = require('node-fetch');
-const { serverAddress } = require('../config');
+const { getActualityUrl } = require('../data/requests');
 
 module.exports = {
   name: 'actuality',
   async get() {
     // get actuality data
-    return fetch(`${serverAddress}/getActuality`)
+    return fetch(getActualityUrl)
       .then(async (res) => {
         const json = await res.json();
 

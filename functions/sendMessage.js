@@ -12,7 +12,7 @@ module.exports = async (vk, {
     peer_id: peerId,
     message,
     attachment,
-    random_id: rand.int(999),
+    random_id: rand.int({ max: 999 }),
     dont_parse_links: dontParseLinks,
   });
 };

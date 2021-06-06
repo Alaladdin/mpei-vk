@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const { version } = require('../package.json');
+const { getUniversalUrl } = require('../data/requests');
 const {
   serverAddress,
   prefix,
@@ -14,7 +15,7 @@ module.exports = {
   aliases: ['info', 'i'],
   async execute(ctx) {
     const msg = [];
-    const serverData = (query) => fetch(`${serverAddress}/${query}`)
+    const serverData = (query) => fetch(getUniversalUrl(query))
       .then(async (res) => {
         const json = await res.json();
 

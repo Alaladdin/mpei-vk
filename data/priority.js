@@ -1,5 +1,5 @@
 const { isProd } = require('../config');
-
+// todo if admin not in chat -> disable bot
 module.exports = {
   admin: isProd ? [
     {

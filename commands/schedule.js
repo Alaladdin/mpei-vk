@@ -1,3 +1,4 @@
+const { startOfISOWeek, endOfISOWeek } = require('date-fns');
 const { format, add } = require('../util/pdate');
 const { serverDateFormat } = require('../config');
 const pschedule = require('../functions/schedule');
@@ -22,6 +23,14 @@ module.exports = {
       name: 'week',
       description: scheduleTexts.arguments.weekFull.toLowerCase(),
     },
+    {
+      name: 'nextWeek',
+      description: scheduleTexts.arguments.nextWeekFull.toLowerCase(),
+    },
+    {
+      name: 'month',
+      description: scheduleTexts.arguments.monthFull.toLowerCase(),
+    },
   ],
   async execute(ctx, args) {
     const today = format(new Date(), serverDateFormat);
@@ -30,13 +39,23 @@ module.exports = {
     const [command] = args;
 
     const argsInstructions = {
-      week: {
-        name: scheduleTexts.arguments.week,
-      },
       tw: {
         name: scheduleTexts.arguments.tomorrow,
         start: tomorrow,
         finish: tomorrow,
+      },
+      week: {
+        name: scheduleTexts.arguments.week,
+      },
+      nextWeek: {
+        name: scheduleTexts.arguments.nextWeek,
+        start: format(startOfISOWeek(add(today, { weeks: 1 })), serverDateFormat),
+        finish: format(endOfISOWeek(add(today, { weeks: 1 })), serverDateFormat),
+      },
+      month: {
+        name: scheduleTexts.arguments.month,
+        start: today,
+        finish: format(add(today, { months: '1' }), serverDateFormat),
       },
       empty: {
         name: scheduleTexts.arguments.today,
