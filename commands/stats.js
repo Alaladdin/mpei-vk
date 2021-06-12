@@ -1,7 +1,7 @@
 const { getters: storeGetters } = require('../store');
 const { texts } = require('../data/messages');
 
-const { stats: statsTexts } = texts;
+const { stats: statsTexts, status: statusTexts } = texts;
 
 module.exports = {
   name: 'stats',
@@ -9,7 +9,13 @@ module.exports = {
   description: statsTexts.description,
   async execute(ctx, args) {
     const msg = [`${statsTexts.description}\n`];
-    const stats = await storeGetters.getCommandStats(args.length && args[0]);
+    const stats = await storeGetters.getCommandStats(args.length && args[0])
+      .catch(async () => {
+        ctx.reply(statusTexts.databaseError);
+        return false;
+      });
+
+    if (!stats) return;
 
     if (args.length && !Number.isInteger(stats)) {
       ctx.reply(statsTexts.status.noCommandStats);
@@ -26,12 +32,16 @@ module.exports = {
       return;
     }
 
-    const sortedStats = stats && Object.entries(stats)
-      .sort(([, a], [, b]) => b - a)
-      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+    Object.entries(stats).forEach(([key, val]) => {
+      const value = [];
 
-    Object.entries(sortedStats).forEach(([key, val]) => msg.push(`${key}: ${val}`));
+      Object.entries(val).forEach(([k, v]) => {
+        value.push(`\n- ${k}: ${v}`);
+      });
 
-    ctx.send(msg.join('\n'));
+      msg.push(`# ${key}: ${value.join('')}`);
+    });
+
+    ctx.send(msg.join('\n\n'));
   },
 };

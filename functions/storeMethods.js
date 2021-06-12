@@ -8,10 +8,6 @@ const getStore = () => fetch(getStoreUrl)
     if (!res.ok) throw new Error(res.statusText);
 
     return json.store;
-  })
-  .catch((err) => {
-    console.error(err);
-    return err;
   });
 
 const setStore = async (store) => fetch(setStoreUrl, {

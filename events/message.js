@@ -1,6 +1,7 @@
 const { prefix } = require('../config');
 const { getters: storeGetters, setters: storeSetters } = require('../store');
 const { execute: notAllowedMessages } = require('../functions/notAllowedMessages');
+const isAdmin = require('../functions/isAdmin');
 const priority = require('../data/priority');
 
 module.exports = {
@@ -8,10 +9,9 @@ module.exports = {
   async execute(ctx, next, vk) {
     const { messagePayload, text } = ctx;
 
-    const isAdminMess = priority.admin.map((user) => user.userId).includes(ctx.peerId);
-    const isBotActive = storeGetters.getBotStatus();
+    const isDisabled = !storeGetters.getBotStatus() && !isAdmin(ctx.senderId);
 
-    if ((!isBotActive && !isAdminMess) || (!messagePayload && !text) || !ctx.isUser) return;
+    if (isDisabled || (!messagePayload && !text) || !ctx.isUser) return;
 
     const messagePrefix = text && prefix.includes(text[0]) && text[0];
 
@@ -50,7 +50,9 @@ module.exports = {
     // call command
     if (command) {
       // update command stats
-      if (!isAdminMess) await storeSetters.incrementCommandStats(command.name);
+      if (isAdmin(ctx.senderId) && command.stats !== false) {
+        await storeSetters.incrementCommandStats(command.name, commandName);
+      }
 
       command.execute(ctx, args, vk);
     }

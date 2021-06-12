@@ -8,16 +8,39 @@ let state = {};
 
 (async () => {
   const remoteStore = await getStore().catch(() => ({}));
+  const isRemoteEmpty = !Object.keys(remoteStore).length;
+
+  const defaults = {
+    isBotActive: true,
+    isHateOnQuestions: true,
+    hateTriggersCount: 0,
+    commandsStats: {},
+    disabledChats: [],
+    bannedUsers: [53265470],
+    actualityAutopost: {
+      chatIds: [],
+      time: '0 0 9 * * *',
+    },
+  };
 
   state = {
-    isBotActive: remoteStore && typeof remoteStore.isBotActive === 'boolean' ? remoteStore.isBotActive : true,
-    commandsStats: remoteStore.commandsStats || {},
+    isBotActive: isRemoteEmpty ? defaults.isBotActive : remoteStore.isBotActive,
+    isHateOnQuestions: isRemoteEmpty ? defaults.isHateOnQuestions : remoteStore.isHateOnQuestions,
+    hateTriggersCount: isRemoteEmpty ? defaults.hateTriggersCount : remoteStore.hateTriggersCount,
+    commandsStats: isRemoteEmpty ? defaults.commandsStats : remoteStore.commandsStats,
+    disabledChats: isRemoteEmpty ? defaults.disabledChats : remoteStore.disabledChats,
+    bannedUsers: isRemoteEmpty ? defaults.bannedUsers : remoteStore.bannedUsers,
+    actualityAutopost: isRemoteEmpty ? defaults.actualityAutopost : remoteStore.actualityAutopost,
   };
 })();
 
 const getters = {
+  getState: () => state,
   getBotStatus: () => state.isBotActive,
   getCommandStats: async (c) => (c ? state.commandsStats[c] : state.commandsStats),
+  getIsHateOnQuestions: () => state.isHateOnQuestions,
+  getHateTriggersCount: () => state.hateTriggersCount,
+  getDisabledChats: () => state.disabledChats,
 };
 
 const setters = {
@@ -33,17 +56,41 @@ const setters = {
     state.isBotActive = status;
     return this.listener('botStatus');
   },
-  async incrementCommandStats(command) {
-    const stats = state.commandsStats[command];
+  async setIsHateOnQuestions(status = true) {
+    state.isHateOnQuestions = status;
+    return this.listener('isHateOnQuestions');
+  },
+  async setChatDisabled(chatId) {
+    if (!chatId) return false;
 
-    state.commandsStats[command] = (stats && stats > 0) ? stats + 1 : 1;
+    state.disabledChats.push(chatId);
+
+    return this.listener('disabledChats');
+  },
+  async incrementCommandStats(command, alias) {
+    const commandStats = state.commandsStats && state.commandsStats[command];
+    if (commandStats) {
+      const aliasStats = state.commandsStats[command][alias];
+
+      state.commandsStats[command][alias] = (aliasStats && aliasStats > 0) ? aliasStats + 1 : 1;
+    } else {
+      state.commandsStats[command] = {
+        [alias]: 1,
+      };
+    }
 
     return this.listener('commandsStats');
+  },
+  async incrementHateTriggersCount() {
+    const count = state.hateTriggersCount;
+
+    state.hateTriggersCount = (count && count > 0) ? count + 1 : 1;
+
+    return this.listener('hateTriggersCount');
   },
 };
 
 module.exports = {
-  state,
   getters,
   setters,
   eventEmitter,

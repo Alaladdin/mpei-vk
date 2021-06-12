@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { texts } = require('../data/messages');
+const { options: optionsRegex } = require('../data/regex');
 const sendMessage = require('../functions/sendMessage');
 const createImage = require('../functions/createImage');
 
@@ -74,7 +75,7 @@ module.exports = {
       return;
     }
 
-    const argsConfig = args.join(' ').match(/([^\s]+:[^\s]+)/gim);
+    const argsConfig = args.join(' ').match(optionsRegex);
 
     if (argsConfig) {
       argsConfig.forEach((option) => {

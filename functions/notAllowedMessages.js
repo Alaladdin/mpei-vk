@@ -1,10 +1,7 @@
-const { hateOnQuestions } = require('../config');
 const { texts, blacklist } = require('../data/messages');
+const { getters: storeGetters, setters: storeSetters } = require('../store');
 
 const { replies, questions } = texts;
-
-// todo bot toggle reply via command
-// todo bot get store config from server
 
 module.exports = {
   name: 'notAllowedMessages',
@@ -15,6 +12,12 @@ module.exports = {
     if (blacklist.includes(userMessage)) ctx.reply(replies.dontDoThat);
 
     // hate on stupid questions
-    if (hateOnQuestions && questions.find((question) => userMessage.match(question))) ctx.reply(replies.fuckThisQuestion);
+    const isHateOnQuestions = await storeGetters.getIsHateOnQuestions();
+    const isTriggerMessage = questions.find((question) => userMessage.match(question));
+
+    if (isHateOnQuestions && isTriggerMessage) {
+      await storeSetters.incrementHateTriggersCount();
+      ctx.reply(replies.fuckThisQuestion);
+    }
   },
 };
