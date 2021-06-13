@@ -6,10 +6,14 @@ module.exports = {
       name: 'AL',
       userId: 161372337,
     },
-    // {
-    //   name: 'Omar',
-    //   userId: 457248723,
-    // },
+    {
+      name: 'Drobot',
+      userId: 102596143,
+    },
+    {
+      name: 'Omar',
+      userId: 457248723,
+    },
   ] : [
     {
       name: 'AL',

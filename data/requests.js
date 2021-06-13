@@ -7,4 +7,7 @@ module.exports = {
   getActualityUrl: `${serverAddress}/getActuality`,
   setActualityUrl: `${serverAddress}/setActuality?authToken=${authToken}`,
   getScheduleUrl: `${serverAddress}/getSchedule/`,
+  getFAQUrl: `${serverAddress}/getFAQ?authToken=${authToken}`,
+  setFAQUrl: `${serverAddress}/setFAQ?authToken=${authToken}`,
+  removeFAQUrl: `${serverAddress}/deleteFAQ?authToken=${authToken}`,
 };
