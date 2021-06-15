@@ -50,7 +50,7 @@ module.exports = {
     // call command
     if (command) {
       // update command stats
-      if (isAdmin(ctx.senderId) && command.stats !== false) {
+      if (!isAdmin(ctx.senderId) && command.stats !== false) {
         await storeSetters.incrementCommandStats(command.name, commandName);
       }
 

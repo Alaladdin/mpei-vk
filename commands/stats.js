@@ -1,4 +1,5 @@
-const { getters: storeGetters } = require('../store');
+const isAdmin = require('../functions/isAdmin');
+const { getters: storeGetters, setters: storeSetters } = require('../store');
 const { texts } = require('../data/messages');
 
 const { stats: statsTexts, status: statusTexts } = texts;
@@ -7,6 +8,12 @@ module.exports = {
   name: 'stats',
   aliases: ['statistics', 'st'],
   description: statsTexts.description,
+  arguments: [
+    {
+      name: 'reset',
+      description: 'Очищает статистику',
+    },
+  ],
   async execute(ctx, args) {
     const msg = [`${statsTexts.description}\n`];
     const stats = await storeGetters.getCommandStats(args.length && args[0])
@@ -15,20 +22,15 @@ module.exports = {
         return false;
       });
 
+    if (args[0] === 'reset' && isAdmin(ctx.senderId)) {
+      await storeSetters.resetCommandStats();
+      ctx.reply(statsTexts.status.statsCleared);
+    }
+
     if (!stats) return;
 
-    if (args.length && !Number.isInteger(stats)) {
-      ctx.reply(statsTexts.status.noCommandStats);
-      return;
-    }
-
-    if (!args.length && stats && Object.keys(stats).length === 0) {
+    if (stats && Object.keys(stats).length === 0) {
       ctx.reply(statsTexts.status.noStats);
-      return;
-    }
-
-    if (args.length) {
-      ctx.send(`command stats\n\nname: ${args[0]}\ncalls: ${stats}`);
       return;
     }
 

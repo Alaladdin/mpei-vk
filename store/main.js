@@ -67,6 +67,10 @@ const setters = {
 
     return this.listener('disabledChats');
   },
+  async resetCommandStats() {
+    state.commandsStats = {};
+    return this.listener('commandsStats');
+  },
   async incrementCommandStats(command, alias) {
     const commandStats = state.commandsStats && state.commandsStats[command];
     if (commandStats) {
