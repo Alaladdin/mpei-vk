@@ -41,6 +41,7 @@ const getters = {
   getIsHateOnQuestions: () => state.isHateOnQuestions,
   getHateTriggersCount: () => state.hateTriggersCount,
   getDisabledChats: () => state.disabledChats,
+  getActualityConfig: () => state.actualityAutopost,
 };
 
 const setters = {

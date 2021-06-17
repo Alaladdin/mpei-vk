@@ -3,7 +3,7 @@ const { getters: storeGetters, setters: storeSetter } = require('../store');
 
 module.exports = {
   name: 'config:hate',
-  description: 'Получает и меняет настройки хейта на тупые вопросы',
+  description: 'настройки хейта на тупые вопросы',
   hidden: true,
   admin: true,
   stats: false,

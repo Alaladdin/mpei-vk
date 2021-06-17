@@ -12,24 +12,24 @@ const {
 
 module.exports = {
   name: 'schedule',
-  description: scheduleTexts.arguments.tomorrowFull,
+  description: scheduleTexts.description,
   aliases: ['s', 'расписание', 'р'],
   arguments: [
     {
       name: 'tw',
-      description: scheduleTexts.arguments.tomorrowFull.toLowerCase(),
+      description: scheduleTexts.arguments.tomorrowFull,
     },
     {
       name: 'week',
-      description: scheduleTexts.arguments.weekFull.toLowerCase(),
+      description: scheduleTexts.arguments.weekFull,
     },
     {
       name: 'nextWeek',
-      description: scheduleTexts.arguments.nextWeekFull.toLowerCase(),
+      description: scheduleTexts.arguments.nextWeekFull,
     },
     {
       name: 'month',
-      description: scheduleTexts.arguments.monthFull.toLowerCase(),
+      description: scheduleTexts.arguments.monthFull,
     },
   ],
   async execute(ctx, args) {

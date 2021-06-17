@@ -6,7 +6,7 @@ const { commands: commandsTexts } = texts;
 
 module.exports = {
   name: 'help',
-  description: 'Получает информацию по командам',
+  description: 'информация по командам',
   aliases: ['h', 'commands'],
   arguments: [
     {

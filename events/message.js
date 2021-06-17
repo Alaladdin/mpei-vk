@@ -8,14 +8,14 @@ module.exports = {
   name: 'message',
   async execute(ctx, next, vk) {
     const { messagePayload, text } = ctx;
-
-    const isDisabled = !storeGetters.getBotStatus() && !isAdmin(ctx.senderId);
+    const isAdminMess = isAdmin(ctx.senderId);
+    const isDisabled = !storeGetters.getBotStatus() && !isAdminMess;
 
     if (isDisabled || (!messagePayload && !text) || !ctx.isUser) return;
 
     const messagePrefix = text && prefix.includes(text[0]) && text[0];
 
-    await notAllowedMessages(ctx, text);
+    if (!isAdminMess) await notAllowedMessages(ctx, text);
 
     if (!messagePrefix) return;
 
@@ -50,7 +50,7 @@ module.exports = {
     // call command
     if (command) {
       // update command stats
-      if (!isAdmin(ctx.senderId) && command.stats !== false) {
+      if (!isAdminMess && command.stats !== false) {
         await storeSetters.incrementCommandStats(command.name, commandName);
       }
 

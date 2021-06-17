@@ -2,7 +2,7 @@ const { get: getFAQ } = require('../functions/FAQ');
 
 module.exports = {
   name: 'faq',
-  description: 'Выводит FAQ',
+  description: 'FAQ',
   aliases: ['f', 'qa'],
   async execute(ctx) {
     const { faq } = await getFAQ() || {};

@@ -3,7 +3,7 @@ const trollings = require('../data/trollings');
 
 module.exports = {
   name: 'troll',
-  description: 'Троллит, притом жейско. Используйте с осторожностью, вы запросто можете ранить чьи-то чувства',
+  description: 'троллит, притом жейско. Используйте с осторожностью, вы запросто можете ранить чьи-то чувства',
   aliases: ['t'],
   lowercaseArguments: false,
   async execute(ctx, args) {

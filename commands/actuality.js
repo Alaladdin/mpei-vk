@@ -9,7 +9,7 @@ const {
 
 module.exports = {
   name: 'actuality',
-  description: 'Получает "актуалочку"',
+  description: 'актуалочка',
   aliases: ['a', 'act', 'news', 'акт'],
   arguments: [
     {

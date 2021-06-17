@@ -3,7 +3,7 @@ const { getters: storeGetters, setters: storeSetter } = require('../store');
 
 module.exports = {
   name: 'config:bot',
-  description: 'Получает состояние бота (включен, выключен)',
+  description: 'Состояние бота (включен, выключен)',
   hidden: true,
   admin: true,
   stats: false,

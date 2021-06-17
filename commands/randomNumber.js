@@ -3,7 +3,7 @@ const rand = require('../util/random');
 module.exports = {
   name: 'random',
   aliases: ['rand'],
-  description: 'Генератор случайных чисел',
+  description: 'генератор случайных чисел',
   lowercaseArguments: false,
   arguments: [
     {

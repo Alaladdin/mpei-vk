@@ -1,9 +1,12 @@
 const { Keyboard } = require('vk-io');
+const isAdmin = require('../functions/isAdmin');
 
 module.exports = {
   name: 'start',
-  description: 'Включает клавиатуру',
+  description: 'включает клавиатуру',
   async execute(ctx) {
+    if (!isAdmin(ctx.senderId) && ctx.peerType !== 'user') return;
+
     await ctx.send({
       message: 'Клавиатура включена',
       keyboard: Keyboard

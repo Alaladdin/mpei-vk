@@ -11,7 +11,7 @@ module.exports = {
   arguments: [
     {
       name: 'reset',
-      description: 'Очищает статистику',
+      description: 'чистит статистику',
     },
   ],
   async execute(ctx, args) {

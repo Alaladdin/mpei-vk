@@ -11,7 +11,7 @@ const {
 
 module.exports = {
   name: 'status',
-  description: 'Выводит информацию о боте',
+  description: 'информация о боте',
   aliases: ['info', 'i'],
   async execute(ctx) {
     const msg = [];
