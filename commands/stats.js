@@ -16,7 +16,7 @@ module.exports = {
   ],
   async execute(ctx, args) {
     const msg = [`${statsTexts.description}\n`];
-    const stats = await storeGetters.getCommandStats(args.length && args[0])
+    const stats = await storeGetters.getCommandStats()
       .catch(async () => {
         ctx.reply(statusTexts.databaseError);
         return false;
