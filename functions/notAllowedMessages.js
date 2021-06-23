@@ -7,6 +7,7 @@ module.exports = {
   name: 'notAllowedMessages',
   async execute(ctx, message) {
     const userMessage = message.toLowerCase();
+    const hateWhiteList = storeGetters.getHateWhiteList();
 
     // blacklist words
     if (blacklist.includes(userMessage)) ctx.reply(replies.dontDoThat);
@@ -15,7 +16,7 @@ module.exports = {
     const isHateOnQuestions = await storeGetters.getIsHateOnQuestions();
     const isTriggerMessage = questions.find((question) => userMessage.match(question));
 
-    if (isHateOnQuestions && isTriggerMessage) {
+    if (isHateOnQuestions && isTriggerMessage && !hateWhiteList.includes(ctx.senderId)) {
       await storeSetters.incrementHateTriggersCount();
       ctx.reply(replies.fuckThisQuestion);
     }

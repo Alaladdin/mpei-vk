@@ -13,6 +13,7 @@ let state = {};
   const defaults = {
     isBotActive: true,
     isHateOnQuestions: true,
+    hateWhiteList: [212053343, 160477317],
     hateTriggersCount: 0,
     commandsStats: {},
     disabledChats: [],
@@ -26,6 +27,7 @@ let state = {};
   state = {
     isBotActive: isRemoteEmpty ? defaults.isBotActive : remoteStore.isBotActive,
     isHateOnQuestions: isRemoteEmpty ? defaults.isHateOnQuestions : remoteStore.isHateOnQuestions,
+    hateWhiteList: isRemoteEmpty ? defaults.hateWhiteList : remoteStore.hateWhiteList,
     hateTriggersCount: isRemoteEmpty ? defaults.hateTriggersCount : remoteStore.hateTriggersCount,
     commandsStats: isRemoteEmpty ? defaults.commandsStats : remoteStore.commandsStats,
     disabledChats: isRemoteEmpty ? defaults.disabledChats : remoteStore.disabledChats,
@@ -39,6 +41,7 @@ const getters = {
   getBotStatus: () => state.isBotActive,
   getCommandStats: async (c) => (c ? state.commandsStats[c] : state.commandsStats),
   getIsHateOnQuestions: () => state.isHateOnQuestions,
+  getHateWhiteList: () => state.hateWhiteList,
   getHateTriggersCount: () => state.hateTriggersCount,
   getDisabledChats: () => state.disabledChats,
   getActualityConfig: () => state.actualityAutopost,
