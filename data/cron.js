@@ -63,7 +63,7 @@ module.exports = {
       });
     });
 
-    // birth days check
+    // birthdays check
     schedule.scheduleJob('0 0 12 * * *', async () => {
       const mainChat = chatIds.find((chat) => chat.name === 'main');
       const res = await getChatMembers(vk, {
@@ -74,7 +74,7 @@ module.exports = {
 
       if (!res) return;
 
-      const today = format(Date.now());
+      const today = format(Date.now(), 'd.M');
       const todayBirthUsers = res.profiles.filter((profile) => {
         if (!profile.bdate) return false;
 

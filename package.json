@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.14.4",
+  "version": "1.14.5",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
@@ -32,10 +32,10 @@
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
     "puppeteer": "^10.0.0",
-    "vk-io": "^4.3.0"
+    "vk-io": "^4.3.1"
   },
   "devDependencies": {
-    "eslint": "^7.28.0",
+    "eslint": "^7.29.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-no-loops": "^0.3.0",
