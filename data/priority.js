@@ -8,11 +8,11 @@ module.exports = {
     },
     {
       name: 'Drobot',
-      userId: 102596143,
+      userId: 425704393,
     },
     {
       name: 'Omar',
-      userId: 457248723,
+      userId: 45052566,
     },
   ] : [
     {
