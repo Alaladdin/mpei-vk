@@ -9,30 +9,36 @@ let state = {};
 (async () => {
   const remoteStore = await getStore().catch(() => ({}));
   const isRemoteEmpty = !Object.keys(remoteStore).length;
-
   const defaults = {
     isBotActive: true,
     isHateOnQuestions: true,
+    // isMailListen: true,
+    // admins: [161372337, 425704393, 45052566],
     hateWhiteList: [212053343, 160477317],
     hateTriggersCount: 0,
     commandsStats: {},
-    disabledChats: [],
+    // disabledChats: [],
     bannedUsers: [53265470],
     actualityAutopost: {
-      chatIds: [],
+      enabled: true,
+      chatIds: [2000000004, 2000000005],
       time: '0 0 9 * * *',
     },
   };
+  const getStateValue = (key) => ((isRemoteEmpty || !remoteStore[key])
+    ? defaults[key]
+    : remoteStore[key]);
 
   state = {
-    isBotActive: isRemoteEmpty ? defaults.isBotActive : remoteStore.isBotActive,
-    isHateOnQuestions: isRemoteEmpty ? defaults.isHateOnQuestions : remoteStore.isHateOnQuestions,
-    hateWhiteList: isRemoteEmpty ? defaults.hateWhiteList : remoteStore.hateWhiteList,
-    hateTriggersCount: isRemoteEmpty ? defaults.hateTriggersCount : remoteStore.hateTriggersCount,
-    commandsStats: isRemoteEmpty ? defaults.commandsStats : remoteStore.commandsStats,
-    disabledChats: isRemoteEmpty ? defaults.disabledChats : remoteStore.disabledChats,
-    bannedUsers: isRemoteEmpty ? defaults.bannedUsers : remoteStore.bannedUsers,
-    actualityAutopost: isRemoteEmpty ? defaults.actualityAutopost : remoteStore.actualityAutopost,
+    isBotActive: getStateValue('isBotActive'),
+    isHateOnQuestions: getStateValue('isHateOnQuestions'),
+    // admins: getStateValue('admins'),
+    hateWhiteList: getStateValue('hateWhiteList'),
+    hateTriggersCount: getStateValue('hateTriggersCount'),
+    commandsStats: getStateValue('commandsStats'),
+    // disabledChats: getStateValue('disabledChats'),
+    bannedUsers: getStateValue('bannedUsers'),
+    actualityAutopost: getStateValue('actualityAutopost'),
   };
 })();
 
@@ -43,7 +49,6 @@ const getters = {
   getIsHateOnQuestions: () => state.isHateOnQuestions,
   getHateWhiteList: () => state.hateWhiteList,
   getHateTriggersCount: () => state.hateTriggersCount,
-  getDisabledChats: () => state.disabledChats,
   getActualityConfig: () => state.actualityAutopost,
 };
 
@@ -64,12 +69,13 @@ const setters = {
     state.isHateOnQuestions = status;
     return this.listener('isHateOnQuestions');
   },
-  async setChatDisabled(chatId) {
-    if (!chatId) return false;
-
-    state.disabledChats.push(chatId);
-
-    return this.listener('disabledChats');
+  async setAutopostingStatus(status = true) {
+    state.actualityAutopost.enabled = status;
+    return this.listener('setAutopostingStatus');
+  },
+  async setAutopostingTime(time = '0 0 9 * * *') {
+    state.actualityAutopost.time = time;
+    return this.listener('setAutopostingTime');
   },
   async resetCommandStats() {
     state.commandsStats = {};

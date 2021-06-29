@@ -1,11 +1,10 @@
-const isAdmin = require('../functions/isAdmin');
 const { getters: storeGetters, setters: storeSetter } = require('../store');
 
 module.exports = {
   name: 'config:hate',
   description: 'настройки хейта на тупые вопросы',
   hidden: true,
-  admin: true,
+  adminOnly: true,
   stats: false,
   arguments: [
     {
@@ -14,8 +13,6 @@ module.exports = {
     },
   ],
   async execute(ctx, args) {
-    if (!isAdmin(ctx.senderId)) return;
-
     const currentState = storeGetters.getIsHateOnQuestions();
     const stateText = (state) => (state ? 'включен' : 'выключен');
 

@@ -1,11 +1,10 @@
-const isAdmin = require('../functions/isAdmin');
 const { getters: storeGetters, setters: storeSetter } = require('../store');
 
 module.exports = {
   name: 'config:bot',
   description: 'Состояние бота (включен, выключен)',
   hidden: true,
-  admin: true,
+  adminOnly: true,
   stats: false,
   arguments: [
     {
@@ -14,8 +13,6 @@ module.exports = {
     },
   ],
   async execute(ctx, args) {
-    if (!isAdmin(ctx.senderId)) return;
-
     const currentState = storeGetters.getBotStatus();
     const stateText = (state) => (state ? 'включен' : 'выключен');
 

@@ -8,10 +8,6 @@ module.exports = {
   token: isProd ? process.env.TOKEN : process.env.TOKEN_DEV,
   serverAddress: isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
   authToken: process.env.AUTH_TOKEN,
-  mailParserEnabled: process.env.MAIL_LISTEN === 'true',
-  mpeiLogin: process.env.MPEI_LOGIN,
-  mpeiPass: process.env.MPEI_PASS,
-  mailSchedule: isProd ? (process.env.MAIL_SHEDULE || '0 0 * * * *') : '0 * * * * *',
   serverDateFormat: 'yyyy.MM.dd',
   chatIds: isProd ? [
     {
@@ -31,9 +27,5 @@ module.exports = {
       name: 'trash',
       peerId: 2000000003,
     },
-    // {
-    //   name: 'trash #2',
-    //   peerId: 2000000008,
-    // },
   ],
 };

@@ -30,6 +30,8 @@ module.exports = {
 
     // call command
     if (command) {
+      if (command.adminOnly && !isAdminMess) return;
+
       // update command stats
       if (!isAdminMess && command.stats !== false) {
         await storeSetters.incrementCommandStats(command.name, commandName);

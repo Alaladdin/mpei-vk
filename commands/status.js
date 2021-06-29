@@ -4,8 +4,6 @@ const { getUniversalUrl } = require('../data/requests');
 const {
   serverAddress,
   prefix,
-  mailSchedule,
-  mailParserEnabled,
   isProd,
 } = require('../config');
 
@@ -35,8 +33,6 @@ module.exports = {
     msg.push(`· version: ${version}`);
     msg.push(`· prefix: "${!Array.isArray(prefix) ? prefix : prefix.join(', ')}"`);
     msg.push(`· isProduction: ${isProd}`);
-    msg.push(`· mailListen: ${mailParserEnabled}`);
-    msg.push(`· mailListen time: "${mailSchedule}"`);
 
     // server info
     msg.push('\n- Server info');

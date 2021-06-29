@@ -1,5 +1,6 @@
 const schedule = require('node-schedule');
 const { format } = require('../util/pdate');
+const { getters: storeGetters } = require('../store');
 const getChatMembers = require('../functions/getChatMembers');
 const sendMessage = require('../functions/sendMessage');
 const pactuality = require('../functions/actuality');
@@ -10,8 +11,13 @@ module.exports = {
   name: 'crons',
   description: 'set cron',
   async init(vk) {
-    // actuality every day at 9:00:00
-    schedule.scheduleJob('0 0 9 * * *', async () => {
+    // actuality
+    const actualityConfig = () => storeGetters.getActualityConfig();
+    const actualityPostTime = () => actualityConfig().time;
+    const actualityChats = () => actualityConfig().chatIds;
+
+    schedule.scheduleJob(actualityPostTime(), async () => {
+      if (!actualityConfig().enabled) return;
       const { actuality } = await pactuality.get();
 
       if (actuality && 'content' in actuality) {
@@ -19,9 +25,9 @@ module.exports = {
         msg.push(`Актуалити. Обновлено: ${format(actuality.date)}\n`);
         msg.push(`${actuality.content}`);
 
-        chatIds.forEach((chat) => {
+        actualityChats().forEach((chat) => {
           sendMessage(vk, {
-            peerId: chat.peerId,
+            peerId: chat,
             message: msg.join('\n'),
           });
         });
