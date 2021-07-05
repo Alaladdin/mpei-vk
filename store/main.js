@@ -14,7 +14,6 @@ let state = {};
     isHateOnQuestions: true,
     // isMailListen: true,
     // admins: [161372337, 425704393, 45052566],
-    hateWhiteList: [212053343, 160477317],
     hateTriggersCount: 0,
     commandsStats: {},
     // disabledChats: [],
@@ -33,7 +32,6 @@ let state = {};
     isBotActive: getStateValue('isBotActive'),
     isHateOnQuestions: getStateValue('isHateOnQuestions'),
     // admins: getStateValue('admins'),
-    hateWhiteList: getStateValue('hateWhiteList'),
     hateTriggersCount: getStateValue('hateTriggersCount'),
     commandsStats: getStateValue('commandsStats'),
     // disabledChats: getStateValue('disabledChats'),
@@ -47,7 +45,6 @@ const getters = {
   getBotStatus: () => state.isBotActive,
   getCommandStats: async (c) => (c ? state.commandsStats[c] : state.commandsStats),
   getIsHateOnQuestions: () => state.isHateOnQuestions,
-  getHateWhiteList: () => state.hateWhiteList,
   getHateTriggersCount: () => state.hateTriggersCount,
   getActualityConfig: () => state.actualityAutopost,
 };

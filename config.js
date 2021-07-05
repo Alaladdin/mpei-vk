@@ -18,6 +18,10 @@ module.exports = {
       name: 'spam',
       peerId: 2000000004,
     },
+    {
+      name: 'HATE_GERA',
+      peerId: 2000000012,
+    },
   ] : [
     {
       name: 'main',
@@ -25,6 +29,10 @@ module.exports = {
     },
     {
       name: 'trash',
+      peerId: 2000000003,
+    },
+    {
+      name: 'HATE_GERA',
       peerId: 2000000003,
     },
   ],

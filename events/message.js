@@ -15,7 +15,7 @@ module.exports = {
     const isBlackListedUser = priority.blackList.includes(ctx.senderId);
 
     if (isDisabled || (!messagePayload && !text) || !ctx.isUser) return;
-    if (!isAdminMess) await notAllowedMessages(ctx, text);
+    if (!isAdminMess) await notAllowedMessages(ctx, text, vk);
     if ((!hasMessagePrefix && !messagePayload) || isBlackListedUser) return;
 
     const commandBody = (messagePayload && messagePayload.command)
