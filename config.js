@@ -9,31 +9,17 @@ module.exports = {
   serverAddress: isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
   authToken: process.env.AUTH_TOKEN,
   serverDateFormat: 'yyyy.MM.dd',
-  chatIds: isProd ? [
-    {
-      name: 'main',
-      peerId: 2000000005,
+  chats: isProd
+    ? {
+      main: 2000000005,
+      spam: 2000000004,
+      hateGera: 2000000012,
+    }
+    : {
+      main: 2000000003,
+      spam: 2000000003,
+      trash: 2000000003,
+      trashSecondary: 2000000004,
+      hateGera: 2000000003,
     },
-    {
-      name: 'spam',
-      peerId: 2000000004,
-    },
-    {
-      name: 'HATE_GERA',
-      peerId: 2000000012,
-    },
-  ] : [
-    {
-      name: 'main',
-      peerId: 2000000003,
-    },
-    {
-      name: 'trash',
-      peerId: 2000000003,
-    },
-    {
-      name: 'HATE_GERA',
-      peerId: 2000000003,
-    },
-  ],
 };

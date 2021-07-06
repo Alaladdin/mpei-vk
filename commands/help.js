@@ -18,6 +18,7 @@ module.exports = {
     const { commands } = vk;
     const showAllCommandsForce = isAdmin(ctx.peerId) && args[0] === 'all';
     const data = [];
+    const command = findCommand(args[0], commands);
 
     if (!args.length || args[0] === 'all') {
       data.push(`${commandsTexts.commandsList}:\n`);
@@ -26,14 +27,12 @@ module.exports = {
       return ctx.send(data.join('\n'));
     }
 
-    const requestedCommand = args[0];
-    const command = findCommand(requestedCommand, commands);
-
     if (!command || (command.hidden && !isAdmin(ctx.peerId))) {
       return ctx.send(commandsTexts.unknownCommand);
     }
 
     data.push(`Name: ${command.name}`);
+
     if (command.description) data.push(`Description: ${command.description}`);
     if (command.aliases) data.push(`Aliases: ${command.aliases.join(', ')}`);
 

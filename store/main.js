@@ -14,7 +14,7 @@ let state = {};
     isHateOnQuestions: true,
     isListenMessages: false,
     // isMailListen: true,
-    // admins: [161372337, 425704393, 45052566],
+    // admins: [],
     hateTriggersCount: 0,
     commandsStats: {},
     // disabledChats: [],
@@ -25,7 +25,7 @@ let state = {};
       time: '0 0 9 * * *',
     },
   };
-  const getStateValue = (key) => ((isRemoteEmpty || !remoteStore[key])
+  const getStateValue = (key) => ((isRemoteEmpty || remoteStore[key] === undefined)
     ? defaults[key]
     : remoteStore[key]);
 

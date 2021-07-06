@@ -2,7 +2,7 @@ const { getters: storeGetters, setters: storeSetter } = require('../store');
 
 module.exports = {
   name: 'config:bot',
-  description: 'Состояние бота (включен, выключен)',
+  description: 'Состояние бота',
   hidden: true,
   adminOnly: true,
   stats: false,
@@ -16,14 +16,14 @@ module.exports = {
     const currentState = storeGetters.getBotStatus();
     const stateText = (state) => (state ? 'включен' : 'выключен');
 
-    if (!args.length) ctx.reply(`Бот сейчас ${stateText(currentState)}`);
+    if (!args.length) ctx.reply(`Статус: ${stateText(currentState)}`);
 
     if (args[0] === 'toggle') {
       const newState = !currentState;
 
       await storeSetter.setBotStatus(newState)
         .then(() => {
-          ctx.reply(`Бот теперь ${stateText(newState)}`);
+          ctx.reply(`Новый статус: ${stateText(newState)}`);
         })
         .catch(() => {
           ctx.reply('Ошибка при попытке изменить настройки');

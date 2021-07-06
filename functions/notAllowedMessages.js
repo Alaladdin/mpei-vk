@@ -1,24 +1,30 @@
-const { texts, blacklist } = require('../data/messages');
+const { chats } = require('../config');
 const { getters: storeGetters, setters: storeSetters } = require('../store');
 const getChatMembers = require('./getChatMembers');
-const { chatIds } = require('../config');
+const isAdmin = require('./isAdmin');
+const { texts, blacklist } = require('../data/messages');
 
 const { replies, questions } = texts;
 
 module.exports = {
   name: 'notAllowedMessages',
   async execute(ctx, message, vk) {
+    if (isAdmin(ctx.senderId) || !message || !storeGetters.getBotStatus()) return;
+
     const userMessage = message.toLowerCase();
 
-    // blacklist words
-    if (blacklist.includes(userMessage)) ctx.reply(replies.dontDoThat);
-
+    this.blackListedWordsTrigger(userMessage, ctx);
+    await this.hateOnQuestionTrigger(userMessage, ctx, vk);
+  },
+  blackListedWordsTrigger(message, ctx) {
+    if (blacklist.includes(message)) ctx.reply(replies.dontDoThat);
+  },
+  async hateOnQuestionTrigger(message, ctx, vk) {
     // hate on stupid questions
-    const hatersLegionChat = chatIds.find((chat) => chat.name === 'HATE_GERA');
-    const hatersLegion = await getChatMembers(vk, { peerId: hatersLegionChat.peerId });
-    const hatersLegionList = hatersLegion.profiles.map((profile) => profile.id);
     const isHateOnQuestions = await storeGetters.getIsHateOnQuestions();
-    const isTriggerMessage = questions.find((question) => userMessage.match(question));
+    const isTriggerMessage = questions.find((question) => message.match(question));
+    const hatersLegion = await getChatMembers(vk, { peerId: chats.hateGera });
+    const hatersLegionList = hatersLegion.profiles.map((profile) => profile.id);
 
     if (isHateOnQuestions && isTriggerMessage && !hatersLegionList.includes(ctx.senderId)) {
       await storeSetters.incrementHateTriggersCount();

@@ -1,6 +1,6 @@
-const { prefix, chatIds } = require('../config');
+const { prefix, chats } = require('../config');
 const { getters: storeGetters, setters: storeSetters } = require('../store');
-const { execute: notAllowedMessages } = require('../functions/notAllowedMessages');
+const notAllowedMessages = require('../functions/notAllowedMessages');
 const sendMessage = require('../functions/sendMessage');
 const isAdmin = require('../functions/isAdmin');
 const findCommand = require('../util/findCommand');
@@ -8,9 +8,42 @@ const priority = require('../data/priority');
 
 module.exports = {
   name: 'message',
+  isPassedConditions(ctx) {
+    const { messagePayload, text } = ctx;
+    const hasMessagePrefix = text && prefix.includes(text[0]);
+    const isDisabled = !isAdmin(ctx.senderId) && !storeGetters.getBotStatus();
+
+    return !isDisabled && ctx.isUser && (hasMessagePrefix || messagePayload);
+  },
+  async execute(ctx, next, vk) {
+    const { messagePayload, text } = ctx;
+
+    await this.listenMessages(ctx, vk);
+    await notAllowedMessages.execute(ctx, text, vk);
+
+    if (!this.isPassedConditions(ctx)) return;
+
+    const commandBody = (messagePayload && messagePayload.command)
+      ? messagePayload.command.slice(1)
+      : text.slice(1);
+    let args = commandBody.split(' ').filter((arg) => arg);
+    const commandAlias = args.shift().toLowerCase();
+    const command = findCommand(commandAlias, vk.commands);
+
+    // call command
+    if (command) {
+      if (command.adminOnly && !isAdmin(ctx.senderId)) return;
+
+      await this.updateCommandStats(ctx, command, commandAlias);
+
+      if (command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
+
+      command.execute(ctx, args, vk);
+    }
+  },
   async listenMessages(ctx, vk) {
     const mess = [];
-    const chatName = chatIds.find((chat) => chat.peerId === ctx.peerId);
+    const chatName = Object.keys(chats).find((key) => (chats[key] === ctx.peerId));
     const isListenMessages = storeGetters.getIsListenMessages();
     const isAdminPrivateChat = isAdmin(ctx.peerId);
 
@@ -25,41 +58,9 @@ module.exports = {
       message: mess.join('\n'),
     });
   },
-  async execute(ctx, next, vk) {
-    const { messagePayload, text } = ctx;
-    const isAdminMess = isAdmin(ctx.senderId);
-    const isDisabled = !isAdminMess && !storeGetters.getBotStatus();
-    const hasMessagePrefix = text && prefix.includes(text[0]);
-    const isBlackListedUser = priority.blackList.includes(ctx.senderId);
+  async updateCommandStats(ctx, command, alias) {
+    if (isAdmin(ctx.senderId) || command.stats === false) return;
 
-    await this.listenMessages(ctx, vk);
-
-    if (isDisabled || (!messagePayload && !text) || !ctx.isUser) return;
-    if (!isAdminMess) await notAllowedMessages(ctx, text, vk);
-    if ((!hasMessagePrefix && !messagePayload) || isBlackListedUser) return;
-
-    const commandBody = (messagePayload && messagePayload.command)
-      ? messagePayload.command.slice(1)
-      : text.slice(1);
-
-    let args = commandBody.split(' ').filter((arg) => arg);
-    const commandName = args.shift().toLowerCase();
-
-    // get command by name or alias
-    const command = findCommand(commandName, vk.commands);
-
-    // call command
-    if (command) {
-      if (command.adminOnly && !isAdminMess) return;
-
-      // update command stats
-      if (!isAdminMess && command.stats !== false) {
-        await storeSetters.incrementCommandStats(command.name, commandName);
-      }
-
-      if (command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
-
-      command.execute(ctx, args, vk);
-    }
+    await storeSetters.incrementCommandStats(command.name, alias);
   },
 };
