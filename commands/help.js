@@ -1,6 +1,6 @@
 const findCommand = require('../util/findCommand');
+const isAdmin = require('../functions/isAdmin');
 const { texts } = require('../data/messages');
-const priority = require('../data/priority');
 
 const { commands: commandsTexts } = texts;
 
@@ -16,20 +16,20 @@ module.exports = {
   ],
   async execute(ctx, args, vk) {
     const { commands } = vk;
+    const showAllCommandsForce = isAdmin(ctx.peerId) && args[0] === 'all';
     const data = [];
-    const isAdminRequest = priority.admin.map((a) => a.userId).includes(ctx.peerId);
-    const showAllCommandsForce = isAdminRequest && args[0] === 'all';
+
     if (!args.length || args[0] === 'all') {
       data.push(`${commandsTexts.commandsList}:\n`);
 
-      commands.forEach((c) => (showAllCommandsForce || !c.hidden) && data.push(`/${c.name} - ${c.description}`));
+      commands.forEach((c) => (showAllCommandsForce || !c.hidden) && data.push(`/${c.name} - ${c.description || '???'}`));
       return ctx.send(data.join('\n'));
     }
 
     const requestedCommand = args[0];
     const command = findCommand(requestedCommand, commands);
 
-    if (!command || (command.hidden && !isAdminRequest)) {
+    if (!command || (command.hidden && !isAdmin(ctx.peerId))) {
       return ctx.send(commandsTexts.unknownCommand);
     }
 

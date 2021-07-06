@@ -12,6 +12,7 @@ let state = {};
   const defaults = {
     isBotActive: true,
     isHateOnQuestions: true,
+    isListenMessages: false,
     // isMailListen: true,
     // admins: [161372337, 425704393, 45052566],
     hateTriggersCount: 0,
@@ -31,6 +32,7 @@ let state = {};
   state = {
     isBotActive: getStateValue('isBotActive'),
     isHateOnQuestions: getStateValue('isHateOnQuestions'),
+    isListenMessages: getStateValue('isListenMessages'),
     // admins: getStateValue('admins'),
     hateTriggersCount: getStateValue('hateTriggersCount'),
     commandsStats: getStateValue('commandsStats'),
@@ -45,6 +47,7 @@ const getters = {
   getBotStatus: () => state.isBotActive,
   getCommandStats: async (c) => (c ? state.commandsStats[c] : state.commandsStats),
   getIsHateOnQuestions: () => state.isHateOnQuestions,
+  getIsListenMessages: () => state.isListenMessages,
   getHateTriggersCount: () => state.hateTriggersCount,
   getActualityConfig: () => state.actualityAutopost,
 };
@@ -65,6 +68,10 @@ const setters = {
   async setIsHateOnQuestions(status = true) {
     state.isHateOnQuestions = status;
     return this.listener('isHateOnQuestions');
+  },
+  async setIsListenMessages(status = true) {
+    state.isListenMessages = status;
+    return this.listener('isListenMessages');
   },
   async setAutopostingStatus(status = true) {
     state.actualityAutopost.enabled = status;
