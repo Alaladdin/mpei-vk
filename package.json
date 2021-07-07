@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.16.2",
+  "version": "1.17.0",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {

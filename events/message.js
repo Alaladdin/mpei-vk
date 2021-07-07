@@ -42,6 +42,7 @@ module.exports = {
       command.execute(ctx, args, vk);
     }
   },
+  // todo disable private messages
   async listenMessages(ctx, vk) {
     const { forwards, replyMessage } = ctx;
     const chatName = Object.keys(chats).find((key) => (chats[key] === ctx.peerId));

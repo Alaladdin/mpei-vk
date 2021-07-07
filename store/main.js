@@ -13,12 +13,8 @@ let state = {};
     isBotActive: true,
     isHateOnQuestions: true,
     isListenMessages: false,
-    // isMailListen: true,
-    // admins: [],
     hateTriggersCount: 0,
     commandsStats: {},
-    // disabledChats: [],
-    bannedUsers: [53265470],
     actualityAutopost: {
       enabled: true,
       chatIds: [2000000004, 2000000005],
@@ -33,11 +29,8 @@ let state = {};
     isBotActive: getStateValue('isBotActive'),
     isHateOnQuestions: getStateValue('isHateOnQuestions'),
     isListenMessages: getStateValue('isListenMessages'),
-    // admins: getStateValue('admins'),
     hateTriggersCount: getStateValue('hateTriggersCount'),
     commandsStats: getStateValue('commandsStats'),
-    // disabledChats: getStateValue('disabledChats'),
-    bannedUsers: getStateValue('bannedUsers'),
     actualityAutopost: getStateValue('actualityAutopost'),
   };
 })();
