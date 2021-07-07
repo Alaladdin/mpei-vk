@@ -8,12 +8,14 @@ const { token } = require('./config');
 const vk = new VK({ token });
 
 vk.updates.start()
-  .then(async () => {
+  .then(() => {
     commands.init(vk);
     events.init(vk);
-    await cron.init(vk);
+    cron.init(vk).then(() => {
+      console.info('[CRON] has been started');
+    });
 
     // setTimeout(() => parser.init(vk), 2000);
-    console.info('Bot has been started');
+    console.info('[BOT] has been started');
   })
   .catch(console.error);

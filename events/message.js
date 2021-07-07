@@ -1,8 +1,9 @@
 const { prefix, chats } = require('../config');
 const { getters: storeGetters, setters: storeSetters } = require('../store');
 const notAllowedMessages = require('../functions/notAllowedMessages');
-const sendMessage = require('../functions/sendMessage');
 const isAdmin = require('../functions/isAdmin');
+const sendMessage = require('../functions/sendMessage');
+const getUsers = require('../functions/getUsers');
 const findCommand = require('../util/findCommand');
 const priority = require('../data/priority');
 
@@ -42,16 +43,39 @@ module.exports = {
     }
   },
   async listenMessages(ctx, vk) {
-    const mess = [];
+    const { forwards, replyMessage } = ctx;
     const chatName = Object.keys(chats).find((key) => (chats[key] === ctx.peerId));
     const isListenMessages = storeGetters.getIsListenMessages();
     const isAdminPrivateChat = isAdmin(ctx.peerId);
+    const mess = [];
 
-    if (!ctx.text || !ctx.isUser || !isListenMessages || isAdminPrivateChat) return;
+    const hasForwardsMessage = forwards.length && forwards[0].text;
+    const hasReplyMessage = replyMessage && replyMessage.text;
+    const hasNoMessageText = !ctx.text && !hasForwardsMessage && !hasReplyMessage;
 
-    mess.push(`@id${ctx.senderId}(Sender)`);
-    mess.push(`Chat: ${chatName || ctx.peerId}`);
-    mess.push(`Message: ${ctx.text}`);
+    if ((hasNoMessageText) || !ctx.isUser || !isListenMessages || isAdminPrivateChat) return;
+
+    const users = await getUsers(vk, { userIds: ctx.senderId });
+
+    if (users) {
+      const getUserFullNameWithLink = (user) => `@id${user.id} (${user.first_name} ${user.last_name})`;
+
+      mess.push(`Chat: ${chatName || ctx.peerId}`);
+      mess.push(`Sender: ${getUserFullNameWithLink(users[0])}`);
+
+      if (hasForwardsMessage) forwards.map((f) => f.text && mess.push(`Forwards: ${f.text}`));
+
+      if (hasReplyMessage) {
+        if (replyMessage.senderType === 'user') {
+          const replyMessageUsers = await getUsers(vk, { userIds: replyMessage.senderId });
+          if (replyMessageUsers) mess.push(`Replied to user: ${getUserFullNameWithLink(replyMessageUsers[0])}`);
+        }
+        mess.push(`Replied mess: ${replyMessage.text}`);
+      }
+      if (ctx.text) mess.push(`Message: ${ctx.text}`);
+    } else {
+      mess.push('[Error] users get');
+    }
 
     await sendMessage(vk, {
       peerId: priority.admins.AL,

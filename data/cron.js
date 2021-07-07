@@ -71,10 +71,7 @@ module.exports = {
 
     // birthdays check
     schedule.scheduleJob('0 0 12 * * *', async () => {
-      const res = await getChatMembers(vk, {
-        peerId: mainChat,
-        fields: ['bdate'],
-      })
+      const res = await getChatMembers(vk, { peerId: mainChat, fields: ['bdate'] })
         .catch(() => false);
 
       if (!res) return;
