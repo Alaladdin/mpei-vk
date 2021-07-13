@@ -34,7 +34,10 @@ module.exports = {
     const selectedChat = chats[selectedChatName];
     const messageToSend = args.slice(1).join(' ');
 
-    if (!selectedChat) ctx.reply('Чат не найден');
+    if (!selectedChat) {
+      ctx.reply('Чат не найден');
+      return;
+    }
 
     sendMessage(vk, {
       peerId: selectedChat,
