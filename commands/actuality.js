@@ -10,7 +10,7 @@ const {
 module.exports = {
   name: 'actuality',
   description: 'актуалочка',
-  aliases: ['a', 'act', 'news', 'акт'],
+  aliases: ['a', 'act', 'акт'],
   arguments: [
     {
       name: 'lazy',
@@ -18,23 +18,23 @@ module.exports = {
     },
   ],
   async execute(ctx, args) {
-    const { actuality } = await pactuality.get().catch(() => ctx.send(statusTexts.databaseError));
-    const [command] = args;
-    const msg = [];
+    pactuality.get()
+      .then((actuality) => {
+        const [command] = args;
+        const msg = [];
 
-    if (!actuality) return;
+        if (command && command.toLowerCase() === 'lazy') {
+          msg.push('Несрочное актуалити\n');
+          msg.push(actuality.lazyContent);
+        } else {
+          msg.push(`Актуалити. Обновлено: ${format(actuality.date)}\n`);
+          msg.push(`${actuality.content}\n`);
+        }
 
-    if (command && command.toLowerCase() === 'lazy') {
-      msg.push('Несрочное актуалити\n');
-      msg.push(actuality.lazyContent);
-
-      ctx.send(msg.join('\n'));
-      return;
-    }
-
-    msg.push(`Актуалити. Обновлено: ${format(actuality.date)}\n`);
-    msg.push(`${actuality.content}`);
-
-    ctx.send(msg.join('\n'));
+        ctx.send(msg.join('\n'));
+      })
+      .catch(() => {
+        ctx.send(statusTexts.databaseError);
+      });
   },
 };

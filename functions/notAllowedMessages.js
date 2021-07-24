@@ -14,10 +14,18 @@ module.exports = {
     const userMessage = message.toLowerCase();
 
     this.blackListedWordsTrigger(userMessage, ctx);
+    this.doNotAllowHateGerman(userMessage, ctx);
     await this.hateOnQuestionTrigger(userMessage, ctx, vk);
   },
   blackListedWordsTrigger(message, ctx) {
     if (blacklist.includes(message)) ctx.reply(replies.dontDoThat);
+  },
+  doNotAllowHateGerman(message, ctx) {
+    const notAllowedPattern = /(Гера|Герман|Gera|German) (воняет|vonyaet)/gim;
+    const allowedPattern = /(Гера|Герман|Gera|German) не (воняет|vonyaet)/gim;
+
+    if (message.match(notAllowedPattern)) ctx.reply('Забери свои лживые слова назад');
+    if (message.match(allowedPattern)) ctx.reply('Уважаемо');
   },
   async hateOnQuestionTrigger(message, ctx, vk) {
     // hate on stupid questions
