@@ -9,12 +9,16 @@ const { replies, questions } = texts;
 module.exports = {
   name: 'notAllowedMessages',
   async execute(ctx, message, vk) {
-    if (isAdmin(ctx.senderId) || !message || !storeGetters.getBotStatus()) return;
+    if (!message || !storeGetters.getBotStatus()) return;
 
     const userMessage = message.toLowerCase();
 
-    this.blackListedWordsTrigger(userMessage, ctx);
     this.doNotAllowHateGerman(userMessage, ctx);
+
+    if (isAdmin(ctx.senderId)) return;
+
+    this.blackListedWordsTrigger(userMessage, ctx);
+
     await this.hateOnQuestionTrigger(userMessage, ctx, vk);
   },
   blackListedWordsTrigger(message, ctx) {
