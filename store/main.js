@@ -14,11 +14,8 @@ let state = {};
     isHateOnQuestions: true,
     isListenMessages: false,
     hateTriggersCount: 0,
-    commandsStats: {},
     actualityAutopost: {
       enabled: true,
-      chatIds: [2000000004, 2000000005],
-      time: '0 0 9 * * *',
     },
   };
   const getStateValue = (key) => ((isRemoteEmpty || remoteStore[key] === undefined)
@@ -30,7 +27,6 @@ let state = {};
     isHateOnQuestions: getStateValue('isHateOnQuestions'),
     isListenMessages: getStateValue('isListenMessages'),
     hateTriggersCount: getStateValue('hateTriggersCount'),
-    commandsStats: getStateValue('commandsStats'),
     actualityAutopost: getStateValue('actualityAutopost'),
   };
 })();
@@ -38,7 +34,6 @@ let state = {};
 const getters = {
   getState: () => state,
   getBotStatus: () => state.isBotActive,
-  getCommandStats: async (c) => (c ? state.commandsStats[c] : state.commandsStats),
   getIsHateOnQuestions: () => state.isHateOnQuestions,
   getIsListenMessages: () => state.isListenMessages,
   getHateTriggersCount: () => state.hateTriggersCount,
@@ -69,28 +64,6 @@ const setters = {
   async setAutopostingStatus(status = true) {
     state.actualityAutopost.enabled = status;
     return this.listener('setAutopostingStatus');
-  },
-  async setAutopostingTime(time = '0 0 9 * * *') {
-    state.actualityAutopost.time = time;
-    return this.listener('setAutopostingTime');
-  },
-  async resetCommandStats() {
-    state.commandsStats = {};
-    return this.listener('commandsStats');
-  },
-  async incrementCommandStats(command, alias) {
-    const commandStats = state.commandsStats && state.commandsStats[command];
-    if (commandStats) {
-      const aliasStats = state.commandsStats[command][alias];
-
-      state.commandsStats[command][alias] = (aliasStats && aliasStats > 0) ? aliasStats + 1 : 1;
-    } else {
-      state.commandsStats[command] = {
-        [alias]: 1,
-      };
-    }
-
-    return this.listener('commandsStats');
   },
   async incrementHateTriggersCount() {
     const count = state.hateTriggersCount;

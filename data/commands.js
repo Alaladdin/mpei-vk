@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const commandFolders = fs.readdirSync('./commands').filter((file) => file.endsWith('.js') && !file.endsWith('.disabled.js'));
+const commandFolders = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
 
 module.exports = {
   name: 'commands',

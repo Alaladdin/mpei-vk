@@ -13,11 +13,11 @@ module.exports = {
   ],
   async execute(ctx, args) {
     const currentState = storeGetters.getIsListenMessages();
-    const getStateText = (state) => (`${!state ? 'не' : ''} активен`);
+    const getStateText = (state) => (state ? 'включен' : 'выключен');
 
-    if (!args.length) ctx.reply(`Статус: ${getStateText(currentState)}`);
-
-    if (args[0] === 'toggle') {
+    if (!args.length) {
+      ctx.reply(`Статус: ${getStateText(currentState)}`);
+    } else if (args[0] === 'toggle') {
       const newState = !currentState;
 
       await storeSetter.setIsListenMessages(newState)

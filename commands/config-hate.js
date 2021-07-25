@@ -14,19 +14,17 @@ module.exports = {
   ],
   async execute(ctx, args) {
     const currentState = storeGetters.getIsHateOnQuestions();
-    const stateText = (state) => (state ? 'включен' : 'выключен');
+    const getStateText = (state) => (state ? 'включен' : 'выключен');
 
     if (!args.length) {
       const hatesCount = storeGetters.getHateTriggersCount();
-      ctx.reply(`Хейт сейчас ${stateText(currentState)}\nКол-во реакций: ${hatesCount}`);
-    }
-
-    if (args[0] === 'toggle') {
+      ctx.reply(`Хейт сейчас ${getStateText(currentState)}\nКол-во реакций: ${hatesCount}`);
+    } else if (args[0] === 'toggle') {
       const newState = !currentState;
 
       await storeSetter.setIsHateOnQuestions(newState)
         .then(() => {
-          ctx.reply(`Хейт теперь ${stateText(newState)}`);
+          ctx.reply(`Хейт теперь ${getStateText(newState)}`);
         })
         .catch(() => {
           ctx.reply('Ошибка при попытке изменить настройки');

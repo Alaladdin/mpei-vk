@@ -4,16 +4,17 @@ const { getFAQUrl } = require('../data/requests');
 module.exports = {
   name: 'FAQ',
   async get() {
-    // get FAQ data
     return fetch(getFAQUrl)
       .then(async (res) => {
         const json = await res.json();
 
-        // if request error
-        if (!res.ok) throw new Error(json.message);
+        if (!res.ok) throw (json.error);
 
         return json;
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        throw e;
+      });
   },
 };

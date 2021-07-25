@@ -54,20 +54,20 @@ module.exports = {
       description: '(int) координаты текста по Y',
     },
   ],
+  getAttachImage(attachments) {
+    const { sizes } = attachments[0];
+    const maxAttachWidth = Math.max(...sizes.map((obj) => obj.width));
+
+    return sizes.find((obj) => obj.width === maxAttachWidth);
+  },
   async execute(ctx, args, vk) {
     const { upload } = vk;
     const { peerId, attachments } = ctx;
     const configBlackListOptions = ['text', 'image'];
     let filteredArgs = args;
-    const getAttachImage = () => {
-      const { sizes } = attachments[0];
-      const maxAttachWidth = Math.max(...sizes.map((obj) => obj.width));
-
-      return sizes.find((obj) => obj.width === maxAttachWidth);
-    };
 
     const config = {
-      image: attachments.length && getAttachImage(),
+      image: attachments.length && this.getAttachImage(attachments),
     };
 
     if (!args.length) {

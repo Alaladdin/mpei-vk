@@ -4,11 +4,7 @@ const { serverDateFormat } = require('../config');
 const pschedule = require('../functions/schedule');
 const { texts } = require('../data/messages');
 
-const {
-  status: statusTexts,
-  schedule: scheduleTexts,
-  commands: commandsTexts,
-} = texts;
+const { schedule: scheduleTexts } = texts;
 
 module.exports = {
   name: 'schedule',
@@ -35,7 +31,6 @@ module.exports = {
   async execute(ctx, args) {
     const today = format(new Date(), serverDateFormat);
     const tomorrow = format(add(new Date()), serverDateFormat);
-
     const [command] = args;
 
     const argsInstructions = {
@@ -47,7 +42,7 @@ module.exports = {
       week: {
         name: scheduleTexts.arguments.week,
       },
-      nextWeek: {
+      nextweek: {
         name: scheduleTexts.arguments.nextWeek,
         start: format(startOfISOWeek(add(today, { weeks: 1 })), serverDateFormat),
         finish: format(endOfISOWeek(add(today, { weeks: 1 })), serverDateFormat),
@@ -64,45 +59,29 @@ module.exports = {
       },
     };
 
-    if (command && (command === 'empty' || !argsInstructions[command])) {
-      ctx.reply(`${commandsTexts.unknownArgument} "${command}"`);
-      return;
-    }
+    if (command && (command === 'empty' || !argsInstructions[command])) return ctx.reply(`${texts.commands.unknownArgument} "${command}"`);
 
     const selectedDate = argsInstructions[!args.length ? 'empty' : command];
-    const { schedule } = await pschedule.get(selectedDate) || {};
 
-    if (typeof schedule !== 'object' && !Array.isArray(schedule)) {
-      await ctx.send(statusTexts.mpeiServerError);
-      return;
-    }
+    return pschedule.get(selectedDate)
+      .then(async ({ schedule }) => {
+        if (!schedule.length) return ctx.send(scheduleTexts.noClasses);
 
-    await ctx.send(`${scheduleTexts.scheduleFor} ${selectedDate.name}`);
+        await ctx.send(`${scheduleTexts.scheduleFor} ${selectedDate.name}`);
 
-    // if schedule data exists
-    if (Array.isArray(schedule) && schedule.length <= 0) {
-      ctx.send(scheduleTexts.noClasses);
-      return;
-    }
+        return schedule.forEach((item) => {
+          const itemData = [];
 
-    schedule.forEach((item) => {
-      const itemData = [];
-      const {
-        date,
-        discipline,
-        dayOfWeekString,
-        kindOfWork,
-        beginLesson,
-        endLesson,
-        lecturer,
-      } = item;
+          itemData.push(`[${item.dayOfWeekString}] ${item.discipline} - ${format(item.date)}`);
+          itemData.push(item.kindOfWork);
+          itemData.push(`${item.beginLesson} - ${item.endLesson}`);
+          itemData.push(item.lecturer);
 
-      itemData.push(`[${dayOfWeekString}] ${discipline} - ${format(date)}`);
-      itemData.push(kindOfWork);
-      itemData.push(`${beginLesson} - ${endLesson}`);
-      itemData.push(lecturer);
-
-      return ctx.send(itemData.join('\n'));
-    });
+          return ctx.send(itemData.join('\n'));
+        });
+      })
+      .catch(() => {
+        ctx.send(texts.status.mpeiServerError);
+      });
   },
 };

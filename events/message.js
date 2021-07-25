@@ -14,7 +14,7 @@ module.exports = {
     const hasMessagePrefix = text && prefix.includes(text[0]);
     const isDisabled = !isAdmin(ctx.senderId) && !storeGetters.getBotStatus();
 
-    return !isDisabled && ctx.isUser && (hasMessagePrefix || messagePayload);
+    return !isDisabled && ctx.isUser && text.length > 1 && (hasMessagePrefix || messagePayload);
   },
   async execute(ctx, next, vk) {
     const { messagePayload, text } = ctx;
@@ -42,7 +42,6 @@ module.exports = {
       command.execute(ctx, args, vk);
     }
   },
-  // todo disable private messages
   async listenMessages(ctx, vk) {
     const { forwards, replyMessage } = ctx;
     const chatName = Object.keys(chats).find((key) => (chats[key] === ctx.peerId));

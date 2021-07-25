@@ -6,21 +6,17 @@ module.exports = {
   description: 'троллит, притом жейско. Используйте с осторожностью, вы запросто можете ранить чьи-то чувства',
   aliases: ['t'],
   lowercaseArguments: false,
+  getRandomTrolling(list = trollings.all) {
+    const randIndex = rand.int({ max: list.length - 1 });
+    return list[randIndex];
+  },
   async execute(ctx, args) {
-    let s = trollings.default; // selected trolligns array
-    const randomTrolling = () => s[rand.int({ max: s.length - 1 })];
-
-    if (!args || !args.length) {
+    if (!args.length) {
       ctx.reply('Кого троллить то?');
-      return;
+    } else if (args[0] === '_') {
+      ctx.send(this.getRandomTrolling(trollings.voron));
+    } else {
+      ctx.send(`${args.join(' ')} ${this.getRandomTrolling()}`);
     }
-
-    if (args && args[0] === '_') {
-      ctx.send(randomTrolling());
-      return;
-    }
-
-    s = trollings.all;
-    ctx.send(`${args.join(' ')} ${randomTrolling()}`);
   },
 };

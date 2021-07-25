@@ -11,13 +11,12 @@ module.exports = {
   name: 'status',
   description: 'информация о боте',
   aliases: ['info', 'i'],
-  async execute(ctx) {
-    const msg = [];
-    const serverData = (query) => fetch(getUniversalUrl(query))
+  getServerData(query) {
+    return fetch(getUniversalUrl(query))
       .then(async (res) => {
         const json = await res.json();
 
-        if (!res.ok) throw new Error(res.statusText);
+        if (!res.ok) throw (json.error);
 
         return Object.values(json)[0];
       })
@@ -25,21 +24,26 @@ module.exports = {
         console.error(err);
         return 'error';
       });
-
-    const serverHealth = await serverData('health');
+  },
+  async execute(ctx) {
+    const prefixText = !Array.isArray(prefix) ? prefix : prefix.join(', ');
+    const serverVersion = await this.getServerData('version');
+    const serverHealth = await this.getServerData('health');
+    const serverPing = await this.getServerData('ping');
+    const msg = [];
 
     // bot info
     msg.push('- Bot info');
     msg.push(`· version: ${version}`);
-    msg.push(`· prefix: "${!Array.isArray(prefix) ? prefix : prefix.join(', ')}"`);
+    msg.push(`· prefix: "${prefixText}"`);
     msg.push(`· isProduction: ${isProd}`);
 
     // server info
     msg.push('\n- Server info');
     msg.push(`· address: ${serverAddress}`);
-    msg.push(`· version: ${await serverData('version')}`);
-    msg.push(`· health: ${serverHealth !== 'error' ? '💖' : serverHealth}`);
-    msg.push(`· ping: ${await serverData('ping')}`);
+    msg.push(`· version: ${serverVersion}`);
+    msg.push(`· health: ${serverHealth}`);
+    msg.push(`· ping: ${serverPing}`);
 
     ctx.send(msg.join('\n'), {
       dont_parse_links: true,

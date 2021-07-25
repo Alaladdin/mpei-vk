@@ -2,11 +2,6 @@ const { format } = require('../util/pdate');
 const pactuality = require('../functions/actuality');
 const { texts } = require('../data/messages');
 
-const {
-  actuality: actualityTexts,
-  status: statusTexts,
-} = texts;
-
 module.exports = {
   name: 'actuality',
   description: 'актуалочка',
@@ -14,7 +9,7 @@ module.exports = {
   arguments: [
     {
       name: 'lazy',
-      description: actualityTexts.arguments.lazy,
+      description: texts.actuality.arguments.lazy,
     },
   ],
   async execute(ctx, args) {
@@ -34,7 +29,7 @@ module.exports = {
         ctx.send(msg.join('\n'));
       })
       .catch(() => {
-        ctx.send(statusTexts.databaseError);
+        ctx.send(texts.status.databaseError);
       });
   },
 };

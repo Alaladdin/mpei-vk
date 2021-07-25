@@ -13,11 +13,13 @@ module.exports = {
       .then(async (res) => {
         const json = await res.json();
 
-        // if request error
-        if (!res.ok) throw new Error(res.statusText);
+        if (!res.ok) throw (res.error);
 
         return json;
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        throw e;
+      });
   },
 };

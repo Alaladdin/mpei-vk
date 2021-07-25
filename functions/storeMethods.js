@@ -5,9 +5,13 @@ const getStore = () => fetch(getStoreUrl)
   .then(async (res) => {
     const json = await res.json();
 
-    if (!res.ok) throw new Error(res.statusText);
+    if (!res.ok) throw (json.error);
 
     return json.store;
+  })
+  .catch((e) => {
+    console.error(e);
+    throw e;
   });
 
 const setStore = async (store) => fetch(setStoreUrl, {
@@ -18,9 +22,13 @@ const setStore = async (store) => fetch(setStoreUrl, {
   .then(async (res) => {
     const json = await res.json();
 
-    if (!res.ok) throw new Error(res.statusText);
+    if (!res.ok) throw (json.error);
 
     return json.store;
+  })
+  .catch((e) => {
+    console.error(e);
+    throw e;
   });
 
 module.exports = {

@@ -45,20 +45,10 @@ module.exports = {
       scheduleToday.forEach((item) => {
         const itemData = [];
 
-        const {
-          date,
-          discipline,
-          dayOfWeekString,
-          kindOfWork,
-          beginLesson,
-          endLesson,
-          lecturer,
-        } = item;
-
-        itemData.push(`[${dayOfWeekString}] ${discipline} - ${format(date)}`);
-        itemData.push(kindOfWork);
-        itemData.push(`${beginLesson} - ${endLesson}`);
-        itemData.push(lecturer);
+        itemData.push(`[${item.dayOfWeekString}] ${item.discipline} - ${format(item.date)}`);
+        itemData.push(item.kindOfWork);
+        itemData.push(`${item.beginLesson} - ${item.endLesson}`);
+        itemData.push(item.lecturer);
 
         [mainChat, spamChat].forEach((chat) => {
           sendMessage(vk, {

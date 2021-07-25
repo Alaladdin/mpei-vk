@@ -3,52 +3,38 @@ const sendMessage = require('../functions/sendMessage');
 
 module.exports = {
   name: 'sm',
-  description: 'Отправляет сообщение от имени бота',
+  description: 'отправляет сообщение через бота',
   hidden: true,
   adminOnly: true,
   stats: false,
   lowercaseArguments: false,
-  getChatsList(ctx) {
-    const msg = [];
-    Object.keys(chats).forEach((key) => msg.push(`${key} - ${chats[key]}`));
-
-    ctx.reply(msg.join('\n'));
+  noArgumentsReply(ctx, isChatPassed) {
+    ctx.reply(`Необходимо сообщение ${!isChatPassed ? 'и чат' : ''} для отправки`);
+  },
+  chatListReply(ctx) {
+    const chatList = Object.keys(chats).map((chatName) => `- ${chatName}`);
+    ctx.reply(chatList.join('\n'));
+  },
+  sendMessageToChat(vk, ctx, peerId, chatName, message) {
+    sendMessage(vk, { peerId, message })
+      .then(() => {
+        ctx.reply(`Сообщение отправлено в чат "${chatName}":\n${message}`);
+      })
+      .catch((e) => {
+        console.error(e);
+        ctx.reply(`Сообщение не отправлено в чат "${chatName}":\n${message}`);
+      });
   },
   async execute(ctx, args, vk) {
-    if (args[0].toLowerCase() === 'chats') {
-      this.getChatsList(ctx);
-      return;
-    }
-
-    if (!args.length || (!args[1])) {
-      ctx.reply(`Необходимо сообщение ${!args[0] ? 'и чат' : ''} для отправки`);
-      return;
-    }
-
-    if (args[0] === 'chats') {
-      this.getChatsList(ctx);
-      return;
-    }
+    if (!args.length || (!args[1])) return this.noArgumentsReply(ctx, !!args[0]);
+    if (args[0].toLowerCase() === 'chats') return this.chatListReply(ctx);
 
     const selectedChatName = args[0].toLowerCase();
     const selectedChat = chats[selectedChatName];
     const messageToSend = args.slice(1).join(' ');
 
-    if (!selectedChat) {
-      ctx.reply('Чат не найден');
-      return;
-    }
+    if (!selectedChat) return ctx.reply(`Чат с именем "${selectedChatName}" не найден`);
 
-    sendMessage(vk, {
-      peerId: selectedChat,
-      message: messageToSend,
-    })
-      .then(() => {
-        ctx.reply(`Сообщение отправлено в чат ${selectedChatName}:\n${messageToSend}`);
-      })
-      .catch((e) => {
-        console.error(e);
-        ctx.reply(`Сообщение не отправлено в чат ${selectedChatName}:\n${messageToSend}`);
-      });
+    return this.sendMessageToChat(vk, ctx, selectedChat, selectedChatName, messageToSend);
   },
 };
