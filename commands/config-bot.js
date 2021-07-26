@@ -23,7 +23,7 @@ module.exports = {
 
       await storeSetter.setBotStatus(newState)
         .then(() => {
-          ctx.reply(`Автопостинг теперь: ${getStateText(newState)}`);
+          ctx.reply(`Бот теперь: ${getStateText(newState)}`);
         })
         .catch(() => {
           ctx.reply('Ошибка при попытке изменить настройки');

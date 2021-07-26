@@ -1,5 +1,5 @@
 const { prefix, chats } = require('../config');
-const { getters: storeGetters, setters: storeSetters } = require('../store');
+const { getters: storeGetters } = require('../store');
 const notAllowedMessages = require('../functions/notAllowedMessages');
 const isAdmin = require('../functions/isAdmin');
 const sendMessage = require('../functions/sendMessage');
@@ -34,8 +34,6 @@ module.exports = {
     // call command
     if (command) {
       if (command.adminOnly && !isAdmin(ctx.senderId)) return;
-
-      await this.updateCommandStats(ctx, command, commandAlias);
 
       if (command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
 
@@ -81,10 +79,5 @@ module.exports = {
       peerId: priority.admins.AL,
       message: mess.join('\n'),
     });
-  },
-  async updateCommandStats(ctx, command, alias) {
-    if (isAdmin(ctx.senderId) || command.stats === false) return;
-
-    await storeSetters.incrementCommandStats(command.name, alias);
   },
 };
