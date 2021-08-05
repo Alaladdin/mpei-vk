@@ -26,8 +26,8 @@ module.exports = {
       });
   },
   async execute(ctx, args, vk) {
+    if (args.length && args[0].toLowerCase() === 'chats') return this.chatListReply(ctx);
     if (!args.length || (!args[1])) return this.noArgumentsReply(ctx, !!args[0]);
-    if (args[0].toLowerCase() === 'chats') return this.chatListReply(ctx);
 
     const selectedChatName = args[0].toLowerCase();
     const selectedChat = chats[selectedChatName];

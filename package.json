@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.18.3",
+  "version": "1.18.4",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
@@ -34,7 +34,7 @@
     "vk-io": "^4.3.2"
   },
   "devDependencies": {
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
     "nodemon": "^2.0.12"
