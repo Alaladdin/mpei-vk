@@ -9,7 +9,7 @@ const { replies, questions } = texts;
 module.exports = {
   name: 'notAllowedMessages',
   async execute(ctx, message, vk) {
-    if (!message || !storeGetters.getBotStatus()) return;
+    if (!message || !ctx.isUser || !storeGetters.getBotStatus()) return;
 
     const userMessage = message.toLowerCase();
 

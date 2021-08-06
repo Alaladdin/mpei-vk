@@ -4,7 +4,10 @@ const commands = require('./data/commands');
 const cron = require('./data/cron');
 const { token } = require('./config');
 
-const vk = new VK({ token });
+const vk = new VK({
+  token,
+  language: 'ru',
+});
 
 vk.updates.start()
   .then(() => {
