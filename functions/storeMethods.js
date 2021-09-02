@@ -15,9 +15,9 @@ const getStore = () => fetch(getStoreUrl)
   });
 
 const setStore = async (store) => fetch(setStoreUrl, {
-  method: 'post',
+  method : 'post',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ store }),
+  body   : JSON.stringify({ store }),
 })
   .then(async (res) => {
     const json = await res.json();

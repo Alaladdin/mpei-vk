@@ -19,8 +19,8 @@ module.exports = {
         const userFullName = `${user.first_name} ${user.last_name}`;
 
         sendMessage(vk, {
-          peerId: chats.main,
-          message: `У @id${user.id} (${userFullName}) сегодня день рождения`,
+          peerId        : chats.main,
+          message       : `У @id${user.id} (${userFullName}) сегодня день рождения`,
           dontParseLinks: false,
         });
       });

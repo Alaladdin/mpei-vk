@@ -3,18 +3,18 @@ const getActuality = require('../functions/getActuality');
 const { texts } = require('../data/messages');
 
 module.exports = {
-  name: 'actuality',
+  name       : 'actuality',
   description: 'актуалочка',
-  aliases: ['a', 'act', 'акт'],
-  arguments: [{ name: 'lazy', description: 'несрочная актуалочка' }],
+  aliases    : ['a', 'act', 'акт'],
+  arguments  : [{ name: 'lazy', description: 'несрочная актуалочка' }],
   getActualityOutputData(contentType, actualityDate) {
     const actualityData = {
       content: {
-        title: `Актуалити. Обновлено: ${formatDate(actualityDate)}`,
+        title     : `Актуалити. Обновлено: ${formatDate(actualityDate)}`,
         emptyTitle: 'Актуалочка пуста 😔',
       },
       lazyContent: {
-        title: 'Несрочное актуалити',
+        title     : 'Несрочное актуалити',
         emptyTitle: 'Несрочная актуалочка пуста 😔',
       },
     };

@@ -1,11 +1,11 @@
 const { getters: storeGetters, setters: storeSetter } = require('../store');
 
 module.exports = {
-  name: 'config:au',
+  name       : 'config:au',
   description: 'настройки автопостинга',
-  hidden: true,
-  adminOnly: true,
-  arguments: [{ name: 'toggle', description: 'Переключает состояние активности' }],
+  hidden     : true,
+  adminOnly  : true,
+  arguments  : [{ name: 'toggle', description: 'Переключает состояние активности' }],
   getIsAutopostingEnabled() {
     const actualityAutoposting = storeGetters.getActualityAutoposting();
 

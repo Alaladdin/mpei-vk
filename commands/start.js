@@ -2,14 +2,14 @@ const { Keyboard } = require('vk-io');
 const { isAdmin } = require('../helpers');
 
 module.exports = {
-  name: 'start',
+  name       : 'start',
   description: 'включает клавиатуру',
-  hidden: true,
+  hidden     : true,
   async execute(ctx) {
     if (!isAdmin(ctx.senderId) && ctx.peerType !== 'user') return;
 
     await ctx.send({
-      message: 'Клавиатура включена',
+      message : 'Клавиатура включена',
       keyboard: Keyboard
         .builder()
         .urlButton({ label: 'Открыть сайт', url: 'https://mpei.space' })

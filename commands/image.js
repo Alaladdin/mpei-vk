@@ -6,11 +6,11 @@ const { sendMessage } = require('../helpers');
 const createImage = require('../functions/createImage');
 
 module.exports = {
-  name: 'image',
-  aliases: ['i', 'p', 'photo'],
-  description: 'создает картинку с заданным текстом',
+  name              : 'image',
+  aliases           : ['i', 'p', 'photo'],
+  description       : 'создает картинку с заданным текстом',
   lowercaseArguments: false,
-  arguments: [
+  arguments         : [
     { name: 'width', description: '(int) ширина' },
     { name: 'height', description: '(int) высота' },
     { name: 'theme', description: ['dark', 'light'].join(', ') },

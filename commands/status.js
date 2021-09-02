@@ -8,10 +8,10 @@ const {
 } = require('../config');
 
 module.exports = {
-  name: 'status',
+  name       : 'status',
   description: 'информация о боте',
-  aliases: ['info'],
-  hidden: true,
+  aliases    : ['info'],
+  hidden     : true,
   getServerData(query) {
     return fetch(getUniversalUrl(query))
       .then(async (res) => {

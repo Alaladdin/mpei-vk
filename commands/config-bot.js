@@ -1,11 +1,11 @@
 const { getters: storeGetters, setters: storeSetter } = require('../store');
 
 module.exports = {
-  name: 'config:bot',
+  name       : 'config:bot',
   description: 'состояние бота',
-  hidden: true,
-  adminOnly: true,
-  arguments: [{ name: 'toggle', description: 'Переключает состояние' }],
+  hidden     : true,
+  adminOnly  : true,
+  arguments  : [{ name: 'toggle', description: 'Переключает состояние' }],
   async execute(ctx, args) {
     const currentStatus = storeGetters.getBotStatus();
     const getStateText = (state) => (state ? 'включен' : 'выключен');

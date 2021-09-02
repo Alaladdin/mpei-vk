@@ -3,7 +3,7 @@ const scheduleSchedule = require('../cron/schedule');
 const birthdaySchedule = require('../cron/birthday');
 
 module.exports = {
-  name: 'crons',
+  name       : 'crons',
   description: 'set cron',
   async init(vk) {
     await actualitySchedule.execute(vk);

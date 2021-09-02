@@ -5,10 +5,10 @@ const getSchedule = require('../functions/getSchedule');
 const { texts } = require('../data/messages');
 
 module.exports = {
-  name: 'schedule',
+  name       : 'schedule',
   description: texts.schedule,
-  aliases: ['s', 'расписание', 'р'],
-  arguments: [
+  aliases    : ['s', 'расписание', 'р'],
+  arguments  : [
     { name: 'tw', description: texts.forTomorrow },
     { name: 'week', description: texts.forWeek },
     { name: 'nextWeek', description: texts.forNextWeekFull },
@@ -21,24 +21,24 @@ module.exports = {
 
     const argsInstructions = {
       tw: {
-        name: texts.tomorrow,
-        start: tomorrow,
+        name  : texts.tomorrow,
+        start : tomorrow,
         finish: tomorrow,
       },
-      week: { name: texts.week },
+      week    : { name: texts.week },
       nextweek: {
-        name: texts.nextWeek,
-        start: formatDate(startOfISOWeek(addToDate(today, { weeks: 1 })), serverDateFormat),
+        name  : texts.nextWeek,
+        start : formatDate(startOfISOWeek(addToDate(today, { weeks: 1 })), serverDateFormat),
         finish: formatDate(endOfISOWeek(addToDate(today, { weeks: 1 })), serverDateFormat),
       },
       month: {
-        name: texts.month,
-        start: today,
+        name  : texts.month,
+        start : today,
         finish: formatDate(addToDate(today, { months: '1' }), serverDateFormat),
       },
       empty: {
-        name: texts.today,
-        start: today,
+        name  : texts.today,
+        start : today,
         finish: today,
       },
     };

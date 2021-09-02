@@ -10,7 +10,7 @@ let state = {};
   const remoteStore = await getStore().catch(() => ({}));
   const isRemoteEmpty = !Object.keys(remoteStore).length;
   const defaults = {
-    isBotActive: true,
+    isBotActive         : true,
     actualityAutoposting: {
       isEnabled: true,
     },
@@ -20,14 +20,14 @@ let state = {};
     : remoteStore[key]);
 
   state = {
-    isBotActive: getStateValue('isBotActive'),
+    isBotActive         : getStateValue('isBotActive'),
     actualityAutoposting: getStateValue('actualityAutoposting'),
   };
 })();
 
 const getters = {
-  getState: () => state,
-  getBotStatus: () => state.isBotActive,
+  getState               : () => state,
+  getBotStatus           : () => state.isBotActive,
   getActualityAutoposting: () => state.actualityAutoposting,
 };
 

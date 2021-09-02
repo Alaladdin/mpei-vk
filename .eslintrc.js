@@ -1,26 +1,26 @@
 module.exports = {
   env: {
     commonjs: true,
-    es2021: true,
-    node: true,
+    es2021  : true,
+    node    : true,
   },
-  extends: ['airbnb-base'],
+  extends      : ['airbnb-base'],
   parserOptions: { ecmaVersion: 12 },
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'linebreak-style': ['warn', 'windows'],
+  rules        : {
+    'no-console'          : process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger'         : process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'linebreak-style'     : ['warn', 'windows'],
     'object-curly-newline': ['error', {
-      ObjectExpression: { minProperties: 6, multiline: true, consistent: true },
-      ObjectPattern: { minProperties: 6, multiline: true, consistent: true },
+      ObjectExpression : { minProperties: 6, multiline: true, consistent: true },
+      ObjectPattern    : { minProperties: 6, multiline: true, consistent: true },
       ImportDeclaration: { minProperties: 6, multiline: true, consistent: true },
       ExportDeclaration: { minProperties: 6, multiline: true, consistent: true },
     }],
-    'max-len': ['error', 130],
+    'max-len'    : ['error', 130],
     'key-spacing': ['error', {
       singleLine: {
         beforeColon: false,
-        afterColon: true,
+        afterColon : true,
       },
       multiLine: { align: 'colon' },
     }],

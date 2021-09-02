@@ -55,8 +55,8 @@ const sendMessage = async (vk, {
   return vk.api.messages.send({
     message,
     attachment,
-    peer_id: peerId,
-    random_id: getRandomInt({ max: 999 }),
+    peer_id         : peerId,
+    random_id       : getRandomInt({ max: 999 }),
     dont_parse_links: dontParseLinks,
   })
     .catch((e) => {

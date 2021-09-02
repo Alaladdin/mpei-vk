@@ -2,10 +2,10 @@ const { getCommand, isAdmin } = require('../helpers');
 const { texts } = require('../data/messages');
 
 module.exports = {
-  name: 'help',
+  name       : 'help',
   description: 'информация по командам',
-  aliases: ['h', 'commands'],
-  arguments: [{ name: 'all', description: 'выводит полный список команд' }],
+  aliases    : ['h', 'commands'],
+  arguments  : [{ name: 'all', description: 'выводит полный список команд' }],
   getAllCommandsInfo(ctx, args, vk) {
     const showAllCommandsForce = isAdmin(ctx.peerId) && args[0] === 'all';
     const msg = [];

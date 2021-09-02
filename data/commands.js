@@ -3,7 +3,7 @@ const fs = require('fs');
 const commandFolders = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
 
 module.exports = {
-  name: 'commands',
+  name       : 'commands',
   description: 'get bot commands',
   init(vk) {
     // eslint-disable-next-line no-param-reassign
