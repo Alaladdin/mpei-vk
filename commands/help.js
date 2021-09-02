@@ -1,44 +1,32 @@
-const findCommand = require('../util/findCommand');
-const isAdmin = require('../functions/isAdmin');
+const { getCommand, isAdmin } = require('../helpers');
 const { texts } = require('../data/messages');
-
-const { commands: commandsTexts } = texts;
 
 module.exports = {
   name: 'help',
   description: 'информация по командам',
   aliases: ['h', 'commands'],
-  arguments: [
-    {
-      name: 'all',
-      description: 'выводит полный список команд',
-    },
-  ],
-  async execute(ctx, args, vk) {
-    const { commands } = vk;
+  arguments: [{ name: 'all', description: 'выводит полный список команд' }],
+  getAllCommandsInfo(ctx, args, vk) {
     const showAllCommandsForce = isAdmin(ctx.peerId) && args[0] === 'all';
-    const data = [];
-    const command = findCommand(args[0], commands);
+    const msg = [];
 
-    if (!args.length || args[0] === 'all') {
-      data.push(`${commandsTexts.commandsList}:\n`);
+    msg.push(`${texts.commandsList}:\n`);
 
-      commands.forEach((c) => (showAllCommandsForce || !c.hidden) && data.push(`/${c.name} - ${c.description || '???'}`));
-      return ctx.send(data.join('\n'));
-    }
+    vk.commands.forEach((c) => (showAllCommandsForce || !c.hidden) && msg.push(`/${c.name} - ${c.description}`));
+    return ctx.send(msg.join('\n'));
+  },
+  getCommandInfo(ctx, args, vk) {
+    const command = getCommand(vk.commands, args[0]);
+    const msg = [];
 
-    if (!command || (command.hidden && !isAdmin(ctx.peerId))) {
-      return ctx.send(commandsTexts.unknownCommand);
-    }
+    msg.push(`Команда: ${command.name}`);
+    msg.push(`Описание: ${command.description}`);
 
-    data.push(`Name: ${command.name}`);
-
-    if (command.description) data.push(`Description: ${command.description}`);
-    if (command.aliases) data.push(`Aliases: ${command.aliases.join(', ')}`);
+    if (command.aliases) msg.push(`Алиасы: ${command.aliases.join(', ')}`);
 
     if (command.arguments) {
       if (typeof command.arguments[0] === 'string') {
-        data.push(`Arguments: \n${command.arguments.join(', ')}`);
+        msg.push(`Аргументы: \n${command.arguments.join(', ')}`);
       } else {
         const commandArgs = [];
 
@@ -46,10 +34,19 @@ module.exports = {
           commandArgs.push(`${c.name} - ${c.description}`);
         });
 
-        data.push(`Arguments: \n${commandArgs.join('\n')}`);
+        msg.push(`Аргументы: \n${commandArgs.join('\n')}`);
       }
     }
 
-    return ctx.send(data.join('\n'));
+    return ctx.send(msg.join('\n'));
+  },
+  async execute(ctx, args, vk) {
+    const command = getCommand(vk.commands, args[0]);
+    const isUnknownCommand = !command || (command.hidden && !isAdmin(ctx.peerId));
+
+    if (!args.length || args[0] === 'all') return this.getAllCommandsInfo(ctx, args, vk);
+    if (isUnknownCommand) return ctx.send(texts.unknownCommand);
+
+    return this.getCommandInfo(ctx, args, vk);
   },
 };

@@ -5,21 +5,15 @@ module.exports = {
   description: 'состояние бота',
   hidden: true,
   adminOnly: true,
-  stats: false,
-  arguments: [
-    {
-      name: 'toggle',
-      description: 'Переключает состояние',
-    },
-  ],
+  arguments: [{ name: 'toggle', description: 'Переключает состояние' }],
   async execute(ctx, args) {
-    const currentState = storeGetters.getBotStatus();
+    const currentStatus = storeGetters.getBotStatus();
     const getStateText = (state) => (state ? 'включен' : 'выключен');
 
     if (!args.length) {
-      ctx.reply(`Статус: ${getStateText(currentState)}`);
+      ctx.reply(`Бот ${getStateText(currentStatus)}`);
     } else if (args[0] === 'toggle') {
-      const newState = !currentState;
+      const newState = !currentStatus;
 
       await storeSetter.setBotStatus(newState)
         .then(() => {

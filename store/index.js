@@ -1,11 +1,3 @@
-const {
-  getters,
-  setters,
-  eventEmitter,
-} = require('./main');
+const { getters, setters, eventEmitter } = require('./main');
 
-module.exports = {
-  getters,
-  setters,
-  eventEmitter,
-};
+module.exports = { getters, setters, eventEmitter };

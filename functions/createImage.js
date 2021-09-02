@@ -2,24 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const { createCanvas, loadImage } = require('canvas');
 
-module.exports = async (
-  {
-    text = 'Гера воняет',
-    width = '1000',
-    height = '1000',
-    image = null,
-
-    // theming
-    theme = 'dark',
-    fontSize = '128',
-    fontFamily = null,
-    textColor = null,
-    bgColor = null,
-    textAlign = 'center',
-    textPosX = null,
-    textPosY = null,
-  },
-) => {
+module.exports = async ({
+                          text = 'Гера воняет',
+                          width = '1000',
+                          height = '1000',
+                          image = null,
+                          theme = 'dark',
+                          fontSize = '128',
+                          fontFamily = null,
+                          textColor = null,
+                          bgColor = null,
+                          textAlign = 'center',
+                          textPosX = null,
+                          textPosY = null,
+                        }) => {
   const imgWidth = image ? image.width : parseInt(width, 10);
   const imgHeight = image ? image.height : parseInt(height, 10);
   const canvas = createCanvas(imgWidth, imgHeight);
@@ -31,14 +27,8 @@ module.exports = async (
     fs.writeFileSync(path.resolve(filesPath, 'userCreated.png'), buffer);
   };
   const themes = {
-    light: {
-      textColor: '121212',
-      bgColor: 'f2f2f2',
-    },
-    dark: {
-      textColor: 'f2f2f2',
-      bgColor: '121212',
-    },
+    light: { textColor: '121212', bgColor: 'f2f2f2' },
+    dark: { textColor: 'f2f2f2', bgColor: '121212' },
   };
   const selectedTheme = themes[Object.keys(themes).find((key) => key === theme) || 'dark'];
   const config = {

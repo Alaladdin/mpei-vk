@@ -7,6 +7,7 @@ module.exports = {
   description: 'set events',
   init(vk) {
     eventFolders.forEach((file) => {
+      // eslint-disable-next-line global-require,import/no-dynamic-require
       const event = require(`../events/${file}`);
       vk.updates.on(event.name, (...args) => event.execute(...args, vk));
     });

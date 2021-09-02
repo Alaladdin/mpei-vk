@@ -2,57 +2,25 @@ const fs = require('fs');
 const path = require('path');
 const { texts } = require('../data/messages');
 const { options: optionsRegex } = require('../data/regex');
-const sendMessage = require('../functions/sendMessage');
+const { sendMessage } = require('../helpers');
 const createImage = require('../functions/createImage');
-
-const { image: imageTexts } = texts;
 
 module.exports = {
   name: 'image',
-  aliases: ['p', 'photo'],
+  aliases: ['i', 'p', 'photo'],
   description: 'создает картинку с заданным текстом',
   lowercaseArguments: false,
   arguments: [
-    {
-      name: 'width',
-      description: '(int) ширина',
-    },
-    {
-      name: 'height',
-      description: '(int) высота',
-    },
-    {
-      name: 'theme',
-      description: ['dark', 'light'].join(', '),
-    },
-    {
-      name: 'fontSize',
-      description: '(int - px) размер шрифта',
-    },
-    {
-      name: 'fontFamily',
-      description: 'шрифт',
-    },
-    {
-      name: 'textColor',
-      description: '(int - hex) цвет шрифта (без #)',
-    },
-    {
-      name: 'bgColor',
-      description: '(int - hex) цвет фона (без #)',
-    },
-    {
-      name: 'textAlign',
-      description: ['left', 'right', 'center', 'start', 'end'].join(', '),
-    },
-    {
-      name: 'textPosX',
-      description: '(int) координаты текста по X',
-    },
-    {
-      name: 'textPosY',
-      description: '(int) координаты текста по Y',
-    },
+    { name: 'width', description: '(int) ширина' },
+    { name: 'height', description: '(int) высота' },
+    { name: 'theme', description: ['dark', 'light'].join(', ') },
+    { name: 'fontSize', description: '(int - px) размер шрифта' },
+    { name: 'fontFamily', description: 'шрифт' },
+    { name: 'textColor', description: '(int - hex) цвет шрифта (без #)' },
+    { name: 'bgColor', description: '(int - hex) цвет фона (без #)' },
+    { name: 'textAlign', description: ['left', 'right', 'center', 'start', 'end'].join(', ') },
+    { name: 'textPosX', description: '(int) координаты текста по X' },
+    { name: 'textPosY', description: '(int) координаты текста по Y' },
   ],
   getAttachImage(attachments) {
     const { sizes } = attachments[0];
@@ -61,21 +29,14 @@ module.exports = {
     return sizes.find((obj) => obj.width === maxAttachWidth);
   },
   async execute(ctx, args, vk) {
-    const { upload } = vk;
     const { peerId, attachments } = ctx;
     const configBlackListOptions = ['text', 'image'];
-    let filteredArgs = args;
+    const config = { image: attachments.length && this.getAttachImage(attachments) };
 
-    const config = {
-      image: attachments.length && this.getAttachImage(attachments),
-    };
-
-    if (!args.length) {
-      await ctx.reply(imageTexts.status.noArgument);
-      return;
-    }
+    if (!args.length) return ctx.reply(texts.imageTextRequired);
 
     const argsConfig = args.join(' ').match(optionsRegex);
+    let filteredArgs = args;
 
     if (argsConfig) {
       argsConfig.forEach((option) => {
@@ -94,20 +55,18 @@ module.exports = {
     try {
       await createImage(config);
     } catch (e) {
-      ctx.reply(texts.status.crashError);
+      ctx.reply(texts.totalCrash);
     }
+
     const fileData = await fs.promises.readFile(path.resolve(__dirname, '../files/userCreated.png'));
+    const uploadedImage = await vk.upload.messagePhoto(
+      { peer_id: peerId, source: { value: fileData } },
+    ).catch(console.error);
 
-    const uploadedImage = await upload.messagePhoto({
-      peer_id: peerId,
-      source: {
-        value: fileData,
-      },
-    });
+    if (!uploadedImage) return ctx.reply(texts.totalCrash);
 
-    await sendMessage(vk, {
-      peerId,
-      attachment: `photo${uploadedImage.ownerId}_${uploadedImage.id}`,
+    return sendMessage(vk, {
+      peerId, attachment: `photo${uploadedImage.ownerId}_${uploadedImage.id}`,
     });
   },
 };

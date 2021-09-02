@@ -1,37 +1,46 @@
-const { format } = require('../util/pdate');
-const pactuality = require('../functions/actuality');
+const { formatDate } = require('../helpers');
+const getActuality = require('../functions/getActuality');
 const { texts } = require('../data/messages');
 
 module.exports = {
   name: 'actuality',
   description: 'актуалочка',
   aliases: ['a', 'act', 'акт'],
-  arguments: [
-    {
-      name: 'lazy',
-      description: texts.actuality.arguments.lazy,
-    },
-  ],
+  arguments: [{ name: 'lazy', description: 'несрочная актуалочка' }],
+  getActualityOutputData(contentType, actualityDate) {
+    const actualityData = {
+      content: {
+        title: `Актуалити. Обновлено: ${formatDate(actualityDate)}`,
+        emptyTitle: 'Актуалочка пуста 😔',
+      },
+      lazyContent: {
+        title: 'Несрочное актуалити',
+        emptyTitle: 'Несрочная актуалочка пуста 😔',
+      },
+    };
+
+    return actualityData[contentType];
+  },
   async execute(ctx, args) {
-    pactuality.get()
-      .then(({ actuality }) => {
+    getActuality()
+      .then((actuality) => {
         const [command] = args;
+        const isLazy = !!command && command.toLowerCase() === 'lazy';
+        const content = isLazy ? 'lazyContent' : 'content';
+        const selectedActualityData = this.getActualityOutputData(content, actuality.date);
         const msg = [];
 
-        if (command && command.toLowerCase() === 'lazy') {
-          if (!actuality.lazyContent) return ctx.send('Несрочная актуалочка пуста 😔');
-          msg.push('Несрочное актуалити\n');
-          msg.push(actuality.lazyContent);
+        if (!actuality[content]) {
+          msg.push(selectedActualityData.emptyTitle);
         } else {
-          if (!actuality.content) return ctx.send('Актуалочка пуста 😔');
-          msg.push(`Актуалити. Обновлено: ${format(actuality.date)}\n`);
-          msg.push(`${actuality.content}\n`);
+          msg.push(selectedActualityData.title);
+          msg.push(actuality[content]);
         }
 
         return ctx.send(msg.join('\n'));
       })
       .catch(() => {
-        ctx.send(texts.status.databaseError);
+        ctx.send(texts.databaseError);
       });
   },
 };

@@ -6,5 +6,4 @@ module.exports = {
   setStoreUrl: `${serverAddress}/setVKBotStore?authToken=${authToken}`,
   getActualityUrl: `${serverAddress}/getActuality`,
   getScheduleUrl: `${serverAddress}/getSchedule/`,
-  getFAQUrl: `${serverAddress}/getFAQ?authToken=${authToken}`,
 };

@@ -11,11 +11,8 @@ let state = {};
   const isRemoteEmpty = !Object.keys(remoteStore).length;
   const defaults = {
     isBotActive: true,
-    isHateOnQuestions: true,
-    isListenMessages: false,
-    hateTriggersCount: 0,
-    actualityAutopost: {
-      enabled: true,
+    actualityAutoposting: {
+      isEnabled: true,
     },
   };
   const getStateValue = (key) => ((isRemoteEmpty || remoteStore[key] === undefined)
@@ -24,20 +21,14 @@ let state = {};
 
   state = {
     isBotActive: getStateValue('isBotActive'),
-    isHateOnQuestions: getStateValue('isHateOnQuestions'),
-    isListenMessages: getStateValue('isListenMessages'),
-    hateTriggersCount: getStateValue('hateTriggersCount'),
-    actualityAutopost: getStateValue('actualityAutopost'),
+    actualityAutoposting: getStateValue('actualityAutoposting'),
   };
 })();
 
 const getters = {
   getState: () => state,
   getBotStatus: () => state.isBotActive,
-  getIsHateOnQuestions: () => state.isHateOnQuestions,
-  getIsListenMessages: () => state.isListenMessages,
-  getHateTriggersCount: () => state.hateTriggersCount,
-  getActualityConfig: () => state.actualityAutopost,
+  getActualityAutoposting: () => state.actualityAutoposting,
 };
 
 const setters = {
@@ -47,35 +38,20 @@ const setters = {
       .then((updatedState) => {
         eventEmitter.emit(eventName);
         return updatedState;
+      })
+      .catch((e) => {
+        console.error(e);
+        throw e;
       });
   },
   async setBotStatus(status = true) {
     state.isBotActive = status;
-    return this.listener('botStatus');
+    return this.listener('setBotStatus');
   },
-  async setIsHateOnQuestions(status = true) {
-    state.isHateOnQuestions = status;
-    return this.listener('isHateOnQuestions');
-  },
-  async setIsListenMessages(status = true) {
-    state.isListenMessages = status;
-    return this.listener('isListenMessages');
-  },
-  async setAutopostingStatus(status = true) {
-    state.actualityAutopost.enabled = status;
-    return this.listener('setAutopostingStatus');
-  },
-  async incrementHateTriggersCount() {
-    const count = state.hateTriggersCount;
-
-    state.hateTriggersCount = (count && count > 0) ? count + 1 : 1;
-
-    return this.listener('hateTriggersCount');
+  async setActualityAutopostingStatus(status = true) {
+    state.actualityAutoposting.isEnabled = status;
+    return this.listener('setActualityAutopostingStatus');
   },
 };
 
-module.exports = {
-  getters,
-  setters,
-  eventEmitter,
-};
+module.exports = { getters, setters, eventEmitter };

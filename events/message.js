@@ -1,11 +1,6 @@
-const { prefix, chats } = require('../config');
+const { prefix } = require('../config');
 const { getters: storeGetters } = require('../store');
-const notAllowedMessages = require('../functions/notAllowedMessages');
-const isAdmin = require('../functions/isAdmin');
-const sendMessage = require('../functions/sendMessage');
-const getUsers = require('../functions/getUsers');
-const findCommand = require('../util/findCommand');
-const priority = require('../data/priority');
+const { getCommand, isAdmin } = require('../helpers');
 
 module.exports = {
   name: 'message',
@@ -19,9 +14,6 @@ module.exports = {
   async execute(ctx, next, vk) {
     const { messagePayload, text } = ctx;
 
-    await this.listenMessages(ctx, vk);
-    await notAllowedMessages.execute(ctx, text, vk);
-
     if (!this.isPassedConditions(ctx)) return;
 
     const commandBody = (messagePayload && messagePayload.command)
@@ -29,7 +21,7 @@ module.exports = {
       : text.slice(1);
     let args = commandBody.split(' ').filter((arg) => arg);
     const commandAlias = args.shift().toLowerCase();
-    const command = findCommand(commandAlias, vk.commands);
+    const command = getCommand(vk.commands, commandAlias);
 
     // call command
     if (command) {
@@ -39,45 +31,5 @@ module.exports = {
 
       command.execute(ctx, args, vk);
     }
-  },
-  async listenMessages(ctx, vk) {
-    const { forwards, replyMessage } = ctx;
-    const chatName = Object.keys(chats).find((key) => (chats[key] === ctx.peerId));
-    const isListenMessages = storeGetters.getIsListenMessages();
-    const isAdminPrivateChat = isAdmin(ctx.peerId);
-    const mess = [];
-
-    const hasForwardsMessage = forwards.length && forwards[0].text;
-    const hasReplyMessage = replyMessage && replyMessage.text;
-    const hasNoMessageText = !ctx.text && !hasForwardsMessage && !hasReplyMessage;
-
-    if ((hasNoMessageText) || !ctx.isUser || !isListenMessages || isAdminPrivateChat) return;
-
-    const users = await getUsers(vk, { userIds: ctx.senderId });
-
-    if (users) {
-      const getUserFullNameWithLink = (user) => `@id${user.id} (${user.first_name} ${user.last_name})`;
-
-      mess.push(`Chat: ${chatName || ctx.peerId}`);
-      mess.push(`Sender: ${getUserFullNameWithLink(users[0])}`);
-
-      if (hasForwardsMessage) forwards.map((f) => f.text && mess.push(`Forwards: ${f.text}`));
-
-      if (hasReplyMessage) {
-        if (replyMessage.senderType === 'user') {
-          const replyMessageUsers = await getUsers(vk, { userIds: replyMessage.senderId });
-          if (replyMessageUsers) mess.push(`Replied to user: ${getUserFullNameWithLink(replyMessageUsers[0])}`);
-        }
-        mess.push(`Replied mess: ${replyMessage.text}`);
-      }
-      if (ctx.text) mess.push(`Message: ${ctx.text}`);
-    } else {
-      mess.push('[Error] users get');
-    }
-
-    await sendMessage(vk, {
-      peerId: priority.admins.AL,
-      message: mess.join('\n'),
-    });
   },
 };

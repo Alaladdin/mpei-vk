@@ -1,8 +1,6 @@
 const schedule = require('node-schedule');
 const { chats } = require('../config');
-const { format: formatDate } = require('../util/pdate');
-const sendMessage = require('../functions/sendMessage');
-const getChatMembers = require('../functions/getChatMembers');
+const { formatDate, getChatMembers, sendMessage } = require('../helpers');
 
 module.exports = {
   async execute(vk) {
@@ -13,8 +11,9 @@ module.exports = {
       if (!chatMembers) return;
 
       const today = formatDate(Date.now(), 'd.M');
-      const todayBirthUsers = chatMembers.profiles.filter((profile) => profile.bdate
-        && profile.bdate.split('.').slice(0, 2).join('.') === today);
+      const todayBirthUsers = chatMembers.profiles.filter(
+        (profile) => profile.bdate && profile.bdate.split('.').slice(0, 2).join('.') === today,
+      );
 
       todayBirthUsers.forEach((user) => {
         const userFullName = `${user.first_name} ${user.last_name}`;

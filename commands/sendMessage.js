@@ -1,12 +1,11 @@
 const { chats } = require('../config');
-const sendMessage = require('../functions/sendMessage');
+const { sendMessage } = require('../helpers');
 
 module.exports = {
   name: 'sm',
   description: 'отправляет сообщение через бота',
   hidden: true,
   adminOnly: true,
-  stats: false,
   lowercaseArguments: false,
   noArgumentsReply(ctx, isChatPassed) {
     ctx.reply(`Необходимо сообщение ${!isChatPassed ? 'и чат' : ''} для отправки`);

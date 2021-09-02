@@ -1,18 +1,25 @@
 const schedule = require('node-schedule');
 const { chats } = require('../config');
 const { getters: storeGetters } = require('../store');
-const { get: getActuality } = require('../functions/actuality');
-const sendMessage = require('../functions/sendMessage');
-const { format: formatDate } = require('../util/pdate');
+const getActuality = require('../functions/getActuality');
+const { formatDate, sendMessage } = require('../helpers');
 
 module.exports = {
+  getIsAutopostingEnabled() {
+    const actualityAutoposting = storeGetters.getActualityAutoposting();
+
+    return actualityAutoposting.isEnabled;
+  },
   async execute(vk) {
-    const actualityConfig = () => storeGetters.getActualityConfig();
     const { main: mainChat, spam: spamChat } = chats;
 
     schedule.scheduleJob('0 0 9 * * *', async () => {
-      if (!actualityConfig().enabled) return;
-      const { actuality } = await getActuality();
+      const isEnabled = this.getIsAutopostingEnabled();
+
+      if (!isEnabled) return;
+
+      const actuality = await getActuality();
+
       if (actuality) {
         const msg = [];
 
@@ -20,10 +27,7 @@ module.exports = {
         msg.push(`${actuality.content}`);
 
         [mainChat, spamChat].forEach((chat) => {
-          sendMessage(vk, {
-            peerId: chat,
-            message: msg.join('\n'),
-          });
+          sendMessage(vk, { peerId: chat, message: msg.join('\n') });
         });
       }
     });

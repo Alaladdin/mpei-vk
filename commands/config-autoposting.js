@@ -5,31 +5,35 @@ module.exports = {
   description: 'настройки автопостинга',
   hidden: true,
   adminOnly: true,
-  stats: false,
-  arguments: [
-    {
-      name: 'toggle',
-      description: 'Переключает состояние активности',
-    },
-  ],
+  arguments: [{ name: 'toggle', description: 'Переключает состояние активности' }],
+  getIsAutopostingEnabled() {
+    const actualityAutoposting = storeGetters.getActualityAutoposting();
+
+    return actualityAutoposting.isEnabled;
+  },
+  getStatusText() {
+    const isEnabled = this.getIsAutopostingEnabled();
+
+    return isEnabled ? 'включен' : 'выключен';
+  },
+  async toggleAutoposting(ctx) {
+    const isEnabled = this.getIsAutopostingEnabled();
+
+    await storeSetter.setActualityAutopostingStatus(!isEnabled)
+      .then(() => {
+        ctx.reply(`Автопостинг актуалочки теперь ${this.getStatusText()}`);
+      })
+      .catch(() => {
+        ctx.reply('Ошибка при попытке изменить настройки');
+      });
+  },
   async execute(ctx, args) {
-    const actualityConfig = storeGetters.getActualityConfig();
-    const getStateText = (state) => (state ? 'включен' : 'выключен');
-
     if (!args.length) {
-      const msg = ['Текущие настройки автопостинга'];
-      msg.push(`Статус: ${getStateText(actualityConfig.enabled)}`);
-      ctx.reply(msg.join('\n'));
-    } else if (args[0] === 'toggle') {
-      const newState = !actualityConfig.enabled;
+      const currentStatus = this.getStatusText();
 
-      await storeSetter.setAutopostingStatus(newState)
-        .then(() => {
-          ctx.reply(`Автопостинг актуалочки теперь ${getStateText(newState)}`);
-        })
-        .catch(() => {
-          ctx.reply('Ошибка при попытке изменить настройки');
-        });
+      ctx.reply(`Автопостинг актуалочки ${currentStatus}`);
+    } else if (args[0] === 'toggle') {
+      await this.toggleAutoposting(ctx);
     }
   },
 };

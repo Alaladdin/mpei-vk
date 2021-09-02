@@ -1,87 +1,72 @@
 const { startOfISOWeek, endOfISOWeek } = require('date-fns');
-const { format, add } = require('../util/pdate');
+const { formatDate, addToDate } = require('../helpers');
 const { serverDateFormat } = require('../config');
-const pschedule = require('../functions/schedule');
+const getSchedule = require('../functions/getSchedule');
 const { texts } = require('../data/messages');
-
-const { schedule: scheduleTexts } = texts;
 
 module.exports = {
   name: 'schedule',
-  description: scheduleTexts.description,
+  description: texts.schedule,
   aliases: ['s', 'расписание', 'р'],
   arguments: [
-    {
-      name: 'tw',
-      description: scheduleTexts.arguments.tomorrowFull,
-    },
-    {
-      name: 'week',
-      description: scheduleTexts.arguments.weekFull,
-    },
-    {
-      name: 'nextWeek',
-      description: scheduleTexts.arguments.nextWeekFull,
-    },
-    {
-      name: 'month',
-      description: scheduleTexts.arguments.monthFull,
-    },
+    { name: 'tw', description: texts.forTomorrow },
+    { name: 'week', description: texts.forWeek },
+    { name: 'nextWeek', description: texts.forNextWeekFull },
+    { name: 'month', description: texts.forMonth },
   ],
   async execute(ctx, args) {
-    const today = format(new Date(), serverDateFormat);
-    const tomorrow = format(add(new Date()), serverDateFormat);
+    const today = formatDate(new Date(), serverDateFormat);
+    const tomorrow = formatDate(addToDate(new Date()), serverDateFormat);
     const [command] = args;
 
     const argsInstructions = {
       tw: {
-        name: scheduleTexts.arguments.tomorrow,
+        name: texts.tomorrow,
         start: tomorrow,
         finish: tomorrow,
       },
-      week: {
-        name: scheduleTexts.arguments.week,
-      },
+      week: { name: texts.week },
       nextweek: {
-        name: scheduleTexts.arguments.nextWeek,
-        start: format(startOfISOWeek(add(today, { weeks: 1 })), serverDateFormat),
-        finish: format(endOfISOWeek(add(today, { weeks: 1 })), serverDateFormat),
+        name: texts.nextWeek,
+        start: formatDate(startOfISOWeek(addToDate(today, { weeks: 1 })), serverDateFormat),
+        finish: formatDate(endOfISOWeek(addToDate(today, { weeks: 1 })), serverDateFormat),
       },
       month: {
-        name: scheduleTexts.arguments.month,
+        name: texts.month,
         start: today,
-        finish: format(add(today, { months: '1' }), serverDateFormat),
+        finish: formatDate(addToDate(today, { months: '1' }), serverDateFormat),
       },
       empty: {
-        name: scheduleTexts.arguments.today,
+        name: texts.today,
         start: today,
         finish: today,
       },
     };
 
-    if (command && (command === 'empty' || !argsInstructions[command])) return ctx.reply(`${texts.commands.unknownArgument} "${command}"`);
+    if (command && (command === 'empty' || !argsInstructions[command])) return ctx.reply(`${texts.unknownArgument} "${command}"`);
 
     const selectedDate = argsInstructions[!args.length ? 'empty' : command];
+    const { start, finish } = selectedDate;
 
-    return pschedule.get(selectedDate)
-      .then(async ({ schedule }) => {
-        if (!schedule.length) return ctx.send(scheduleTexts.noClasses);
+    return getSchedule(start, finish)
+      .then(async (schedule) => {
+        if (!schedule.length) return ctx.send(texts.noClasses);
 
-        await ctx.send(`${scheduleTexts.scheduleFor} ${selectedDate.name}`);
+        await ctx.send(`${texts.scheduleFor} ${selectedDate.name}`);
 
-        return schedule.forEach((item) => {
+        return schedule.forEach((i) => {
           const itemData = [];
 
-          itemData.push(`[${item.dayOfWeekString}] ${item.discipline} - ${format(item.date)}`);
-          itemData.push(item.kindOfWork);
-          itemData.push(`${item.beginLesson} - ${item.endLesson}`);
-          itemData.push(item.lecturer);
+          itemData.push(`[${i.dayOfWeekString}] ${formatDate(i.date)} - ${i.discipline}`);
+          itemData.push(`Тип: ${i.kindOfWork}`);
+          itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
+          itemData.push(`Препод: ${i.lecturer}`);
+          if (i.building !== '-') itemData.push(`Кабинет: ${i.auditorium} (${i.building})`);
+          if (i.group) itemData.push(`Группа: ${i.group}`);
 
           return ctx.send(itemData.join('\n'));
         });
       })
-      .catch(() => {
-        ctx.send(texts.status.mpeiServerError);
-      });
+      .catch(() => ctx.send(texts.mpeiServerError));
   },
 };

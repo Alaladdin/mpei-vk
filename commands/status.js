@@ -10,7 +10,8 @@ const {
 module.exports = {
   name: 'status',
   description: 'информация о боте',
-  aliases: ['info', 'i'],
+  aliases: ['info'],
+  hidden: true,
   getServerData(query) {
     return fetch(getUniversalUrl(query))
       .then(async (res) => {
@@ -20,16 +21,14 @@ module.exports = {
 
         return Object.values(json)[0];
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((e) => {
+        console.error(e);
         return 'error';
       });
   },
   async execute(ctx) {
     const prefixText = !Array.isArray(prefix) ? prefix : prefix.join(', ');
     const serverVersion = await this.getServerData('version');
-    const serverHealth = await this.getServerData('health');
-    const serverPing = await this.getServerData('ping');
     const msg = [];
 
     // bot info
@@ -42,11 +41,7 @@ module.exports = {
     msg.push('\n- Server info');
     msg.push(`· address: ${serverAddress}`);
     msg.push(`· version: ${serverVersion}`);
-    msg.push(`· health: ${serverHealth}`);
-    msg.push(`· ping: ${serverPing}`);
 
-    ctx.send(msg.join('\n'), {
-      dont_parse_links: true,
-    });
+    ctx.send(msg.join('\n'), { dont_parse_links: true });
   },
 };

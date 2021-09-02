@@ -4,7 +4,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   isProd,
-  prefix: ['/', '!', '@'] || process.env.PREFIX,
+  prefix: ['/', '!', '@'] || process.env.PREFIXES,
   token: isProd ? process.env.TOKEN : process.env.TOKEN_DEV,
   serverAddress: isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
   authToken: process.env.AUTH_TOKEN,
