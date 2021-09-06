@@ -23,8 +23,8 @@ module.exports = {
         if (i.building !== '-') itemData.push(`Кабинет: ${i.auditorium} (${i.building})`);
         if (i.group) itemData.push(`Группа: ${i.group}`);
 
-        [mainChat, spamChat].forEach((chat) => {
-          sendMessage(vk, { peerId: chat.peerId, message: itemData.join('\n') });
+        [mainChat, spamChat].forEach((peerId) => {
+          sendMessage(vk, { peerId, message: itemData.join('\n') });
         });
       });
     });
