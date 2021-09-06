@@ -26,8 +26,8 @@ module.exports = {
         msg.push(`Актуалити. Обновлено: ${formatDate(actuality.date)}\n`);
         msg.push(`${actuality.content}`);
 
-        [mainChat, spamChat].forEach((chat) => {
-          sendMessage(vk, { peerId: chat, message: msg.join('\n') });
+        [mainChat, spamChat].forEach((peerId) => {
+          sendMessage(vk, { peerId, message: msg.join('\n') });
         });
       }
     });

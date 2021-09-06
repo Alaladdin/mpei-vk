@@ -7,7 +7,7 @@ module.exports = {
   aliases    : ['h', 'commands'],
   arguments  : [{ name: 'all', description: 'выводит полный список команд' }],
   getAllCommandsInfo(ctx, args, vk) {
-    const showAllCommandsForce = isAdmin(ctx.peerId) && args[0] === 'all';
+    const showAllCommandsForce = args[0] === 'all';
     const msg = [];
 
     msg.push(`${texts.commandsList}:\n`);
