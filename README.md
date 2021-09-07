@@ -1,15 +1,22 @@
+![GitHub package.json version](https://img.shields.io/github/package-json/v/Alaladdin/mpei-vk?color=%23BE97F5)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/Alaladdin/mpei-server?color=%23BE97F5&label=api%20version)
+
 # MPEI-vk bot
 
 ### Commands
 
-`/actuality` - get actuality
+`/actuality` - актуалочка
 
-`/schedule ` - get schedule
+`/compliment` - утопляет комплиментами. Осторожно, чрезмерное использование может привести к дружелюбной обстановке
 
-`/start` - show keyboard
+`/time` - текущее время по МСК
 
-`/help` - get help
+`/help` - информация по командам
 
-`/hide` - hide keyboard
+`/image` - создает картинку с заданным текстом
 
-`/troll` - get trolling message
+`/schedule` - расписание
+
+`/status` - информация о боте
+
+`/troll` - троллит, притом жейско. Используйте с осторожностью, вы запросто можете ранить чьи-то чувства

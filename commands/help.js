@@ -38,7 +38,7 @@ module.exports = {
       }
     }
 
-    return ctx.send(msg.join('\n'));
+    return ctx.send(msg.join('\n'), { dont_parse_links: true });
   },
   async execute(ctx, args, vk) {
     const command = getCommand(vk.commands, args[0]);
