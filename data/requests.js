@@ -1,9 +1,9 @@
-const { serverAddress, authToken } = require('../config');
+const { serverAddress } = require('../config');
 
 module.exports = {
   getUniversalUrl: (query) => `${serverAddress}/${query}`,
-  getStoreUrl    : `${serverAddress}/getVKBotStore?authToken=${authToken}`,
-  setStoreUrl    : `${serverAddress}/setVKBotStore?authToken=${authToken}`,
+  getStoreUrl    : `${serverAddress}/getVKBotStore`,
+  setStoreUrl    : `${serverAddress}/setVKBotStore`,
   getActualityUrl: `${serverAddress}/getActuality`,
   getScheduleUrl : `${serverAddress}/getSchedule/`,
 };
