@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.21.2",
+  "version": "1.22.0",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,6 @@
   "author": "Alaladdin",
   "license": "ISC",
   "dependencies": {
-    "canvas": "^2.8.0",
     "date-fns": "^2.23.0",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",

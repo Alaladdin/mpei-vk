@@ -16,7 +16,7 @@ module.exports = {
       scheduleData.forEach((i) => {
         const itemData = [];
 
-        itemData.push(`[${i.dayOfWeekString}] ${formatDate(i.date)} - ${i.discipline}`);
+        itemData.push(`[${i.dayOfWeekString}] ${i.date} - ${i.discipline}`);
         itemData.push(`Тип: ${i.kindOfWork}`);
         itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
         itemData.push(`Препод: ${i.lecturer}`);
