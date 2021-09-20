@@ -16,12 +16,8 @@ module.exports = {
       const newState = !currentStatus;
 
       await storeSetter.setBotStatus(newState)
-        .then(() => {
-          ctx.reply(`Бот теперь: ${getStateText(newState)}`);
-        })
-        .catch(() => {
-          ctx.reply('Ошибка при попытке изменить настройки');
-        });
+        .then(() => ctx.reply(`Бот теперь: ${getStateText(newState)}`))
+        .catch(() => ctx.reply('Ошибка при попытке изменить настройки'));
     }
   },
 };

@@ -20,12 +20,8 @@ module.exports = {
     const isEnabled = this.getIsAutopostingEnabled();
 
     await storeSetter.setActualityAutopostingStatus(!isEnabled)
-      .then(() => {
-        ctx.reply(`Автопостинг актуалочки теперь ${this.getStatusText()}`);
-      })
-      .catch(() => {
-        ctx.reply('Ошибка при попытке изменить настройки');
-      });
+      .then(() => ctx.reply(`Автопостинг актуалочки теперь ${this.getStatusText()}`))
+      .catch(() => ctx.reply('Ошибка при попытке изменить настройки'));
   },
   async execute(ctx, args) {
     if (!args.length) {

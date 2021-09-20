@@ -2,7 +2,7 @@ const schedule = require('node-schedule');
 const { chats } = require('../config');
 const { getters: storeGetters } = require('../store');
 const getActuality = require('../functions/getActuality');
-const { formatDate, sendMessage } = require('../helpers');
+const { sendMessage } = require('../helpers');
 
 module.exports = {
   getIsAutopostingEnabled() {
@@ -15,21 +15,13 @@ module.exports = {
 
     schedule.scheduleJob('0 0 9 * * *', async () => {
       const isEnabled = this.getIsAutopostingEnabled();
-
-      if (!isEnabled) return;
-
       const actuality = await getActuality();
 
-      if (actuality) {
-        const msg = [];
+      if (!isEnabled || !actuality) return;
 
-        msg.push(`Актуалити. Обновлено: ${formatDate(actuality.date)}\n`);
-        msg.push(`${actuality.content}`);
-
-        [mainChat, spamChat].forEach((peerId) => {
-          sendMessage(vk, { peerId, message: msg.join('\n') });
-        });
-      }
+      [mainChat, spamChat].forEach((peerId) => {
+        sendMessage(vk, { peerId, message: `Актуалити\n${actuality.content}` });
+      });
     });
   },
 };

@@ -1,4 +1,3 @@
-const { formatDate } = require('../helpers');
 const getActuality = require('../functions/getActuality');
 const { texts } = require('../data/messages');
 
@@ -7,10 +6,10 @@ module.exports = {
   description: 'актуалочка',
   aliases    : ['a', 'act', 'акт'],
   arguments  : [{ name: 'lazy', description: 'несрочная актуалочка' }],
-  getActualityOutputData(contentType, actualityDate) {
+  getActualityOutputData(contentType) {
     const actualityData = {
       content: {
-        title     : `Актуалити. Обновлено: ${formatDate(actualityDate)}`,
+        title     : 'Актуалити',
         emptyTitle: 'Актуалочка пуста 😔',
       },
       lazyContent: {
@@ -27,7 +26,7 @@ module.exports = {
         const [command] = args;
         const isLazy = !!command && command.toLowerCase() === 'lazy';
         const content = isLazy ? 'lazyContent' : 'content';
-        const selectedActualityData = this.getActualityOutputData(content, actuality.date);
+        const selectedActualityData = this.getActualityOutputData(content);
         const msg = [];
 
         if (!actuality[content]) {
@@ -39,8 +38,6 @@ module.exports = {
 
         return ctx.send(msg.join('\n'));
       })
-      .catch(() => {
-        ctx.send(texts.databaseError);
-      });
+      .catch(() => ctx.send(texts.databaseError));
   },
 };
