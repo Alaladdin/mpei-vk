@@ -10,7 +10,7 @@ module.exports = {
 
       if (!chatMembers) return;
 
-      const today = formatDate(Date.now(), 'd.M');
+      const today = formatDate(new Date(), 'd.M');
       const todayBirthUsers = chatMembers.profiles.filter(
         (profile) => profile.bdate && profile.bdate.split('.').slice(0, 2).join('.') === today,
       );
