@@ -2,8 +2,8 @@ const { serverAddress } = require('../config');
 
 module.exports = {
   getUniversalUrl: (query) => `${serverAddress}/${query}`,
-  getStoreUrl    : `${serverAddress}/getVKBotStore`,
-  setStoreUrl    : `${serverAddress}/setVKBotStore`,
+  getStoreUrl    : `${serverAddress}/vk/getStore`,
+  setStoreUrl    : `${serverAddress}/vk/setStore`,
   getActualityUrl: `${serverAddress}/getActuality`,
   getScheduleUrl : `${serverAddress}/getSchedule/`,
 };
