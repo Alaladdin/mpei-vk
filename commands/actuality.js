@@ -36,7 +36,7 @@ module.exports = {
           msg.push(actuality[content]);
         }
 
-        return ctx.send(msg.join('\n'));
+        return ctx.send(msg.join('\n\n'));
       })
       .catch(() => ctx.send(texts.databaseError));
   },
