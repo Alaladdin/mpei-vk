@@ -13,6 +13,7 @@ module.exports = {
     { name: 'week', description: texts.forWeek },
     { name: 'nextWeek', description: texts.forNextWeekFull },
     { name: 'month', description: texts.forMonth },
+    { name: 'all', description: texts.all },
   ],
   async execute(ctx, args) {
     const today = formatDate(new Date(), serverDateFormat);
