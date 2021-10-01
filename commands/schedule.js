@@ -18,7 +18,6 @@ module.exports = {
     const today = formatDate(new Date(), serverDateFormat);
     const tomorrow = formatDate(addToDate(new Date()), serverDateFormat);
     const [command] = args;
-
     const argsInstructions = {
       tw: {
         name  : texts.tomorrow,
@@ -43,9 +42,8 @@ module.exports = {
       },
     };
 
-    if (command && (command === 'empty' || !argsInstructions[command])) return ctx.reply(`${texts.unknownArgument} "${command}"`);
-
-    const selectedDate = argsInstructions[!args.length ? 'empty' : command];
+    const showAllFields = args.includes('all');
+    const selectedDate = argsInstructions[command] || argsInstructions.empty;
     const { start, finish } = selectedDate;
 
     return getSchedule(start, finish)
@@ -59,8 +57,8 @@ module.exports = {
 
           itemData.push(`[${i.dayOfWeekString}] ${i.date} - ${i.disciplineAbbr}`);
           itemData.push(`Тип: ${i.kindOfWork}`);
-          itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
-          itemData.push(`Препод: ${i.lecturer}`);
+          if (showAllFields) itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
+          if (showAllFields) itemData.push(`Препод: ${i.lecturer}`);
           if (i.building !== '-') itemData.push(`Кабинет: ${i.auditorium} (${i.building})`);
           if (i.group) itemData.push(`Группа: ${i.group}`);
 

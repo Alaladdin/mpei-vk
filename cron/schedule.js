@@ -18,8 +18,8 @@ module.exports = {
 
         itemData.push(`[${i.dayOfWeekString}] ${i.date} - ${i.disciplineAbbr}`);
         itemData.push(`Тип: ${i.kindOfWork}`);
-        itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
-        itemData.push(`Препод: ${i.lecturer}`);
+        // itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
+        // itemData.push(`Препод: ${i.lecturer}`);
         if (i.building !== '-') itemData.push(`Кабинет: ${i.auditorium} (${i.building})`);
         if (i.group) itemData.push(`Группа: ${i.group}`);
 
