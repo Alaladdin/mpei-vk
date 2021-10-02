@@ -7,6 +7,7 @@ const { texts } = require('../data/messages');
 module.exports = {
   name       : 'schedule',
   description: texts.schedule,
+  hidden     : true,
   aliases    : ['s', 'расписание', 'р'],
   arguments  : [
     { name: 'tw', description: texts.forTomorrow },
@@ -16,6 +17,8 @@ module.exports = {
     { name: 'all', description: texts.all },
   ],
   async execute(ctx, args) {
+    return ctx.send('Команда удалена в связи со своей бесполезностью');
+
     const today = formatDate(new Date(), serverDateFormat);
     const tomorrow = formatDate(addToDate(new Date()), serverDateFormat);
     const [command] = args;
