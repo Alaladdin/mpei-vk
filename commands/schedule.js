@@ -27,10 +27,10 @@ module.exports = {
 
     return vk.upload.messagePhoto({ peer_id: ctx.peerId, source: { value: fileData } })
       .then(async (image) => {
-        const message = `${texts.scheduleFor} ${selectedPeriod.name}`;
-
-        await ctx.send(texts.uselessAlert);
-        await ctx.send({ message, attachment: `photo${image.ownerId}_${image.id}` });
+        await ctx.send({
+          message   : `${texts.scheduleFor} ${selectedPeriod.name}`,
+          attachment: `photo${image.ownerId}_${image.id}`,
+        });
       })
       .catch((e) => {
         console.error(e);
