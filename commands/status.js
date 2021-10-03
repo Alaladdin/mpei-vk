@@ -1,11 +1,7 @@
 const fetch = require('node-fetch');
 const { version } = require('../package.json');
 const { getUniversalUrl } = require('../data/requests');
-const {
-  serverAddress,
-  prefix,
-  isProd,
-} = require('../config');
+const { serverAddress, prefix, isProd } = require('../config');
 
 module.exports = {
   name       : 'status',

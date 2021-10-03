@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.22.7-beta",
+  "version": "1.23.0",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,7 @@
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
+    "text2png": "^2.3.0",
     "vk-io": "^4.3.2"
   },
   "devDependencies": {

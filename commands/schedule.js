@@ -1,74 +1,42 @@
-const { startOfISOWeek, endOfISOWeek } = require('date-fns');
-const { formatDate, addToDate } = require('../helpers');
-const { serverDateFormat } = require('../config');
-const getSchedule = require('../functions/getSchedule');
+const fs = require('fs');
+const path = require('path');
+const createImage = require('../functions/createImage');
+const getFormattedSchedule = require('../functions/getFormattedSchedule');
 const { texts } = require('../data/messages');
+const schedulePeriods = require('../data/schedulePeriods');
+
+const outPath = path.resolve(__dirname, '../files/userCreated.png');
 
 module.exports = {
   name       : 'schedule',
   description: texts.schedule,
-  hidden     : true,
   aliases    : ['s', 'расписание', 'р'],
   arguments  : [
     { name: 'tw', description: texts.forTomorrow },
     { name: 'week', description: texts.forWeek },
-    { name: 'nextWeek', description: texts.forNextWeekFull },
     { name: 'month', description: texts.forMonth },
     { name: 'all', description: texts.all },
   ],
-  async execute(ctx, args) {
-    return ctx.send('Команда удалена в связи со своей бесполезностью');
+  async execute(ctx, args, vk) {
+    const selectedPeriod = schedulePeriods.getSchedulePeriod(args[0]);
+    const schedule = await getFormattedSchedule(args, selectedPeriod);
 
-    const today = formatDate(new Date(), serverDateFormat);
-    const tomorrow = formatDate(addToDate(new Date()), serverDateFormat);
-    const [command] = args;
-    const argsInstructions = {
-      tw: {
-        name  : texts.tomorrow,
-        start : tomorrow,
-        finish: tomorrow,
-      },
-      week    : { name: texts.week },
-      nextweek: {
-        name  : texts.nextWeek,
-        start : formatDate(startOfISOWeek(addToDate(today, { weeks: 1 })), serverDateFormat),
-        finish: formatDate(endOfISOWeek(addToDate(today, { weeks: 1 })), serverDateFormat),
-      },
-      month: {
-        name  : texts.month,
-        start : today,
-        finish: formatDate(addToDate(today, { months: '1' }), serverDateFormat),
-      },
-      empty: {
-        name  : texts.today,
-        start : today,
-        finish: today,
-      },
-    };
+    if (schedule === null) return ctx.send(texts.mpeiServerError);
+    if (!schedule.length) return ctx.send(texts.noClasses);
 
-    const showAllFields = args.includes('all');
-    const selectedDate = argsInstructions[command] || argsInstructions.empty;
-    const { start, finish } = selectedDate;
+    await createImage(schedule);
 
-    return getSchedule(start, finish)
-      .then(async (schedule) => {
-        if (!schedule.length) return ctx.send(texts.noClasses);
+    const fileData = await fs.promises.readFile(outPath);
 
-        await ctx.send(`${texts.scheduleFor} ${selectedDate.name}`);
-
-        return schedule.forEach((i) => {
-          const itemData = [];
-
-          itemData.push(`[${i.dayOfWeekString}] ${i.date} - ${i.disciplineAbbr}`);
-          itemData.push(`Тип: ${i.kindOfWork}`);
-          if (showAllFields) itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
-          if (showAllFields) itemData.push(`Препод: ${i.lecturer}`);
-          if (i.building !== '-') itemData.push(`Кабинет: ${i.auditorium} (${i.building})`);
-          if (i.group) itemData.push(`Группа: ${i.group}`);
-
-          return ctx.send(itemData.join('\n'));
-        });
+    return vk.upload.messagePhoto({ peer_id: ctx.peerId, source: { value: fileData } })
+      .then(async (image) => {
+        await ctx.send(texts.uselessAlert);
+        await ctx.send(`${texts.scheduleFor} ${selectedPeriod.name}`);
+        await ctx.send({ attachment: `photo${image.ownerId}_${image.id}` });
       })
-      .catch(() => ctx.send(texts.mpeiServerError));
+      .catch((e) => {
+        console.error(e);
+        ctx.send(texts.totalCrash);
+      });
   },
 };
