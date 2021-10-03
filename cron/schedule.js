@@ -1,32 +1,28 @@
 const schedule = require('node-schedule');
-const { chats, serverDateFormat } = require('../config');
-const getSchedule = require('../functions/getSchedule');
+const fs = require('fs');
+const { chats, serverDateFormat, outImagePath } = require('../config');
 const { formatDate, sendMessage } = require('../helpers');
+const { getFormattedSchedule, createImage } = require('../functions');
 
 module.exports = {
   async execute(vk) {
-    const { main: mainChat, spam: spamChat } = chats;
-
     schedule.scheduleJob('0 5 9 * * *', async () => {
       const today = formatDate(new Date(), serverDateFormat);
-      const scheduleData = await getSchedule(today, today);
+      const scheduleData = await getFormattedSchedule([], { start: today, finish: today });
 
-      if (!scheduleData) return;
+      if (scheduleData) {
+        await createImage(scheduleData);
+        const fileData = await fs.promises.readFile(outImagePath);
 
-      scheduleData.forEach((i) => {
-        const itemData = [];
-
-        itemData.push(`[${i.dayOfWeekString}] ${i.date} - ${i.disciplineAbbr}`);
-        itemData.push(`Тип: ${i.kindOfWork}`);
-        // itemData.push(`Время: ${i.beginLesson} - ${i.endLesson}`);
-        // itemData.push(`Препод: ${i.lecturer}`);
-        if (i.building !== '-') itemData.push(`Кабинет: ${i.auditorium} (${i.building})`);
-        if (i.group) itemData.push(`Группа: ${i.group}`);
-
-        [mainChat, spamChat].forEach((peerId) => {
-          sendMessage(vk, { peerId, message: itemData.join('\n') });
-        });
-      });
+        vk.upload.messagePhoto({ peer_id: chats.main, source: { value: fileData } })
+          .then(async (image) => {
+            await sendMessage(vk, {
+              peerId    : chats.main,
+              attachment: `photo${image.ownerId}_${image.id}`,
+            });
+          })
+          .catch(console.error);
+      }
     });
   },
 };

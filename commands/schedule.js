@@ -1,11 +1,8 @@
 const fs = require('fs');
-const path = require('path');
-const createImage = require('../functions/createImage');
-const getFormattedSchedule = require('../functions/getFormattedSchedule');
+const { getFormattedSchedule, createImage } = require('../functions');
 const { texts } = require('../data/messages');
 const schedulePeriods = require('../data/schedulePeriods');
-
-const outPath = path.resolve(__dirname, '../files/userCreated.png');
+const { outImagePath } = require('../config');
 
 module.exports = {
   name       : 'schedule',
@@ -26,13 +23,14 @@ module.exports = {
 
     await createImage(schedule);
 
-    const fileData = await fs.promises.readFile(outPath);
+    const fileData = await fs.promises.readFile(outImagePath);
 
     return vk.upload.messagePhoto({ peer_id: ctx.peerId, source: { value: fileData } })
       .then(async (image) => {
+        const message = `${texts.scheduleFor} ${selectedPeriod.name}`;
+
         await ctx.send(texts.uselessAlert);
-        await ctx.send(`${texts.scheduleFor} ${selectedPeriod.name}`);
-        await ctx.send({ attachment: `photo${image.ownerId}_${image.id}` });
+        await ctx.send({ message, attachment: `photo${image.ownerId}_${image.id}` });
       })
       .catch((e) => {
         console.error(e);

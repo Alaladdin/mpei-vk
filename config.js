@@ -1,3 +1,4 @@
+const path = require('path');
 require('dotenv').config();
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -9,6 +10,7 @@ module.exports = {
   serverAddress   : isProd ? process.env.PROD_SERVER : process.env.DEV_SERVER,
   authToken       : process.env.AUTH_TOKEN,
   serverDateFormat: 'yyyy.MM.dd',
+  outImagePath    : path.resolve(__dirname, './files/userCreated.png'),
   chats           : isProd
     ? {
       main    : 2000000005,

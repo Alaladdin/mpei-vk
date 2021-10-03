@@ -1,5 +1,7 @@
-const getActuality = require('../functions/getActuality');
+const fs = require('fs');
+const { outImagePath } = require('../config');
 const { texts } = require('../data/messages');
+const { getActuality, createImage } = require('../functions');
 
 module.exports = {
   name       : 'actuality',
@@ -20,24 +22,30 @@ module.exports = {
 
     return actualityData[contentType];
   },
-  async execute(ctx, args) {
-    getActuality()
-      .then((actuality) => {
-        const [command] = args;
-        const isLazy = !!command && command.toLowerCase() === 'lazy';
-        const content = isLazy ? 'lazyContent' : 'content';
-        const selectedActualityData = this.getActualityOutputData(content);
-        const msg = [];
+  async execute(ctx, args, vk) {
+    const [command] = args;
+    const isLazy = !!command && command.toLowerCase() === 'lazy';
+    const content = isLazy ? 'lazyContent' : 'content';
+    const { title: actualityTitle, emptyTitle: actualityEmptyTitle } = this.getActualityOutputData(content);
+    const actuality = await getActuality().catch(() => {});
 
-        if (!actuality[content]) {
-          msg.push(selectedActualityData.emptyTitle);
-        } else {
-          msg.push(selectedActualityData.title);
-          msg.push(actuality[content]);
-        }
+    if (!actuality) return ctx.send(texts.databaseError);
+    if (!actuality[content]) return ctx.send(actualityEmptyTitle);
 
-        return ctx.send(msg.join('\n\n'));
+    await createImage(actuality[content]);
+
+    const fileData = await fs.promises.readFile(outImagePath);
+
+    return vk.upload.messagePhoto({ peer_id: ctx.peerId, source: { value: fileData } })
+      .then((image) => {
+        ctx.send({
+          message   : actualityTitle,
+          attachment: `photo${image.ownerId}_${image.id}`,
+        });
       })
-      .catch(() => ctx.send(texts.databaseError));
+      .catch((e) => {
+        console.error(e);
+        ctx.send(texts.totalCrash);
+      });
   },
 };

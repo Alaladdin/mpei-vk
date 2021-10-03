@@ -21,7 +21,7 @@ module.exports = async (args, { start, finish }) => {
         schedules.push(itemData.join('\n'));
       });
     })
-    .catch(() => {});
+    .catch(() => null);
 
-  return scheduleResult ? schedules.join('\n\n') : null;
+  return scheduleResult !== null ? schedules.join('\n\n') : null;
 };

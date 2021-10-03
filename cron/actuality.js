@@ -1,7 +1,8 @@
 const schedule = require('node-schedule');
-const { chats } = require('../config');
+const fs = require('fs');
+const { chats, outImagePath } = require('../config');
 const { getters: storeGetters } = require('../store');
-const getActuality = require('../functions/getActuality');
+const { getActuality, createImage } = require('../functions');
 const { sendMessage } = require('../helpers');
 
 module.exports = {
@@ -11,17 +12,23 @@ module.exports = {
     return actualityAutoposting.isEnabled;
   },
   async execute(vk) {
-    const { main: mainChat, spam: spamChat } = chats;
-
     schedule.scheduleJob('0 0 9 * * *', async () => {
       const isEnabled = this.getIsAutopostingEnabled();
-      const actuality = await getActuality();
+      const actuality = await getActuality().catch(() => {});
 
-      if (!isEnabled || !actuality) return;
+      if (isEnabled && actuality) {
+        await createImage(actuality.content);
+        const fileData = await fs.promises.readFile(outImagePath);
 
-      [mainChat, spamChat].forEach((peerId) => {
-        sendMessage(vk, { peerId, message: `Актуалити\n${actuality.content}` });
-      });
+        vk.upload.messagePhoto({ peer_id: chats.main, source: { value: fileData } })
+          .then(async (image) => {
+            await sendMessage(vk, {
+              peerId    : chats.main,
+              attachment: `photo${image.ownerId}_${image.id}`,
+            });
+          })
+          .catch(console.error);
+      }
     });
   },
 };
