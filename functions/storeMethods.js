@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const { getStoreUrl, setStoreUrl } = require('../data/requests');
 const { authToken } = require('../config');
 
-const getStore = () => fetch(getStoreUrl, { headers: { authorization: authToken } })
+const getStore = () => fetch(getStoreUrl, { headers: { authToken } })
   .then(async (res) => {
     const json = await res.json();
 
@@ -17,7 +17,7 @@ const getStore = () => fetch(getStoreUrl, { headers: { authorization: authToken 
 
 const setStore = async (store) => fetch(setStoreUrl, {
   method : 'post',
-  headers: { 'Content-Type': 'application/json', authorization: authToken },
+  headers: { 'Content-Type': 'application/json', authToken },
   body   : JSON.stringify({ store }),
 })
   .then(async (res) => {

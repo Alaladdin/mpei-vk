@@ -3,11 +3,12 @@ require('dotenv').config();
 module.exports = {
   apps: [
     {
-      name        : 'mvk',
-      script      : 'index.js',
-      watch       : true,
-      ignore_watch: ['node_modules', 'files'],
-      env         : {
+      name         : 'mvk',
+      script       : 'index.js',
+      watch        : true,
+      restart_delay: 10000,
+      ignore_watch : ['node_modules', 'files'],
+      env          : {
         NODE_ENV: 'development',
       },
       env_production: {
