@@ -26,17 +26,17 @@
   "author": "Alaladdin",
   "license": "ISC",
   "dependencies": {
-    "date-fns": "^2.24.0",
+    "date-fns": "^2.25.0",
     "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
     "text2png": "^2.3.0",
-    "vk-io": "^4.3.2"
+    "vk-io": "^4.4.0"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "eslint": "^8.0.1",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-import": "^2.25.2",
     "nodemon": "^2.0.13"
   },
   "engines": {
