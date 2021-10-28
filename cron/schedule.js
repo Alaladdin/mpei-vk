@@ -5,7 +5,7 @@ const { formatDate, sendMessage } = require('../helpers');
 const { getFormattedSchedule, createImage } = require('../functions');
 
 module.exports = {
-  async execute(vk) {
+  async init(vk) {
     schedule.scheduleJob('0 5 9 * * *', async () => {
       const today = formatDate(new Date(), serverDateFormat);
       const scheduleData = await getFormattedSchedule([], { start: today, finish: today });

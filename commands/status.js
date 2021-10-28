@@ -6,7 +6,7 @@ const { serverAddress, prefix, isProd } = require('../config');
 module.exports = {
   name       : 'status',
   description: 'информация о боте',
-  aliases    : ['info'],
+  aliases    : ['i', 'info'],
   hidden     : true,
   getServerData(query) {
     return fetch(getUniversalUrl(query))

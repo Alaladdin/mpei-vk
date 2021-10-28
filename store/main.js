@@ -15,9 +15,7 @@ let state = {};
       isEnabled: true,
     },
   };
-  const getStateValue = (key) => ((isRemoteEmpty || remoteStore[key] === undefined)
-    ? defaults[key]
-    : remoteStore[key]);
+  const getStateValue = (key) => ((isRemoteEmpty || remoteStore[key] === undefined) ? defaults[key] : remoteStore[key]);
 
   state = {
     isBotActive         : getStateValue('isBotActive'),

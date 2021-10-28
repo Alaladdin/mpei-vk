@@ -11,7 +11,7 @@ module.exports = {
 
     return actualityAutoposting.isEnabled;
   },
-  async execute(vk) {
+  async init(vk) {
     schedule.scheduleJob('0 0 9 * * *', async () => {
       const isEnabled = this.getIsAutopostingEnabled();
       const actuality = await getActuality().catch(() => {});
