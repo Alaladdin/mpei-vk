@@ -1,5 +1,6 @@
 const { chats } = require('../config');
 const { sendMessage } = require('../helpers');
+const { sendAsImage } = require('../functions');
 
 module.exports = {
   name              : 'sm',
@@ -7,12 +8,14 @@ module.exports = {
   hidden            : true,
   adminOnly         : true,
   lowercaseArguments: false,
+  arguments         : [{ name: 'chats', description: 'выводит доступных чатов' }],
   noArgumentsReply(ctx, isChatPassed) {
     ctx.reply(`Необходимо сообщение ${!isChatPassed ? 'и чат' : ''} для отправки`);
   },
-  chatListReply(ctx) {
+  chatListReply(ctx, vk) {
     const chatList = Object.keys(chats).map((chatName) => `- ${chatName}`);
-    ctx.reply(chatList.join('\n'));
+
+    return sendAsImage({ message: chatList.join('\n'), ctx, vk });
   },
   sendMessageToChat(vk, ctx, peerId, chatName, message) {
     sendMessage(vk, { peerId, message })
@@ -25,7 +28,7 @@ module.exports = {
       });
   },
   async execute(ctx, args, vk) {
-    if (args.length && args[0].toLowerCase() === 'chats') return this.chatListReply(ctx);
+    if (args.length && args[0].toLowerCase() === 'chats') return this.chatListReply(ctx, vk);
     if (!args.length || (!args[1])) return this.noArgumentsReply(ctx, !!args[0]);
 
     const selectedChatName = args[0].toLowerCase();

@@ -1,7 +1,5 @@
-const fs = require('fs');
-const { outImagePath } = require('../config');
 const { texts } = require('../data/messages');
-const { getActuality, createImage } = require('../functions');
+const { getActuality, sendAsImage } = require('../functions');
 
 module.exports = {
   name       : 'actuality',
@@ -32,20 +30,6 @@ module.exports = {
     if (!actuality) return ctx.send(texts.databaseError);
     if (!actuality[content]) return ctx.send(actualityEmptyTitle);
 
-    await createImage(actuality[content]);
-
-    const fileData = await fs.promises.readFile(outImagePath);
-
-    return vk.upload.messagePhoto({ peer_id: ctx.peerId, source: { value: fileData } })
-      .then((image) => {
-        ctx.send({
-          message   : actualityTitle,
-          attachment: `photo${image.ownerId}_${image.id}`,
-        });
-      })
-      .catch((e) => {
-        console.error(e);
-        ctx.send(texts.totalCrash);
-      });
+    return sendAsImage({ message: actuality[content], title: actualityTitle, ctx, vk });
   },
 };

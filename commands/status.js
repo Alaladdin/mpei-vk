@@ -1,7 +1,8 @@
 const fetch = require('node-fetch');
 const { version } = require('../package.json');
 const { getUniversalUrl } = require('../data/requests');
-const { serverAddress, prefix, isProd } = require('../config');
+const { prefix, isProd } = require('../config');
+const { sendAsImage } = require('../functions');
 
 module.exports = {
   name       : 'status',
@@ -22,7 +23,7 @@ module.exports = {
         return 'error';
       });
   },
-  async execute(ctx) {
+  async execute(ctx, args, vk) {
     const prefixText = !Array.isArray(prefix) ? prefix : prefix.join(', ');
     const serverVersion = await this.getServerData('version');
     const msg = [];
@@ -35,9 +36,8 @@ module.exports = {
 
     // server info
     msg.push('\n- Server info');
-    msg.push(`· address: ${serverAddress}`);
     msg.push(`· version: ${serverVersion}`);
 
-    ctx.send(msg.join('\n'), { dont_parse_links: true });
+    return sendAsImage({ message: msg.join('\n'), ctx, vk });
   },
 };

@@ -1,8 +1,6 @@
-const fs = require('fs');
-const { getFormattedSchedule, createImage } = require('../functions');
+const { getFormattedSchedule, sendAsImage } = require('../functions');
 const { texts } = require('../data/messages');
 const schedulePeriods = require('../data/schedulePeriods');
-const { outImagePath } = require('../config');
 
 module.exports = {
   name       : 'schedule',
@@ -21,20 +19,11 @@ module.exports = {
     if (schedule === null) return ctx.send(texts.mpeiServerError);
     if (!schedule.length) return ctx.send(texts.noClasses);
 
-    await createImage(schedule);
-
-    const fileData = await fs.promises.readFile(outImagePath);
-
-    return vk.upload.messagePhoto({ peer_id: ctx.peerId, source: { value: fileData } })
-      .then(async (image) => {
-        await ctx.send({
-          message   : `${texts.scheduleFor} ${selectedPeriod.name}`,
-          attachment: `photo${image.ownerId}_${image.id}`,
-        });
-      })
-      .catch((e) => {
-        console.error(e);
-        ctx.send(texts.totalCrash);
-      });
+    return sendAsImage({
+      title  : `${texts.scheduleFor} ${selectedPeriod.name}`,
+      message: schedule,
+      ctx,
+      vk,
+    });
   },
 };

@@ -1,5 +1,6 @@
 const { getCommand, isAdmin } = require('../helpers');
 const { texts } = require('../data/messages');
+const { sendAsImage } = require('../functions');
 
 module.exports = {
   name       : 'help',
@@ -13,9 +14,10 @@ module.exports = {
     msg.push(`${texts.commandsList}:\n`);
 
     vk.commands.forEach((c) => (showAllCommandsForce || !c.hidden) && msg.push(`/${c.name} - ${c.description}`));
-    return ctx.send(msg.join('\n'));
+
+    return sendAsImage({ message: msg.join('\n'), ctx, vk });
   },
-  getCommandInfo(ctx, args, vk) {
+  async getCommandInfo(ctx, args, vk) {
     const command = getCommand(vk.commands, args[0]);
     const msg = [];
 
@@ -38,7 +40,7 @@ module.exports = {
       }
     }
 
-    return ctx.send(msg.join('\n'), { dont_parse_links: true });
+    return sendAsImage({ message: msg.join('\n'), ctx, vk });
   },
   async execute(ctx, args, vk) {
     const command = getCommand(vk.commands, args[0]);
