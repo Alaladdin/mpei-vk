@@ -18,11 +18,11 @@ module.exports = async (text) => {
   const selectedTheme = getThemeByHour();
 
   return fs.writeFileSync(outImagePath, text2png(text, {
-    ...selectedTheme,
     padding      : 20,
     lineSpacing  : 10,
     borderWidth  : 7,
     font         : '30px Calibri',
     localFontPath: 'Calibri',
+    ...selectedTheme,
   }));
 };
