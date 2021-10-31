@@ -10,12 +10,7 @@ module.exports = {
       const scheduleData = await getFormattedSchedule([], { start: today, finish: today });
 
       if (scheduleData) {
-        sendAsImage({
-          message: scheduleData,
-          title  : 'Расписание на сегодня',
-          peerId : chats.main,
-          vk,
-        })
+        sendAsImage({ message: scheduleData, title: 'Расписание на сегодня', peerId: chats.main, vk })
           .catch(console.error);
       }
     });

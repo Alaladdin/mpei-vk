@@ -12,14 +12,11 @@ module.exports = {
   async init(vk) {
     schedule.scheduleJob('0 0 9 * * *', async () => {
       const isEnabled = this.getIsAutopostingEnabled();
-      const actuality = await getActuality().catch(() => {});
+      const actuality = await getActuality();
 
       if (isEnabled && actuality) {
-        sendAsImage({
-          message: actuality.content,
-          peerId : chats.main,
-          vk,
-        }).catch(console.error);
+        sendAsImage({ message: actuality.content, peerId: chats.main, vk })
+          .catch(console.error);
       }
     });
   },
