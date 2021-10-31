@@ -1,6 +1,7 @@
 const { chats } = require('../config');
 const { sendMessage } = require('../helpers');
 const { sendAsImage } = require('../functions');
+const { texts } = require('../data/messages');
 
 module.exports = {
   name              : 'sm',
@@ -15,28 +16,31 @@ module.exports = {
   chatListReply(ctx, vk) {
     const chatList = Object.keys(chats).map((chatName) => `- ${chatName}`);
 
-    return sendAsImage({ message: chatList.join('\n'), ctx, vk });
+    return sendAsImage({ message: chatList.join('\n'), peerId: ctx.peerId, vk })
+      .catch(() => ctx.send(texts.totalCrash));
   },
-  sendMessageToChat(vk, ctx, peerId, chatName, message) {
+  sendMessageToChat(message, chatName, peerId, ctx, vk) {
     sendMessage(vk, { peerId, message })
       .then(() => {
-        ctx.reply(`Сообщение отправлено в чат "${chatName}":\n${message}`);
+        const msg = ['Сообщение отправлено', `Чат: ${chatName}`, `Сообщение: ${message}`].join('\n');
+
+        ctx.reply(msg);
       })
       .catch((e) => {
         console.error(e);
-        ctx.reply(`Сообщение не отправлено в чат "${chatName}":\n${message}`);
+        ctx.reply('Сообщение не отправлено');
       });
   },
   async execute(ctx, args, vk) {
     if (args.length && args[0].toLowerCase() === 'chats') return this.chatListReply(ctx, vk);
-    if (!args.length || (!args[1])) return this.noArgumentsReply(ctx, !!args[0]);
+    if (!args.length || !args[1]) return this.noArgumentsReply(ctx, !!args[0]);
 
     const selectedChatName = args[0].toLowerCase();
     const selectedChat = chats[selectedChatName];
     const messageToSend = args.slice(1).join(' ');
 
-    if (!selectedChat) return ctx.reply(`Чат с именем "${selectedChatName}" не найден`);
+    if (!selectedChat) return ctx.reply(`Чат "${selectedChatName}" не найден`);
 
-    return this.sendMessageToChat(vk, ctx, selectedChat, selectedChatName, messageToSend);
+    return this.sendMessageToChat(messageToSend, selectedChatName, selectedChat, ctx, vk);
   },
 };

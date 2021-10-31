@@ -25,11 +25,17 @@ module.exports = {
     const isLazy = !!command && command.toLowerCase() === 'lazy';
     const content = isLazy ? 'lazyContent' : 'content';
     const { title: actualityTitle, emptyTitle: actualityEmptyTitle } = this.getActualityOutputData(content);
-    const actuality = await getActuality().catch(() => {});
+    const actuality = await getActuality();
 
     if (!actuality) return ctx.send(texts.databaseError);
     if (!actuality[content]) return ctx.send(actualityEmptyTitle);
 
-    return sendAsImage({ message: actuality[content], title: actualityTitle, ctx, vk });
+    return sendAsImage({
+      message: actuality[content],
+      title  : actualityTitle,
+      peerId : ctx.peerId,
+      vk,
+    })
+      .catch(() => ctx.send(texts.totalCrash));
   },
 };

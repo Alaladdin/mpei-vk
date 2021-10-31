@@ -15,7 +15,8 @@ module.exports = {
 
     vk.commands.forEach((c) => (showAllCommandsForce || !c.hidden) && msg.push(`/${c.name} - ${c.description}`));
 
-    return sendAsImage({ message: msg.join('\n'), ctx, vk });
+    return sendAsImage({ message: msg.join('\n'), peerId: ctx.peerId, vk })
+      .catch(() => ctx.send(texts.totalCrash));
   },
   async getCommandInfo(ctx, args, vk) {
     const command = getCommand(vk.commands, args[0]);
@@ -40,7 +41,8 @@ module.exports = {
       }
     }
 
-    return sendAsImage({ message: msg.join('\n'), ctx, vk });
+    return sendAsImage({ message: msg.join('\n'), peerId: ctx.peerId, vk })
+      .catch(() => ctx.send(texts.totalCrash));
   },
   async execute(ctx, args, vk) {
     const command = getCommand(vk.commands, args[0]);

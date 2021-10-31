@@ -22,8 +22,9 @@ module.exports = {
     return sendAsImage({
       title  : `${texts.scheduleFor} ${selectedPeriod.name}`,
       message: schedule,
-      ctx,
+      peerId : ctx.peerId,
       vk,
-    });
+    })
+      .catch(() => ctx.send(texts.totalCrash));
   },
 };

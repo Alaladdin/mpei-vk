@@ -3,7 +3,7 @@ const { getters: storeGetters } = require('../store');
 const { getCommand, isAdmin } = require('../helpers');
 
 module.exports = {
-  name: 'message',
+  name: 'message_new',
   isPassedConditions(ctx) {
     const { text } = ctx;
     if (!text || text.length <= 1) return false;

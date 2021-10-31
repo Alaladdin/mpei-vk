@@ -11,5 +11,6 @@ module.exports = () => fetch(getActualityUrl)
   })
   .catch((e) => {
     console.error(e);
-    throw e;
+
+    return null;
   });

@@ -13,12 +13,12 @@ const getThemeByHour = () => {
 };
 
 module.exports = async (text) => {
-  if (!text) return false;
+  if (!text || !text.trim()) return false;
 
-  const themeMap = getThemeByHour();
+  const selectedTheme = getThemeByHour();
 
   return fs.writeFileSync(outImagePath, text2png(text, {
-    ...themeMap,
+    ...selectedTheme,
     padding      : 20,
     lineSpacing  : 10,
     borderWidth  : 7,

@@ -3,6 +3,7 @@ const { version } = require('../package.json');
 const { getUniversalUrl } = require('../data/requests');
 const { prefix, isProd } = require('../config');
 const { sendAsImage } = require('../functions');
+const { texts } = require('../data/messages');
 
 module.exports = {
   name       : 'status',
@@ -29,15 +30,16 @@ module.exports = {
     const msg = [];
 
     // bot info
-    msg.push('- Bot info');
+    msg.push('# Bot info');
     msg.push(`· version: ${version}`);
     msg.push(`· prefix: "${prefixText}"`);
-    msg.push(`· isProduction: ${isProd}`);
+    msg.push(`· isProd: ${isProd}`);
 
     // server info
-    msg.push('\n- Server info');
+    msg.push('\n# Server info');
     msg.push(`· version: ${serverVersion}`);
 
-    return sendAsImage({ message: msg.join('\n'), ctx, vk });
+    return sendAsImage({ message: msg.join('\n'), peerId: ctx.peerId, vk })
+      .catch(() => ctx.send(texts.totalCrash));
   },
 };

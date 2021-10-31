@@ -1,9 +1,7 @@
 const schedule = require('node-schedule');
-const fs = require('fs');
-const { chats, outImagePath } = require('../config');
+const { chats } = require('../config');
 const { getters: storeGetters } = require('../store');
-const { getActuality, createImage } = require('../functions');
-const { sendMessage } = require('../helpers');
+const { getActuality, sendAsImage } = require('../functions');
 
 module.exports = {
   getIsAutopostingEnabled() {
@@ -17,17 +15,11 @@ module.exports = {
       const actuality = await getActuality().catch(() => {});
 
       if (isEnabled && actuality) {
-        await createImage(actuality.content);
-        const fileData = await fs.promises.readFile(outImagePath);
-
-        vk.upload.messagePhoto({ peer_id: chats.main, source: { value: fileData } })
-          .then(async (image) => {
-            await sendMessage(vk, {
-              peerId    : chats.main,
-              attachment: `photo${image.ownerId}_${image.id}`,
-            });
-          })
-          .catch(console.error);
+        sendAsImage({
+          message: actuality.content,
+          peerId : chats.main,
+          vk,
+        }).catch(console.error);
       }
     });
   },

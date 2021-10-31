@@ -1,8 +1,7 @@
 const schedule = require('node-schedule');
-const fs = require('fs');
-const { chats, serverDateFormat, outImagePath } = require('../config');
-const { formatDate, sendMessage } = require('../helpers');
-const { getFormattedSchedule, createImage } = require('../functions');
+const { chats, serverDateFormat } = require('../config');
+const { formatDate } = require('../helpers');
+const { getFormattedSchedule, sendAsImage } = require('../functions');
 
 module.exports = {
   async init(vk) {
@@ -11,16 +10,12 @@ module.exports = {
       const scheduleData = await getFormattedSchedule([], { start: today, finish: today });
 
       if (scheduleData) {
-        await createImage(scheduleData);
-        const fileData = await fs.promises.readFile(outImagePath);
-
-        vk.upload.messagePhoto({ peer_id: chats.main, source: { value: fileData } })
-          .then(async (image) => {
-            await sendMessage(vk, {
-              peerId    : chats.main,
-              attachment: `photo${image.ownerId}_${image.id}`,
-            });
-          })
+        sendAsImage({
+          message: scheduleData,
+          title  : 'Расписание на сегодня',
+          peerId : chats.main,
+          vk,
+        })
           .catch(console.error);
       }
     });
