@@ -5,7 +5,7 @@ module.exports = {
   description: 'настройки автопостинга',
   hidden     : true,
   adminOnly  : true,
-  arguments  : [{ name: 'toggle', description: 'Переключает состояние активности' }],
+  arguments  : [{ name: 'toggle', description: 'переключает состояние активности' }],
   async execute(ctx, args) {
     if (!args.length) {
       const currentStatusText = this.getStatusText();

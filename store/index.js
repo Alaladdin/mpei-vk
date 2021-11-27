@@ -48,6 +48,10 @@ const setters = {
     state.isActualityAutopostingEnabled = status;
     return this.updateStore('actualityAutopostingStatus');
   },
+  async setConcatActualities(status = true) {
+    state.isConcatActualities = status;
+    return this.updateStore('concatActualities');
+  },
 };
 
 module.exports = { getters, setters, eventEmitter };

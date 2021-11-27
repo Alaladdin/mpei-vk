@@ -5,7 +5,7 @@ module.exports = {
   description: 'состояние бота',
   hidden     : true,
   adminOnly  : true,
-  arguments  : [{ name: 'toggle', description: 'Переключает состояние' }],
+  arguments  : [{ name: 'toggle', description: 'переключает состояние' }],
   async execute(ctx, args) {
     const currentStatus = storeGetters.getBotStatus();
     const getStateText = (state) => (state ? 'включен' : 'выключен');
