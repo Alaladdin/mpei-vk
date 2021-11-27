@@ -1,7 +1,7 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.25.1",
+  "version": "1.26.0",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
@@ -26,18 +26,19 @@
   "author": "Alaladdin",
   "license": "ISC",
   "dependencies": {
-    "date-fns": "^2.25.0",
+    "date-fns": "^2.26.0",
     "dotenv": "^10.0.0",
+    "lodash": "^4.17.21",
     "node-fetch": "2.6.1",
     "node-schedule": "^2.0.0",
     "text2png": "^2.3.0",
     "vk-io": "^4.4.0"
   },
   "devDependencies": {
-    "eslint": "^8.1.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.25.2",
-    "nodemon": "^2.0.14"
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "nodemon": "^2.0.15"
   },
   "engines": {
     "node": ">=15.x"

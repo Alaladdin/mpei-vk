@@ -4,17 +4,12 @@ const { getters: storeGetters } = require('../store');
 const { getActuality, sendAsImage } = require('../functions');
 
 module.exports = {
-  getIsAutopostingEnabled() {
-    const actualityAutoposting = storeGetters.getActualityAutoposting();
-
-    return actualityAutoposting.isEnabled;
-  },
   async init(vk) {
     schedule.scheduleJob('0 0 9 * * *', async () => {
-      const isEnabled = this.getIsAutopostingEnabled();
+      const isActualityAutopostingEnabled = storeGetters.getIsActualityAutopostingEnabled();
       const actuality = await getActuality();
 
-      if (isEnabled && actuality) {
+      if (isActualityAutopostingEnabled && actuality && actuality.content) {
         sendAsImage({ message: actuality.content, peerId: chats.main, vk })
           .catch(console.error);
       }
