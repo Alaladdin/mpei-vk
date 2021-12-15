@@ -1,9 +1,15 @@
 const { format, add } = require('date-fns');
-const priority = require('../data/priority');
+const { values } = require('lodash');
+const { getters: storeGetters } = require('../store');
 
 const formatDate = (dateString, dateFormat = 'dd.MM') => format(new Date(dateString), dateFormat);
 const addToDate = (dateString, duration = { days: 1 }) => add(new Date(dateString), duration);
-const isAdmin = (userId) => (Object.values(priority.admins).includes(userId));
+const isAdmin = (userId) => {
+  const admins = storeGetters.getAdmins();
+
+  return values(admins).includes(userId);
+};
+
 const getCommand = (commands, commandName) => {
   let command;
 

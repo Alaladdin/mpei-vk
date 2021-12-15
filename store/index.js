@@ -13,19 +13,19 @@ const state = {};
     isBotActive                  : true,
     isActualityAutopostingEnabled: false,
     isConcatActualities          : false,
+    admins                       : { AL: 161372337, Drobot: 425704393, Omar: 45052566, Vova: 310167864 },
   };
 
   each(keys(defaultState), (stateKey) => {
     state[stateKey] = defaultTo(loadedState[stateKey], defaultState[stateKey]);
   });
-
-  // console.log(state);
 })();
 
 const getters = {
   getBotStatus                    : () => state.isBotActive,
   getIsActualityAutopostingEnabled: () => state.isActualityAutopostingEnabled,
   getIsConcatActualities          : () => state.isConcatActualities,
+  getAdmins                       : () => state.admins,
 };
 
 const setters = {
