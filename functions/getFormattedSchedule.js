@@ -7,13 +7,16 @@ module.exports = async (args, { start, finish }) => {
   const scheduleResult = await getSchedule(start, finish)
     .then(async (schedule) => {
       if (!schedule.length) return false;
+      const defaultLessonTime = '18:55 - 22:00';
 
       return schedule.forEach((s) => {
         const itemData = [];
+        const lessonTime = `${s.beginLesson} - ${s.endLesson}`;
 
         itemData.push(`[${s.dayOfWeekString}] ${s.date} - ${s.disciplineAbbr}`);
         itemData.push(`Тип: ${s.kindOfWork}`);
-        if (isShowAllFields) itemData.push(`Время: ${s.beginLesson} - ${s.endLesson}`);
+
+        if (isShowAllFields || lessonTime !== defaultLessonTime) itemData.push(`Время: ${lessonTime}`);
         if (isShowAllFields) itemData.push(`Препод: ${s.lecturer}`);
         if (s.building !== '-') itemData.push(`Кабинет: ${s.auditorium} (${s.building})`);
         if (s.group) itemData.push(`Группа: ${s.group}`);
