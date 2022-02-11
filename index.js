@@ -15,5 +15,6 @@ vk.updates.start()
     });
 
     console.info('[BOT] has been started');
+    process.send('ready');
   })
   .catch(console.error);
