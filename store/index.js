@@ -1,6 +1,7 @@
 const events = require('events');
 const { defaultTo, each, keys } = require('lodash');
 const { getStore, setStore } = require('../functions/storeMethods');
+const { sendMessage } = require('../helpers');
 
 events.captureRejections = true;
 
@@ -8,7 +9,12 @@ const eventEmitter = new events.EventEmitter();
 const state = {};
 
 (async () => {
-  const loadedState = await getStore().catch(() => ({}));
+  const loadedState = await getStore()
+    .catch((e) => {
+      sendMessage(null, { peerId: 161372337, message: `Store not loaded:\n${e.message}` });
+      return {};
+    });
+
   const defaultState = {
     isBotActive                  : true,
     isActualityAutopostingEnabled: false,
