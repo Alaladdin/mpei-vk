@@ -1,8 +1,6 @@
 const { format, add } = require('date-fns');
 const { values } = require('lodash');
-const { VK } = require('vk-io');
 const { getters: storeGetters } = require('../store');
-const { token } = require('../config');
 
 const formatDate = (dateString, dateFormat = 'dd.MM') => format(new Date(dateString), dateFormat);
 const addToDate = (dateString, duration = { days: 1 }) => add(new Date(dateString), duration);
@@ -60,9 +58,7 @@ const sendMessage = async (vk, {
 }) => {
   if (!peerId) return false;
 
-  const vkApi = vk || new VK({ token, language: 'ru' });
-
-  return vkApi.api.messages.send({
+  return vk.api.messages.send({
     message,
     attachment,
     peer_id         : peerId,
