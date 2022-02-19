@@ -1,11 +1,12 @@
 const schedule = require('node-schedule');
 const { chats } = require('../config');
-const { formatDate, getChatMembers, sendMessage } = require('../helpers');
+const { formatDate, getChatMembers, sendMessage, handleError } = require('../helpers');
 
 module.exports = {
   async init(vk) {
     schedule.scheduleJob('0 10 9 * * *', async () => {
       const chatMembers = await getChatMembers(vk, { peerId: chats.main, fields: ['bdate'] })
+        .catch((error) => handleError(error, vk))
         .catch(() => false);
 
       if (!chatMembers) return;

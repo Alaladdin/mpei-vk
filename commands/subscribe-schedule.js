@@ -7,22 +7,22 @@ module.exports = {
   aliases    : ['ss'],
   arguments  : [{ name: 'toggle', description: 'переключает подписку' }],
   async execute(ctx, args) {
-    if (!isAdmin(ctx.senderId)) {
-      ctx.reply('Команда тестируется, не трохай');
-      return;
-    }
+    if (!isAdmin(ctx.senderId))
+      return ctx.reply('Команда тестируется, не трохай');
 
-    if (!args.length) {
-      const currentStatusText = this.getStatusText(ctx);
+    if (!isAdmin(ctx.senderId) && !ctx.isChat)
+      return ctx.reply('Подписку чата могут переключать только админы. Для уведомлений в лс, пиши боту');
 
-      ctx.reply(`Уведомления ${currentStatusText}`);
-    } else if (args[0] === 'toggle') {
-      await this.toggleSubscription(ctx);
-    }
+    if (args[0] === 'toggle')
+      return this.toggleSubscription(ctx);
+
+    const currentStatusText = this.getStatusText(ctx);
+
+    return ctx.reply(`Уведомления ${currentStatusText}`);
   },
   async toggleSubscription(ctx) {
     await storeSetter.setScheduleSubscribers(ctx.peerId)
-      .then(() => ctx.reply(`Уведомления ${this.getStatusText(ctx)}`))
+      .then(() => ctx.reply(`Уведомления теперь ${this.getStatusText(ctx)}`))
       .catch(() => ctx.reply('Ошибка при попытке изменить настройки'));
   },
   getStatusText(ctx) {

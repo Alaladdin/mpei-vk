@@ -1,6 +1,6 @@
 const schedule = require('node-schedule');
 const { chats, serverDateFormat } = require('../config');
-const { formatDate } = require('../helpers');
+const { formatDate, handleError } = require('../helpers');
 const { getFormattedSchedule, sendAsImage } = require('../functions');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
 
       if (scheduleData) {
         sendAsImage({ message: scheduleData, title: 'Расписание на сегодня', peerId: chats.main, vk })
-          .catch(console.error);
+          .catch((error) => handleError(error, vk));
       }
     });
   },

@@ -10,10 +10,10 @@ vk.updates.start()
   .then(() => {
     commands.init(vk);
     events.init(vk);
-    cron.init(vk).then(() => {
-      console.info('[CRON] has been started');
-    });
-
+    cron.init(vk);
+  })
+  .then(() => {
+    console.info('[CRON] has been started');
     console.info('[BOT] has been started');
     process.send('ready');
   })

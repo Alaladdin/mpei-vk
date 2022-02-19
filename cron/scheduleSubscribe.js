@@ -1,7 +1,7 @@
 const schedule = require('node-schedule');
 const { each } = require('lodash');
 const { serverDateFormat } = require('../config');
-const { formatDate, removeFromDate } = require('../helpers');
+const { formatDate, removeFromDate, handleError } = require('../helpers');
 const { getters: storeGetters } = require('../store');
 const { getSchedule: getRawSchedule, getFormattedSchedule, sendAsImage } = require('../functions');
 
@@ -34,7 +34,7 @@ module.exports = {
     this.currentSchedule = schedule.scheduleJob(date, () => {
       each(scheduleSubscribers, (chatId) => {
         sendAsImage({ message: scheduleData, peerId: chatId, vk })
-          .catch(console.error);
+          .catch((error) => handleError(error, vk));
       });
 
       schedule.cancelJob(this.currentSchedule);

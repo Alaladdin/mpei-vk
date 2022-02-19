@@ -16,6 +16,12 @@ module.exports = {
       ImportDeclaration: { minProperties: 6, multiline: true, consistent: true },
       ExportDeclaration: { minProperties: 6, multiline: true, consistent: true },
     }],
+    'nonblock-statement-body-position': ['error', 'any'],
+    curly                             : [
+      'error',
+      'multi-or-nest',
+      'consistent',
+    ],
     'max-len'    : ['error', 130],
     'key-spacing': ['error', {
       singleLine: {

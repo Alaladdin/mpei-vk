@@ -72,6 +72,17 @@ const sendMessage = async (vk, {
     });
 };
 
+const handleError = (error, vk) => {
+  const admins = storeGetters.getAdmins();
+
+  console.error(error);
+
+  return sendMessage(vk, {
+    peerId : admins.AL,
+    message: `Error: ${error}`,
+  });
+};
+
 module.exports = {
   isAdmin,
   getCommand,
@@ -83,4 +94,5 @@ module.exports = {
   getChatMembers,
   getUsers,
   sendMessage,
+  handleError,
 };

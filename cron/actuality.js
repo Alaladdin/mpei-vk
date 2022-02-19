@@ -2,6 +2,7 @@ const schedule = require('node-schedule');
 const { chats } = require('../config');
 const { getters: storeGetters } = require('../store');
 const { getActuality, sendAsImage } = require('../functions');
+const { handleError } = require('../helpers');
 
 module.exports = {
   async init(vk) {
@@ -11,7 +12,7 @@ module.exports = {
 
       if (isActualityAutopostingEnabled && actuality && actuality.content) {
         sendAsImage({ message: actuality.content, peerId: chats.main, vk })
-          .catch(console.error);
+          .catch((error) => handleError(error, vk));
       }
     });
   },
