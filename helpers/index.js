@@ -1,9 +1,10 @@
-const { format, add } = require('date-fns');
+const { format, add, sub } = require('date-fns');
 const { values } = require('lodash');
 const { getters: storeGetters } = require('../store');
 
 const formatDate = (dateString, dateFormat = 'dd.MM') => format(new Date(dateString), dateFormat);
 const addToDate = (dateString, duration = { days: 1 }) => add(new Date(dateString), duration);
+const removeFromDate = (dateString, duration = { days: 1 }) => sub(new Date(dateString), duration);
 const isAdmin = (userId) => {
   const admins = storeGetters.getAdmins();
 
@@ -78,6 +79,7 @@ module.exports = {
   getRandomInt,
   formatDate,
   addToDate,
+  removeFromDate,
   getChatMembers,
   getUsers,
   sendMessage,

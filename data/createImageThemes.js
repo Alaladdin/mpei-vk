@@ -10,6 +10,11 @@ module.exports = {
       backgroundColor: 'rgba(255, 255, 255, 0.9)',
       borderColor    : '#bbb',
     },
+    {
+      color          : '#7A41E8',
+      backgroundColor: '#DDD7FC',
+      borderColor    : '#7A41E8',
+    },
   ],
   dark: [
     {

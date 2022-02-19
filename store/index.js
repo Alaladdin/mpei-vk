@@ -1,5 +1,5 @@
 const events = require('events');
-const { defaultTo, each, keys } = require('lodash');
+const { defaultTo, each, keys, reject, concat } = require('lodash');
 const { getStore, setStore } = require('../functions/storeMethods');
 
 events.captureRejections = true;
@@ -14,6 +14,7 @@ const state = {};
     isActualityAutopostingEnabled: false,
     isConcatActualities          : false,
     admins                       : { AL: 161372337, Drobot: 425704393, Omar: 45052566, Vova: 310167864 },
+    scheduleSubscribers          : [],
   };
 
   each(keys(defaultState), (stateKey) => {
@@ -26,6 +27,7 @@ const getters = {
   getIsActualityAutopostingEnabled: () => state.isActualityAutopostingEnabled,
   getIsConcatActualities          : () => state.isConcatActualities,
   getAdmins                       : () => state.admins,
+  getScheduleSubscribers          : () => state.scheduleSubscribers,
 };
 
 const setters = {
@@ -51,6 +53,16 @@ const setters = {
   async setConcatActualities(status = true) {
     state.isConcatActualities = status;
     return this.updateStore('concatActualities');
+  },
+  async setScheduleSubscribers(subscriberId) {
+    const { scheduleSubscribers: currentSubscribers } = state;
+    const isSubscribed = currentSubscribers.includes(subscriberId);
+
+    state.scheduleSubscribers = isSubscribed
+      ? reject(currentSubscribers, (userId) => userId === subscriberId)
+      : concat(currentSubscribers, [subscriberId]);
+
+    return this.updateStore('scheduleSubscribers');
   },
 };
 
