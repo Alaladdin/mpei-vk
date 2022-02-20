@@ -10,7 +10,6 @@ const state = {};
 (async () => {
   const loadedState = await getStore().catch(() => ({}));
   const defaultState = {
-    isBotActive                  : true,
     isActualityAutopostingEnabled: false,
     isConcatActualities          : false,
     admins                       : { AL: 161372337, Drobot: 425704393, Omar: 45052566, Vova: 310167864 },
@@ -23,7 +22,6 @@ const state = {};
 })();
 
 const getters = {
-  getBotStatus                    : () => state.isBotActive,
   getIsActualityAutopostingEnabled: () => state.isActualityAutopostingEnabled,
   getIsConcatActualities          : () => state.isConcatActualities,
   getAdmins                       : () => state.admins,
@@ -41,10 +39,6 @@ const setters = {
         console.error(e);
         throw e;
       });
-  },
-  async setBotStatus(status = true) {
-    state.isBotActive = status;
-    return this.updateStore('botStatus');
   },
   async setActualityAutopostingStatus(status = true) {
     state.isActualityAutopostingEnabled = status;

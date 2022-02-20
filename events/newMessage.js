@@ -1,5 +1,4 @@
 const { prefix } = require('../config');
-const { getters: storeGetters } = require('../store');
 const { getCommand, isAdmin } = require('../helpers');
 
 module.exports = {
@@ -9,9 +8,8 @@ module.exports = {
     if (!text || text.length <= 1) return false;
 
     const hasMessagePrefix = prefix.includes(text[0]);
-    const isDisabled = !isAdmin(ctx.senderId) && !storeGetters.getBotStatus();
 
-    return !isDisabled && ctx.isUser && hasMessagePrefix;
+    return ctx.isUser && hasMessagePrefix;
   },
   async execute(ctx, next, vk) {
     if (!this.isPassedConditions(ctx)) return;
