@@ -13,9 +13,7 @@ module.exports = {
     if (args[0] === 'toggle')
       return this.toggleSubscription(ctx);
 
-    const currentStatusText = this.getStatusText(ctx);
-
-    return ctx.reply(`Уведомления ${currentStatusText}`);
+    return ctx.reply(`Уведомления ${this.getStatusText(ctx)}`);
   },
   async toggleSubscription(ctx) {
     await storeSetter.setScheduleSubscribers(ctx.peerId)
