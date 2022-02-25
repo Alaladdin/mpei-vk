@@ -7,9 +7,6 @@ module.exports = {
   aliases    : ['ss'],
   arguments  : [{ name: 'toggle', description: 'переключает подписку' }],
   async execute(ctx, args) {
-    if (!isAdmin(ctx.senderId))
-      return ctx.reply('Команда тестируется, не трохай');
-
     if (!isAdmin(ctx.senderId) && !ctx.isChat)
       return ctx.reply('Подписку чата могут переключать только админы. Для уведомлений в лс, пиши боту');
 
