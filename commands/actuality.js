@@ -6,6 +6,7 @@ const { getActuality, sendAsImage } = require('../functions');
 module.exports = {
   name       : 'actuality',
   description: 'актуалочка',
+  slowMode   : true,
   aliases    : ['a', 'act', 'акт'],
   arguments  : [{ name: 'lazy', description: 'несрочная актуалочка' }],
   async execute(ctx, args, vk) {

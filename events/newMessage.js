@@ -1,5 +1,5 @@
 const { prefix } = require('../config');
-const { getCommand, isAdmin } = require('../helpers');
+const { getCommand, isAdmin, getRandomInt } = require('../helpers');
 
 module.exports = {
   name: 'message_new',
@@ -24,7 +24,21 @@ module.exports = {
       if (command.adminOnly && !isAdmin(ctx.senderId)) return;
       if (command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
 
-      command.execute(ctx, args, vk);
+      let executionTimeout = 0;
+
+      if (command.slowMode) {
+        executionTimeout = getRandomInt({ min: 20, max: 120 });
+        ctx.send('Дайте-ка подумать...');
+      }
+
+      setTimeout(() => {
+        const isError = Math.random() >= 0.3;
+
+        if (command.slowMode && isError)
+          ctx.reply('Какая-то невероятная ошибка');
+        else
+          command.execute(ctx, args, vk);
+      }, executionTimeout * 1000);
     }
   },
 };
