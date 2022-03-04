@@ -7,7 +7,7 @@ module.exports = {
   aliases    : ['ss'],
   arguments  : [{ name: 'toggle', description: 'переключает подписку' }],
   async execute(ctx, args) {
-    if (!isAdmin(ctx.senderId) && !ctx.isChat)
+    if (!isAdmin(ctx.senderId) && ctx.isChat)
       return ctx.reply('Подписку чата могут переключать только админы. Для уведомлений в лс, пиши боту');
 
     if (args[0] === 'toggle')
