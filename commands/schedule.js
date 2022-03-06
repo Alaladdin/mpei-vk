@@ -5,7 +5,6 @@ const schedulePeriods = require('../data/schedulePeriods');
 module.exports = {
   name       : 'schedule',
   description: texts.schedule,
-  slowMode   : true,
   aliases    : ['s', 'расписание', 'р'],
   arguments  : [
     { name: 'tw', description: texts.forTomorrow },
