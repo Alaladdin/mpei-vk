@@ -1,6 +1,4 @@
 .idea
-.ignore
 .env
 node_modules
 files
-pnpm-lock.yaml

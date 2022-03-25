@@ -32,10 +32,10 @@
     "node-fetch": "2.6.7",
     "node-schedule": "^2.1.0",
     "text2png": "^2.3.0",
-    "vk-io": "^4.4.0"
+    "vk-io": "^4.5.2"
   },
   "devDependencies": {
-    "eslint": "^8.8.0",
+    "eslint": "^8.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15"
