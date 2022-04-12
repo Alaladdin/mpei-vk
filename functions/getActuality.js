@@ -9,8 +9,8 @@ module.exports = () => fetch(getActualityUrl)
 
     return json.actuality;
   })
-  .catch((e) => {
-    console.error(e);
+  .catch((err) => {
+    console.error(err);
 
     return null;
   });

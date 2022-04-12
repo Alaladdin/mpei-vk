@@ -1,25 +1,19 @@
 const { format, add, sub, differenceInMinutes } = require('date-fns');
-const { values } = require('lodash');
-const { getters: storeGetters } = require('../store');
+const { find } = require('lodash');
 
 const formatDate = (dateString, dateFormat = 'dd.MM') => format(new Date(dateString), dateFormat);
 const addToDate = (dateString, duration = { days: 1 }) => add(new Date(dateString), duration);
 const removeFromDate = (dateString, duration = { days: 1 }) => sub(new Date(dateString), duration);
 const getDateDiffInMinutes = (dateLeft, dateRight) => differenceInMinutes(dateLeft, dateRight);
-const isAdmin = (userId) => {
-  const admins = storeGetters.getAdmins();
-
-  return values(admins).includes(userId);
-};
 
 const getCommand = (commands, commandName) => {
-  let command;
+  const command = commands.get(commandName);
 
-  if (commands.get(commandName)) return commands.get(commandName);
+  if (!command) {
+    const commandsArray = Array.from(commands.values());
 
-  commands.forEach((c) => {
-    if (!command && c.aliases && c.aliases.includes((commandName))) command = c;
-  });
+    return find(commandsArray, (c) => !!c.aliases && c.aliases.includes((commandName)));
+  }
 
   return command;
 };
@@ -74,18 +68,15 @@ const sendMessage = async (vk, {
 };
 
 const handleError = (error, vk) => {
-  const admins = storeGetters.getAdmins();
-
   console.error(error);
 
   return sendMessage(vk, {
-    peerId : admins.AL,
+    peerId : 161372337,
     message: `Error: ${error}`,
   });
 };
 
 module.exports = {
-  isAdmin,
   getCommand,
   getRandomArrayItem,
   getRandomInt,

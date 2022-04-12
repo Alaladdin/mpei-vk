@@ -15,8 +15,9 @@ module.exports = (start, finish) => {
 
       return json.schedule;
     })
-    .catch((e) => {
-      console.error(e);
-      throw e;
+    .catch((err) => {
+      console.error(err);
+
+      throw err;
     });
 };

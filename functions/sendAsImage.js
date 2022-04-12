@@ -15,5 +15,10 @@ module.exports = async ({ message, title, peerId, vk }) => {
         message   : title,
         attachment: `photo${image.ownerId}_${image.id}`,
       });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      throw err;
     });
 };

@@ -1,11 +1,12 @@
 const { prefix } = require('../config');
-const { getCommand, isAdmin } = require('../helpers');
+const { getCommand } = require('../helpers');
 
 module.exports = {
   name: 'message_new',
   isPassedConditions(ctx) {
     const { text } = ctx;
-    if (!text || text.length <= 1) return false;
+    if (!text || text.length <= 1)
+      return false;
 
     const hasMessagePrefix = prefix.includes(text[0]);
 
@@ -21,8 +22,8 @@ module.exports = {
 
     // call command
     if (command) {
-      if (command.adminOnly && !isAdmin(ctx.senderId)) return;
-      if (command.lowercaseArguments !== false) args = args.map((arg) => arg.toLowerCase());
+      if (command.lowercaseArguments !== false)
+        args = args.map((arg) => arg.toLowerCase());
 
       command.execute(ctx, args, vk);
     }

@@ -1,4 +1,4 @@
-const { getCommand, isAdmin } = require('../helpers');
+const { getCommand } = require('../helpers');
 const { texts } = require('../data/messages');
 const { sendAsImage } = require('../functions');
 
@@ -6,14 +6,14 @@ module.exports = {
   name       : 'help',
   description: 'информация по командам',
   aliases    : ['h', 'commands'],
-  arguments  : [{ name: 'all', description: 'выводит полный список команд' }],
   getAllCommandsInfo(ctx, args, vk) {
-    const showAllCommandsForce = args[0] === 'all';
     const msg = [];
 
     msg.push(`${texts.commandsList}:\n`);
 
-    vk.commands.forEach((c) => (showAllCommandsForce || !c.hidden) && msg.push(`/${c.name} - ${c.description}`));
+    vk.commands.forEach((c) => {
+      msg.push(`/${c.name} - ${c.description}`);
+    });
 
     return sendAsImage({ message: msg.join('\n'), peerId: ctx.peerId, vk })
       .catch(() => ctx.send(texts.totalCrash));
@@ -25,7 +25,8 @@ module.exports = {
     msg.push(`Команда: ${command.name}`);
     msg.push(`Описание: ${command.description}`);
 
-    if (command.aliases) msg.push(`Алиасы: ${command.aliases.join(', ')}`);
+    if (command.aliases)
+      msg.push(`Алиасы: ${command.aliases.join(', ')}`);
 
     if (command.arguments) {
       if (typeof command.arguments[0] === 'string') {
@@ -46,10 +47,12 @@ module.exports = {
   },
   async execute(ctx, args, vk) {
     const command = getCommand(vk.commands, args[0]);
-    const isUnknownCommand = !command || (command.hidden && !isAdmin(ctx.peerId));
 
-    if (!args.length || args[0] === 'all') return this.getAllCommandsInfo(ctx, args, vk);
-    if (isUnknownCommand) return ctx.send(texts.unknownCommand);
+    if (!args.length)
+      return this.getAllCommandsInfo(ctx, args, vk);
+
+    if (!command)
+      return ctx.send(texts.unknownCommand);
 
     return this.getCommandInfo(ctx, args, vk);
   },
