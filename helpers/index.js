@@ -25,7 +25,7 @@ const getRandomInt = ({ min = 0, max = 1 }) => {
   return Math.floor(Math.random() * (maxRange - minRange + 1) + minRange);
 };
 
-const getRandomArrayItem = (arr) => arr[getRandomInt({ max: arr.length - 1 })];
+const getRandomArrayItem = (arr) => (arr ? arr[getRandomInt({ max: arr.length - 1 })] : undefined);
 const getChatMembers = async (vk, { peerId = null, fields = [] }) => {
   if (!peerId) return false;
 
