@@ -10,6 +10,6 @@ module.exports = {
   serverAddress   : process.env.SERVER_ADDRESS,
   authToken       : process.env.AUTH_TOKEN,
   serverDateFormat: 'yyyy.MM.dd',
-  outImagePath    : path.resolve(__dirname, './files/userCreated.png'),
+  tempImagePath   : path.resolve(__dirname, './tmp/userCreated.png'),
   mainChat        : isProd ? 2000000005 : 2000000003,
 };

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const text2png = require('text2png');
 const themes = require('../data/createImageThemes');
-const { outImagePath } = require('../config');
+const { tempImagePath } = require('../config');
 const { getRandomArrayItem } = require('../helpers');
 
 const getThemeByHour = () => {
@@ -17,7 +17,7 @@ module.exports = async (text) => {
 
   const selectedTheme = getThemeByHour();
 
-  return fs.writeFileSync(outImagePath, text2png(text, {
+  return fs.writeFileSync(tempImagePath, text2png(text, {
     padding      : 20,
     lineSpacing  : 10,
     borderWidth  : 7,

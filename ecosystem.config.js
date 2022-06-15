@@ -8,7 +8,7 @@ module.exports = {
       wait_ready    : true,
       watch         : true,
       restart_delay : 5000,
-      ignore_watch  : ['node_modules', 'files'],
+      ignore_watch  : ['node_modules', 'tmp'],
       env           : { NODE_ENV: 'development' },
       env_production: { NODE_ENV: 'production' },
     },

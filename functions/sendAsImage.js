@@ -1,12 +1,12 @@
 const fs = require('fs');
 const createImage = require('./createImage');
 const { sendMessage } = require('../helpers');
-const { outImagePath } = require('../config');
+const { tempImagePath } = require('../config');
 
 module.exports = async ({ message, title, peerId, vk }) => {
   await createImage(message);
 
-  const fileData = await fs.promises.readFile(outImagePath);
+  const fileData = await fs.promises.readFile(tempImagePath);
 
   return vk.upload.messagePhoto({ peer_id: peerId, source: { value: fileData } })
     .then((image) => {
