@@ -10,6 +10,7 @@ module.exports = {
     ],
     425704393: [
       'drobot_1.ogg',
+      'drobot_2.ogg',
     ],
     160477317: [
       'vika_1.ogg',
