@@ -12,6 +12,6 @@ module.exports = {
   serverDateFormat: 'yyyy.MM.dd',
   assetsPath      : path.resolve(__dirname, './assets/'),
   tempImagePath   : path.resolve(__dirname, './tmp/userCreated.png'),
-  adminsChatIds   : [161372337, 310167864],
+  adminsChatIds   : [161372337, 283599204, 310167864],
   mainChat        : isProd ? 2000000005 : 2000000003,
 };
