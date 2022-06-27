@@ -27,6 +27,8 @@ module.exports = {
         });
 
         each(chatMembers.profiles, (user) => {
+          if (!user.bdate) return false;
+
           const birthdayDate = getUserBirthdayDate(user);
 
           if (birthdayDate === dayAfterTomorrow) {
