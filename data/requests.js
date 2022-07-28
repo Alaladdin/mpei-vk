@@ -1,6 +1,6 @@
-const { serverAddress } = require('../config');
+const { apiUrl } = require('../config');
 
 module.exports = {
-  getUniversalUrl: (query) => `${serverAddress}/${query}`,
-  getScheduleUrl : `${serverAddress}/getSchedule`,
+  getUniversalUrl: (query) => `${apiUrl}/${query}`,
+  getScheduleUrl : `${apiUrl}/getSchedule`,
 };
