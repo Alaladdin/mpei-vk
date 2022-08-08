@@ -22,6 +22,5 @@ vk.updates.start()
   .then(() => {
     console.info('[CRON] has been started');
     console.info('[BOT] has been started');
-    process.send('ready');
   })
   .catch(console.error);
