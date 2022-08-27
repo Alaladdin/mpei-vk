@@ -40,7 +40,7 @@ module.exports = {
       .reverse()
       .flatten()
       .map((member, i, members) => {
-        const separator = `${i && members[i - 1].dateForGroup !== member.dateForGroup ? `${'#'.repeat(27)}\n` : ''}`;
+        const separator = `${i && members[i - 1].dateForGroup !== member.dateForGroup ? '\n' : ''}`;
 
         return `${separator}${member.bdate} — ${member.fullName}`;
       })
