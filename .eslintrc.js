@@ -13,8 +13,8 @@ module.exports = {
     'object-curly-newline': ['error', {
       ObjectExpression : { minProperties: 6, multiline: true, consistent: true },
       ObjectPattern    : { minProperties: 6, multiline: true, consistent: true },
-      ImportDeclaration: { minProperties: 6, multiline: true, consistent: true },
-      ExportDeclaration: { minProperties: 6, multiline: true, consistent: true },
+      ImportDeclaration: { minProperties: 10, multiline: true, consistent: true },
+      ExportDeclaration: { minProperties: 10, multiline: true, consistent: true },
     }],
     'nonblock-statement-body-position': ['error', 'any'],
     curly                             : [

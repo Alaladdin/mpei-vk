@@ -27,5 +27,10 @@ module.exports = {
       backgroundColor: '#24191C',
       borderColor    : '#342B2D',
     },
+    {
+      color          : '#ca31ca',
+      backgroundColor: '#1f0332',
+      borderColor    : '#d32bd3',
+    },
   ],
 };

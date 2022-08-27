@@ -1,12 +1,14 @@
 {
   "name": "mpei-vk",
   "private": true,
-  "version": "1.33.0",
+  "version": "1.34.0",
   "description": "mpei vk bot",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "dev": "nodemon ./index.js"
+    "dev": "nodemon index.js",
+    "docker:build": "docker build -t vk .",
+    "docker:dev": "docker run --net=host --env-file ./.env vk"
   },
   "keywords": [
     "mpei",
@@ -27,6 +29,7 @@
     "date-fns": "^2.29.1",
     "dotenv": "^16.0.1",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "node-fetch": "2.6.7",
     "node-schedule": "^2.1.0",
     "text2png": "^2.3.0",

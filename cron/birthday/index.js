@@ -3,9 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const { each, filter } = require('lodash');
 const { mainChat, assetsPath, adminsChatIds } = require('../../config');
-const {
-  formatDate, getChatMembers, sendMessage, handleError, getRandomArrayItem, addToDate,
-} = require('../../helpers');
+const { formatDate, getChatMembers, sendMessage, handleError, getRandomArrayItem, addToDate } = require('../../helpers');
 const { audioMessages } = require('./metadata');
 
 const getUserBirthdayDate = (user) => user.bdate.split('.').slice(0, 2).join('.');

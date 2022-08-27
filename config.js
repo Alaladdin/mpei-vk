@@ -7,7 +7,7 @@ const isProd = process.env.NODE_ENV === 'production';
 module.exports = {
   isProd,
   prefix          : ['/', '!', '@'] || process.env.PREFIXES,
-  token           : process.env.BOT_TOKEN,
+  token           : isProd ? process.env.BOT_TOKEN : process.env.BOT_TOKEN_DEV,
   apiUrl          : process.env.API_URL,
   authToken       : process.env.AUTH_TOKEN,
   serverDateFormat: 'yyyy.MM.dd',

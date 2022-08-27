@@ -1,5 +1,5 @@
 const { format, add, sub, differenceInMinutes } = require('date-fns');
-const { find } = require('lodash');
+const { find, random } = require('lodash');
 
 const formatDate = (dateString, dateFormat = 'dd.MM') => format(new Date(dateString), dateFormat);
 const addToDate = (dateString, duration = { days: 1 }) => add(new Date(dateString), duration);
@@ -18,14 +18,7 @@ const getCommand = (commands, commandName) => {
   return command;
 };
 
-const getRandomInt = ({ min = 0, max = 1 }) => {
-  const minRange = Math.ceil(min);
-  const maxRange = Math.floor(max);
-
-  return Math.floor(Math.random() * (maxRange - minRange + 1) + minRange);
-};
-
-const getRandomArrayItem = (arr) => (arr ? arr[getRandomInt({ max: arr.length - 1 })] : undefined);
+const getRandomArrayItem = (arr) => (arr ? arr[random(0, arr.length - 1)] : undefined);
 const getChatMembers = async (vk, { peerId = null, fields = [] }) => {
   if (!peerId) return false;
 
@@ -58,7 +51,7 @@ const sendMessage = async (vk, {
     message,
     attachment,
     peer_id         : peerId,
-    random_id       : getRandomInt({ max: 999 }),
+    random_id       : random(0, 999),
     dont_parse_links: dontParseLinks,
   })
     .catch((e) => {
@@ -79,7 +72,6 @@ const handleError = (error, vk) => {
 module.exports = {
   getCommand,
   getRandomArrayItem,
-  getRandomInt,
   formatDate,
   addToDate,
   removeFromDate,
