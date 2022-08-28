@@ -1,4 +1,4 @@
-const { prefix } = require('../config');
+const { prefixes } = require('../config');
 const { getCommand } = require('../helpers');
 
 module.exports = {
@@ -8,9 +8,7 @@ module.exports = {
     if (!text || text.length <= 1)
       return false;
 
-    const hasMessagePrefix = prefix.includes(text[0]);
-
-    return ctx.isUser && hasMessagePrefix;
+    return ctx.isUser && prefixes.includes(text[0]);
   },
   async execute(ctx, next, vk) {
     if (!this.isPassedConditions(ctx)) return;

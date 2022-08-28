@@ -12,13 +12,13 @@ const getCommand = (commands, commandName) => {
   if (!command) {
     const commandsArray = Array.from(commands.values());
 
-    return find(commandsArray, (c) => !!c.aliases && c.aliases.includes((commandName)));
+    return find(commandsArray, (c) => c?.aliases.includes((commandName)));
   }
 
   return command;
 };
 
-const getRandomArrayItem = (arr) => (arr ? arr[random(0, arr.length - 1)] : undefined);
+const getRandomArrayItem = (arr) => (arr ? arr[random(arr.length - 1)] : undefined);
 const getChatMembers = async (vk, { peerId = null, fields = [] }) => {
   if (!peerId) return false;
 

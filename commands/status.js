@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const { version } = require('../package.json');
 const { getUniversalUrl } = require('../data/requests');
-const { prefix, isProd } = require('../config');
+const { prefixes, isProd } = require('../config');
 const { sendAsImage } = require('../functions');
 const { texts } = require('../data/messages');
 
@@ -25,14 +25,13 @@ module.exports = {
       });
   },
   async execute(ctx, args, vk) {
-    const prefixText = !Array.isArray(prefix) ? prefix : prefix.join(', ');
     const serverVersion = await this.getServerData('version');
     const msg = [];
 
     // bot info
     msg.push('# Bot info');
     msg.push(`· version: ${version}`);
-    msg.push(`· prefix: "${prefixText}"`);
+    msg.push(`· prefixes: "${prefixes.join(', ')}"`);
     msg.push(`· isProd: ${isProd}`);
 
     // server info

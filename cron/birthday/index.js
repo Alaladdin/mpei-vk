@@ -4,12 +4,14 @@ const fs = require('fs');
 const { each, filter } = require('lodash');
 const { mainChat, assetsPath, adminsChatIds } = require('../../config');
 const { formatDate, getChatMembers, sendMessage, handleError, getRandomArrayItem, addToDate } = require('../../helpers');
-const { audioMessages } = require('./metadata');
+const metadata = require('./metadata');
 
 const getUserBirthdayDate = (user) => user.bdate.split('.').slice(0, 2).join('.');
 
 module.exports = {
   async init(vk) {
+    await metadata.loadUsedData();
+
     schedule.scheduleJob('0 0 6 * * *', async () => {
       const chatMembers = await getChatMembers(vk, { peerId: mainChat, fields: ['first_name_gen', 'last_name_gen', 'bdate'] })
         .catch((error) => handleError(error, vk))
@@ -41,11 +43,9 @@ module.exports = {
 
         each(todayBirthUsers, async (user) => {
           const userFullName = `${user.first_name_gen} ${user.last_name_gen}`;
-          const audioMessagesArray = audioMessages[user.id] || audioMessages.default;
-          const audioMessageFileName = getRandomArrayItem(audioMessagesArray);
           const audioMessage = await vk.upload.audioMessage({
             peer_id: mainChat,
-            source : { value: fs.readFileSync(path.resolve(assetsPath, audioMessageFileName)) },
+            source : { value: fs.readFileSync(path.resolve(assetsPath, await metadata.getAudioMessage(user.id))) },
           })
             .then((audio) => `audio_message${audio.ownerId}_${audio.id}`)
             .catch((err) => {
