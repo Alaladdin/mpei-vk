@@ -27,7 +27,7 @@
   "license": "ISC",
   "dependencies": {
     "date-fns": "^2.29.1",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "node-fetch": "2.6.7",
