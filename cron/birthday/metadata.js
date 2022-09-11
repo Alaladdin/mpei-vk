@@ -43,8 +43,8 @@ module.exports = {
   },
   audioMessages: {
     default: [
-      { file: 'default_1.ogg' },
-      { file: 'default_2.mp3' },
+      { file: 'default_1.mp3' },
+      { file: 'default_2.ogg' },
       { file: 'default_3.ogg' },
       { file: 'default_4.ogg' },
       { file: 'default_5.ogg' },

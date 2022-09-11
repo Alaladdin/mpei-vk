@@ -6,8 +6,6 @@ const { mainChat, assetsPath, adminsChatIds } = require('../../config');
 const { formatDate, getChatMembers, sendMessage, handleError, getRandomArrayItem, addToDate } = require('../../helpers');
 const metadata = require('./metadata');
 
-const getUserBirthdayDate = (user) => user.bdate.split('.').slice(0, 2).join('.');
-
 module.exports = {
   async init(vk) {
     await metadata.loadUsedData();
@@ -20,46 +18,47 @@ module.exports = {
       if (chatMembers) {
         const today = formatDate(new Date(), 'd.M');
         const dayAfterTomorrow = formatDate(addToDate(new Date(), { days: 2 }), 'd.M');
-        const todayBirthUsers = filter(chatMembers.profiles, (user) => {
-          if (!user.bdate) return false;
 
-          return getUserBirthdayDate(user) === today;
-        });
+        each(chatMembers.profiles, async (user) => {
+          if (!user.bdate) return;
 
-        each(chatMembers.profiles, (user) => {
-          if (!user.bdate) return false;
+          const birthdayDate = user.bdate.split('.').slice(0, 2).join('.')
 
-          const birthdayDate = getUserBirthdayDate(user);
+          if (birthdayDate === dayAfterTomorrow)
+            this.handleAfterTomorrowBirthday(user, vk);
 
-          if (birthdayDate === dayAfterTomorrow) {
-            each(adminsChatIds, (chatId) => {
-              sendMessage(vk, {
-                peerId : chatId,
-                message: `У @id${user.id} (${user.first_name_gen}) день рождения через два дня`,
-              }).catch((err) => handleError(err, vk));
-            });
-          }
-        });
-
-        each(todayBirthUsers, async (user) => {
-          const userFullName = `${user.first_name_gen} ${user.last_name_gen}`;
-          const audioMessage = await vk.upload.audioMessage({
-            peer_id: mainChat,
-            source : { value: fs.readFileSync(path.resolve(assetsPath, await metadata.getAudioMessage(user.id))) },
-          })
-            .then((audio) => `audio_message${audio.ownerId}_${audio.id}`)
-            .catch((err) => {
-              handleError(err, vk);
-              return null;
-            });
-
-          await sendMessage(vk, {
-            peerId    : mainChat,
-            message   : `У @id${user.id} (${userFullName}) сегодня день рождения`,
-            attachment: audioMessage,
-          });
+          if (birthdayDate === today)
+            await this.handleTodayBirthday(user, vk);
         });
       }
+    });
+  },
+  handleAfterTomorrowBirthday(user, vk) {
+    each(adminsChatIds, (chatId) => {
+      sendMessage(vk, {
+        peerId: chatId,
+        message: `У @id${user.id} (${user.first_name_gen}) день рождения через два дня`,
+      })
+        .catch((err) => handleError(err, vk));
+    });
+  },
+  async handleTodayBirthday(user, vk) {
+    const userFullName = `${user.first_name_gen} ${user.last_name_gen}`;
+    const audioFileName = await metadata.getAudioMessage(user.id)
+    const audioMessage = await vk.upload.audioMessage({
+      peer_id: mainChat,
+      source: { value: fs.readFileSync(path.resolve(assetsPath, audioFileName)) },
+    })
+      .then((audio) => `audio_message${audio.ownerId}_${audio.id}`)
+      .catch((err) => {
+        handleError(err, vk);
+        return null;
+      });
+
+    await sendMessage(vk, {
+      peerId: mainChat,
+      message: `У @id${user.id} (${userFullName}) сегодня день рождения`,
+      attachment: audioMessage,
     });
   },
 };

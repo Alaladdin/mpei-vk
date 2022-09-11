@@ -12,6 +12,6 @@ module.exports = {
   authToken       : process.env.AUTH_TOKEN,
   serverDateFormat: 'yyyy.MM.dd',
   assetsPath      : path.resolve(__dirname, './assets/'),
-  adminsChatIds   : [161372337, 283599204, 310167864],
+  adminsChatIds   : isProd ? [161372337, 283599204, 310167864] : [161372337],
   mainChat        : isProd ? 2000000005 : 2000000003,
 };
