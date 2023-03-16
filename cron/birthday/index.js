@@ -1,9 +1,9 @@
 const schedule = require('node-schedule');
 const path = require('path');
 const fs = require('fs');
-const { each, filter } = require('lodash');
+const { each } = require('lodash');
 const { mainChat, assetsPath, adminsChatIds } = require('../../config');
-const { formatDate, getChatMembers, sendMessage, handleError, getRandomArrayItem, addToDate } = require('../../helpers');
+const { formatDate, getChatMembers, sendMessage, handleError, addToDate } = require('../../helpers');
 const metadata = require('./metadata');
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
         each(chatMembers.profiles, async (user) => {
           if (!user.bdate) return;
 
-          const birthdayDate = user.bdate.split('.').slice(0, 2).join('.')
+          const birthdayDate = user.bdate.split('.').slice(0, 2).join('.');
 
           if (birthdayDate === dayAfterTomorrow)
             this.handleAfterTomorrowBirthday(user, vk);
@@ -36,7 +36,7 @@ module.exports = {
   handleAfterTomorrowBirthday(user, vk) {
     each(adminsChatIds, (chatId) => {
       sendMessage(vk, {
-        peerId: chatId,
+        peerId : chatId,
         message: `У @id${user.id} (${user.first_name_gen}) день рождения через два дня`,
       })
         .catch((err) => handleError(err, vk));
@@ -44,10 +44,10 @@ module.exports = {
   },
   async handleTodayBirthday(user, vk) {
     const userFullName = `${user.first_name_gen} ${user.last_name_gen}`;
-    const audioFileName = await metadata.getAudioMessage(user.id)
+    const audioFileName = await metadata.getAudioMessage(user.id);
     const audioMessage = await vk.upload.audioMessage({
       peer_id: mainChat,
-      source: { value: fs.readFileSync(path.resolve(assetsPath, audioFileName)) },
+      source : { value: fs.readFileSync(path.resolve(assetsPath, audioFileName)) },
     })
       .then((audio) => `audio_message${audio.ownerId}_${audio.id}`)
       .catch((err) => {
@@ -56,8 +56,8 @@ module.exports = {
       });
 
     await sendMessage(vk, {
-      peerId: mainChat,
-      message: `У @id${user.id} (${userFullName}) сегодня день рождения`,
+      peerId    : mainChat,
+      message   : `У @id${user.id} (${userFullName}) сегодня день рождения`,
       attachment: audioMessage,
     });
   },

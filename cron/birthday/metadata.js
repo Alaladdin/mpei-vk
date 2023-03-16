@@ -13,6 +13,7 @@ module.exports = {
 
         each(this.audioMessages, (audios) => {
           each(audios, (audio) => {
+            // eslint-disable-next-line no-param-reassign
             audio.usedData = usedData[audio.file] || 0;
           });
         });
@@ -55,7 +56,6 @@ module.exports = {
     ],
     425704393: [
       { file: 'drobot_1.ogg' },
-      { file: 'drobot_2.ogg' },
     ],
   },
 };
