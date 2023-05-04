@@ -2,8 +2,8 @@ const schedule = require('node-schedule');
 const path = require('path');
 const fs = require('fs');
 const { each } = require('lodash');
-const { mainChat, assetsPath, adminsChatIds } = require('../../config');
-const { formatDate, getChatMembers, sendMessage, handleError, addToDate } = require('../../helpers');
+const { mainChat, assetsPath } = require('../../config');
+const { formatDate, getChatMembers, sendMessage, handleError } = require('../../helpers');
 const metadata = require('./metadata');
 
 module.exports = {
@@ -17,29 +17,16 @@ module.exports = {
 
       if (chatMembers) {
         const today = formatDate(new Date(), 'd.M');
-        const dayAfterTomorrow = formatDate(addToDate(new Date(), { days: 2 }), 'd.M');
 
         each(chatMembers.profiles, async (user) => {
           if (!user.bdate) return;
 
           const birthdayDate = user.bdate.split('.').slice(0, 2).join('.');
 
-          if (birthdayDate === dayAfterTomorrow)
-            this.handleAfterTomorrowBirthday(user, vk);
-
           if (birthdayDate === today)
             await this.handleTodayBirthday(user, vk);
         });
       }
-    });
-  },
-  handleAfterTomorrowBirthday(user, vk) {
-    each(adminsChatIds, (chatId) => {
-      sendMessage(vk, {
-        peerId : chatId,
-        message: `У @id${user.id} (${user.first_name_gen}) день рождения через два дня`,
-      })
-        .catch((err) => handleError(err, vk));
     });
   },
   async handleTodayBirthday(user, vk) {

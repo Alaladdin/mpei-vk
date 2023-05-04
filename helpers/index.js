@@ -12,7 +12,7 @@ const getCommand = (commands, commandName) => {
   if (!command) {
     const commandsArray = Array.from(commands.values());
 
-    return find(commandsArray, (c) => c?.aliases.includes((commandName)));
+    return find(commandsArray, (c) => c?.aliases?.includes((commandName)));
   }
 
   return command;
