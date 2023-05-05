@@ -10,7 +10,7 @@ module.exports = {
   async init(vk) {
     await metadata.loadUsedData();
 
-    schedule.scheduleJob('0 0 6 * * *', async () => {
+    schedule.scheduleJob('0 0 0 * * *', async () => {
       const chatMembers = await getChatMembers(vk, { peerId: mainChat, fields: ['first_name_gen', 'last_name_gen', 'bdate'] })
         .catch((error) => handleError(error, vk))
         .catch(() => false);
